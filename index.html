@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muhammad Talha Qamar | Portfolio</title>
+  
+  <style>
+    /* --- CSS VARIABLES & RESET --- */
+    :root {
+      --bg: #090a0f;
+      --card-bg: #13151f;
+      --text: #f0f0f5;
+      --text-muted: #8e8ea0;
+      --accent-1: #6366f1;
+      --accent-2: #a855f7;
+      --border: #242738;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* --- NAVIGATION --- */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 1.5rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(9, 10, 15, 0.75);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* --- SECTIONS --- */
+    section {
+      padding: 8rem 8% 4rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 3rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--accent-1);
+      border-radius: 2px;
+    }
+
+    /* --- HERO SECTION --- */
+    .hero {
+      align-items: flex-start;
+      position: relative;
+    }
+
+    .badge {
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: var(--accent-1);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .cta-btn {
+      padding: 0.9rem 2.2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+    }
+
+    .secondary-btn {
+      padding: 0.9rem 2.2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .secondary-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent-1);
+    }
+
+    /* --- SKILLS GRID --- */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .skill-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      border-radius: 12px;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-1);
+    }
+
+    .skill-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* --- PROJECTS GRID --- */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      width: 100%;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-2);
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    .project-link {
+      color: var(--accent-1);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* --- CONTACT --- */
+    .contact-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 3rem;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent-1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* --- NATIVE SCROLL & FADE ANIMATIONS --- */
+    .animate-hero {
+      animation: heroFadeUp 0.8s ease-out forwards;
+    }
+
+    @keyframes heroFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scroll-target {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .scroll-target.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="logo">&lt;Talha /&gt;</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="about">
+    <div class="badge animate-hero">Frontend Developer</div>
+    <h1 class="animate-hero">Hi, I'm <span>Muhammad Talha Qamar</span>.<br>I build web experiences.</h1>
+    <p class="animate-hero">Passionate about creating modern, interactive, and responsive websites using HTML, CSS, and JavaScript.</p>
+    <div class="hero-btns animate-hero">
+      <a href="#projects" class="cta-btn">View Projects</a>
+      <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" class="secondary-btn">GitHub Profile</a>
+    </div>
+  </section>
+
+  <!-- SKILLS SECTION -->
+  <section id="skills">
+    <h2 class="section-title scroll-target">Technical Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-card scroll-target">
+        <h3>HTML5</h3>
+        <p>Semantic structuring, accessible element markup, and clean DOM hierarchy.</p>
+      </div>
+      <div class="skill-card scroll-target">
+        <h3>CSS3 & Layouts</h3>
+        <p>Flexbox, CSS Grid, custom properties, keyframes, and responsive layouts.</p>
+      </div>
+      <div class="skill-card scroll-target">
+        <h3>JavaScript (ES6+)</h3>
+        <p>DOM selection & manipulation, event listeners, array methods, and dynamic rendering.</p>
+      </div>
+      <div class="skill-card scroll-target">
+        <h3>Git & GitHub</h3>
+        <p>Version control, managing repositories, hosting projects, and collaboration.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS SECTION -->
+  <section id="projects">
+    <h2 class="section-title scroll-target">Featured Projects</h2>
+    <div class="projects-grid">
+      
+      <!-- Project 1 -->
+      <div class="project-card scroll-target">
+        <div>
+          <h3>Interactive Web App</h3>
+          <p>A modern frontend application featuring dynamic JS logic and custom responsive design.</p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+          </div>
+        </div>
+        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" class="project-link">View Repository &rarr;</a>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card scroll-target">
+        <div>
+          <h3>Responsive Web Interface</h3>
+          <p>Sleek dark-mode showcase built with clean CSS keyframe effects and flex layout.</p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS Keyframes</span>
+            <span class="tag">CSS Grid</span>
+          </div>
+        </div>
+        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" class="project-link">View Repository &rarr;</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact">
+    <h2 class="section-title scroll-target">Get In Touch</h2>
+    <div class="contact-box scroll-target">
+      <form id="contact-form">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Your name" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="your@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" rows="4" placeholder="Your message..." required></textarea>
+        </div>
+        <button type="submit" class="cta-btn" style="width: 100%;">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Muhammad Talha Qamar. Built with HTML, CSS & JS.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      // Reveal elements on scroll using native IntersectionObserver
+      const observerOptions = {
+        threshold: 0.15
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // Target cards and section titles for scroll animations
+      const scrollElements = document.querySelectorAll(".scroll-target");
+      scrollElements.forEach(el => observer.observe(el));
+
+      // Contact Form Handler
+      const contactForm = document.getElementById("contact-form");
+      if (contactForm) {
+        contactForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          alert("Thanks! Your message has been sent.");
+          contactForm.reset();
+        });
+      }
+
+    });
+  </script>
+</body>
+</html>
