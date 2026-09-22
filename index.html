@@ -1,283 +1,307 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Muhammad Talha Qamar — frontend developer. Responsive, clean, and extremely pokeable web apps." />
-  <meta name="theme-color" content="#090a0f" />
+  <meta name="description" content="Muhammad Talha Qamar — frontend developer portfolio." />
+  <meta name="theme-color" content="#050816" id="theme-color" />
   <title>Muhammad Talha Qamar | Portfolio</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%BE%3C/text%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <link rel="stylesheet" href="style.css" />
   <script>
-    document.documentElement.classList.add("js");
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.documentElement.classList.add("reduce-motion");
-    }
     try {
-      var savedTheme = localStorage.getItem("talha-theme");
-      if (savedTheme) document.documentElement.dataset.theme = savedTheme;
-    } catch (err) { /* storage blocked */ }
+      var savedMode = localStorage.getItem("talha-mode");
+      if (savedMode === "light" || savedMode === "dark") {
+        document.documentElement.dataset.mode = savedMode;
+      }
+    } catch (err) {
+      document.documentElement.dataset.mode = "dark";
+    }
   </script>
 </head>
 <body>
-  <a class="skip" href="#about">Skip to content</a>
+  <div class="container">
+    <video class="back-vid" autoplay loop muted playsinline src="videos/galaxy.mp4"></video>
 
-  <div class="orb orb-a" aria-hidden="true"></div>
-  <div class="orb orb-b" aria-hidden="true"></div>
-  <canvas id="particles" aria-hidden="true"></canvas>
-  <div class="spotlight" aria-hidden="true"></div>
-  <div class="progress" id="progress" aria-hidden="true"></div>
+    <header data-aos="fade-down" data-aos-duration="2000">
+      <a class="left" href="#home">
+        <img src="images/main.png" alt="Talha logo" />
+        <h2><span>Talha</span>Qamar</h2>
+      </a>
 
-  <div class="cursor" id="cursor" aria-hidden="true"></div>
-  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
-
-  <div id="boot" role="dialog" aria-label="Loading">
-    <p class="boot-logo">&lt;Talha /&gt;</p>
-    <div class="boot-bar" aria-hidden="true"><span></span></div>
-    <p id="boot-text">teaching pixels to dance…</p>
-    <p class="boot-skip">click anywhere to skip</p>
-  </div>
-
-  <nav aria-label="Primary">
-    <a class="logo" href="#about">&lt;Talha /&gt;</a>
-    <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-panel">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="nav-panel" id="nav-panel">
-      <ul class="nav-links">
+      <ul>
         <li><a href="#about">About</a></li>
         <li><a href="#skills">Skills</a></li>
         <li><a href="#projects">Projects</a></li>
-        <li><a href="#playground">Play</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <div class="nav-actions">
-        <button class="icon-btn" id="sound-toggle" type="button" aria-pressed="false" title="Toggle sound effects">sfx off</button>
-        <button class="icon-btn" id="party-toggle" type="button" aria-pressed="false" title="Shortcut: P">Party</button>
+
+      <div class="box-icons">
+        <button class="theme-toggle" id="mode-toggle" type="button" aria-label="Switch to light mode" title="Toggle light / dark mode">
+          <i class="bx bx-sun icon-sun"></i>
+          <i class="bx bx-moon icon-moon"></i>
+        </button>
+        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+          <i class="bx bxl-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+          <i class="bx bxl-linkedin-square"></i>
+        </a>
       </div>
+
+      <button class="menu-icon" id="menu-icon" type="button" aria-label="Open menu">
+        <i class="bx bx-menu"></i>
+      </button>
+    </header>
+
+    <aside class="sidebar" id="sidebar" aria-label="Mobile menu">
+      <button class="close-icon" id="close-icon" type="button" aria-label="Close menu">
+        <i class="bx bx-x"></i>
+      </button>
+
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="social-sidebar">
+        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+          <i class="bx bxl-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+          <i class="bx bxl-linkedin-square"></i>
+        </a>
+      </div>
+    </aside>
+
+    <div class="blackhole-box" data-aos="fade-down" data-aos-duration="2000">
+      <video autoplay loop muted playsinline src="videos/blackhole.mp4"></video>
     </div>
-  </nav>
 
-  <main>
-    <section class="hero" id="about">
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <div class="badge animate-hero">Frontend Developer</div>
-          <p class="rotator animate-hero" id="role">building playful interfaces</p>
-          <h1 class="animate-hero" aria-label="Hi, I'm Muhammad Talha Qamar.">Hi, I'm <span class="name" id="name" aria-hidden="true">Muhammad Talha Qamar.</span></h1>
-          <p class="tagline animate-hero">"I build responsive, clean web applications."</p>
-          <p class="lede animate-hero">Passionate about creating modern, interactive, and responsive websites using HTML, CSS, and JavaScript.</p>
-          <div class="hero-btns animate-hero">
-            <a class="cta-btn magnet" href="#projects">View Projects</a>
-            <a class="secondary-btn magnet" href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener">GitHub Profile</a>
-            <button class="secondary-btn magnet" id="surprise" type="button">Surprise me</button>
-          </div>
-          <p class="hint animate-hero"><kbd>P</kbd> party · <kbd>B</kbd> boop · the terminal loves <kbd>help</kbd></p>
+    <section class="hero" id="home">
+      <div class="hero-info autoBlur" data-aos="fade-right" data-aos-duration="1000">
+        <div class="hero-info-title">
+          <i class="bx bxl-sketch"></i>
+          Front-end Developer Portfolio
         </div>
 
-        <div class="hero-side">
-          <div class="buddy-wrap" id="buddy-wrap">
-            <button class="buddy" id="buddy" type="button" title="Click or press B" aria-label="Boop the blob">
-              <span class="shine" aria-hidden="true"></span>
-              <span class="eye left" aria-hidden="true"><span class="pupil"></span></span>
-              <span class="eye right" aria-hidden="true"><span class="pupil"></span></span>
-              <span class="shades" aria-hidden="true"></span>
-              <span class="mouth" aria-hidden="true"></span>
-            </button>
-            <p class="buddy-status" id="buddy-status">boop me</p>
-          </div>
+        <h1 data-aos="fade-right" data-aos-duration="3000">
+          Providing <span class="gradient">the best</span> Project
+          <span class="gradient">Experience</span>
+        </h1>
 
-          <div class="terminal" id="terminal">
-            <div class="term-bar">
-              <button class="dot red" id="dot-red" type="button" aria-label="Pretend to close the terminal"></button>
-              <button class="dot yellow" id="dot-yellow" type="button" aria-label="Squash the terminal for a second"></button>
-              <button class="dot green" id="dot-green" type="button" aria-label="Toggle party mode"></button>
-              <span class="term-title">talha — bash</span>
-            </div>
-            <div class="term-body" id="term-body">
-              <div id="term-out" role="log" aria-live="polite" aria-relevant="additions"></div>
-              <form id="term-form" autocomplete="off">
-                <label class="term-prompt">
-                  <span aria-hidden="true">talha@portfolio:~$</span>
-                  <input id="term-cmd" type="text" aria-label="Terminal command" spellcheck="false" autocapitalize="off" placeholder="try help" />
-                </label>
-              </form>
-            </div>
+        <p>
+          I'm Muhammad Talha Qamar — a frontend developer passionate about building
+          modern, interactive, and responsive websites with HTML, CSS, and JavaScript.
+        </p>
+
+        <a class="hero-btn" href="#contact"><i class="bx bx-send"></i> Contact Me</a>
+      </div>
+
+      <div class="skills-video-box" data-aos="fade-left" data-aos-duration="1500">
+        <div class="hero-photo-wrap autoBlur">
+          <img class="hero-photo" src="images/main.png" alt="Muhammad Talha Qamar" />
+        </div>
+      </div>
+
+      <a class="scroll-down" href="#about" aria-label="Scroll to about"></a>
+    </section>
+
+    <section class="info-section" id="about">
+      <h1 class="section-title autoDisplay">Hello, There👋</h1>
+      <div class="info-cards">
+        <div class="card">
+          <h1>Hi there, I'm Talha</h1>
+          <p>
+            Frontend developer focused on clean layouts, responsive design, and
+            interactive web experiences built with HTML, CSS, and JavaScript.
+          </p>
+          <img src="images/main.png" alt="Muhammad Talha Qamar" />
+        </div>
+
+        <div class="card">
+          <h1>Tech Stack</h1>
+          <p>
+            I work with semantic HTML5, modern CSS (Flexbox, Grid, animations),
+            JavaScript ES6+, and Git &amp; GitHub for version control.
+          </p>
+          <img src="images/grid2.png" alt="Tech stack visual" />
+        </div>
+
+        <div class="card">
+          <h1>Open to learning, building &amp; shipping</h1>
+          <p>
+            Always exploring new frontend techniques and ready to collaborate on
+            creative web projects.
+          </p>
+          <video src="videos/glob.mp4" autoplay loop muted playsinline></video>
+          <a class="card-btn" href="#contact"><i class="bx bx-send"></i> Contact Me</a>
+        </div>
+
+        <div class="card">
+          <h1>My Passion for Coding</h1>
+          <p>
+            I love solving problems and building things through code. Programming
+            isn't just a skill — it's how I turn ideas into polished, interactive
+            websites people enjoy using.
+          </p>
+          <img src="images/grid4.png" alt="Coding passion visual" />
+        </div>
+      </div>
+    </section>
+
+    <section class="my-project" id="projects">
+      <h1 class="section-title autoDisplay">My Projects 👨‍💻</h1>
+
+      <div class="project-card">
+        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website/" target="_blank" rel="noreferrer noopener">
+          <img src="images/grid1.png" alt="BYD Dolphin Surf website preview" />
+          <div class="hover-sign"></div>
+        </a>
+        <div class="project-info fadein-left">
+          <h1>BYD <span class="gradient">Dolphin Surf</span> Website</h1>
+          <p>
+            Product landing page for BYD’s Ocean Series EV — hero storytelling,
+            feature sections, and a polished responsive layout.
+          </p>
+          <a class="project-btn" href="https://muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website/" target="_blank" rel="noreferrer noopener">
+            <i class="bx bx-link-external"></i> Website
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener">
+          <img src="images/grid2.png" alt="SMIT Clone website preview" />
+        </a>
+        <div class="project-info fadein-left">
+          <h1>SMIT <span class="gradient">Clone</span> Website</h1>
+          <p>
+            Saylani Mass IT Training clone covering courses, campuses, student
+            stories, and a full multi-section marketing layout.
+          </p>
+          <a class="project-btn" href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener">
+            <i class="bx bx-link-external"></i> Website
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <a class="project-vidbox autoBlur" href="#home">
+          <img src="images/main.png" alt="This portfolio preview" />
+        </a>
+        <div class="project-info fadein-left">
+          <h1>Animated <span class="gradient">Portfolio</span></h1>
+          <p>
+            This page — a space-themed animated portfolio with scroll effects,
+            glowing UI, and a focus on frontend craft.
+          </p>
+          <a class="project-btn" href="#home">
+            <i class="bx bx-link-external"></i> You're here
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="skills-section" id="skills">
+      <h1 class="section-title autoDisplay">My Skills 💪</h1>
+      <div class="skills-box autoDisplay">
+        <img class="skills-image" src="images/digital-brain.png" alt="Digital brain skills visual" />
+
+        <div class="Designer">
+          <h1 class="gradient">Designer <i class="bx bx-laptop"></i></h1>
+          <p>
+            Expertise in HTML, CSS layouts, visual hierarchy, and responsive
+            interfaces that feel polished on every screen size.
+          </p>
+        </div>
+
+        <div class="coder">
+          <h1 class="gradient">Coder <i class="bx bx-code-block"></i></h1>
+          <p>
+            Skilled in JavaScript (ES6+), DOM work, Git &amp; GitHub, and building
+            interactive experiences that ship cleanly.
+          </p>
+        </div>
+
+        <div class="slider" style="--width: 100px; --height: 100px; --quantity: 9;">
+          <div class="list">
+            <div class="item" style="--position: 1"><img src="images/1.png" alt="Skill icon 1" /></div>
+            <div class="item" style="--position: 2"><img src="images/2.png" alt="Skill icon 2" /></div>
+            <div class="item" style="--position: 3"><img src="images/3.webp" alt="Skill icon 3" /></div>
+            <div class="item" style="--position: 4"><img src="images/4.webp" alt="Skill icon 4" /></div>
+            <div class="item" style="--position: 5"><img src="images/5.png" alt="Skill icon 5" /></div>
+            <div class="item" style="--position: 6"><img src="images/6.png" alt="Skill icon 6" /></div>
+            <div class="item" style="--position: 7"><img src="images/7.png" alt="Skill icon 7" /></div>
+            <div class="item" style="--position: 8"><img src="images/8.png" alt="Skill icon 8" /></div>
+            <div class="item" style="--position: 9"><img src="images/9.png" alt="Skill icon 9" /></div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="skills">
-      <h2 class="section-title scroll-target">Technical Skills</h2>
-      <p class="section-lead scroll-target">Poke a card. The bars are honest. The quips are not.</p>
-      <div class="skills-grid">
-        <div class="skill-card tilt scroll-target" tabindex="0" role="button" aria-pressed="false" data-skill="HTML5" data-quip="Semantic tags are my love language.">
-          <h3>HTML5</h3>
-          <p>Semantic structuring, accessible element markup, and clean DOM hierarchy.</p>
-          <div class="bar" role="meter" aria-label="HTML5" aria-valuemin="0" aria-valuemax="100" aria-valuenow="90">
-            <span data-level="90"></span>
-          </div>
-          <p class="quip" hidden></p>
-        </div>
-        <div class="skill-card tilt scroll-target" tabindex="0" role="button" aria-pressed="false" data-skill="CSS3 & Layouts" data-quip="If it can be a grid, it will be a grid.">
-          <h3>CSS3 &amp; Layouts</h3>
-          <p>Flexbox, CSS Grid, custom properties, keyframes, and responsive layouts.</p>
-          <div class="bar" role="meter" aria-label="CSS3 and layouts" aria-valuemin="0" aria-valuemax="100" aria-valuenow="86">
-            <span data-level="86"></span>
-          </div>
-          <p class="quip" hidden></p>
-        </div>
-        <div class="skill-card tilt scroll-target" tabindex="0" role="button" aria-pressed="false" data-skill="JavaScript (ES6+)" data-quip="I speak fluent addEventListener.">
-          <h3>JavaScript (ES6+)</h3>
-          <p>DOM selection &amp; manipulation, event listeners, array methods, and dynamic rendering.</p>
-          <div class="bar" role="meter" aria-label="JavaScript" aria-valuemin="0" aria-valuemax="100" aria-valuenow="84">
-            <span data-level="84"></span>
-          </div>
-          <p class="quip" hidden></p>
-        </div>
-        <div class="skill-card tilt scroll-target" tabindex="0" role="button" aria-pressed="false" data-skill="Git & GitHub" data-quip="Commit messages I only slightly regret.">
-          <h3>Git &amp; GitHub</h3>
-          <p>Version control, managing repositories, hosting projects, and collaboration.</p>
-          <div class="bar" role="meter" aria-label="Git and GitHub" aria-valuemin="0" aria-valuemax="100" aria-valuenow="78">
-            <span data-level="78"></span>
-          </div>
-          <p class="quip" hidden></p>
+    <section class="contact-section" id="contact">
+      <h1 class="section-title autoDisplay">Let's talk😊</h1>
+
+      <div class="social-box autoBlur">
+        <a href="mailto:hello@example.com"><i class="bx bxs-envelope"></i> Email me</a>
+        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener">
+          <i class="bx bxl-github"></i> GitHub Profile
+        </a>
+        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener">
+          <i class="bx bxl-linkedin-square"></i> LinkedIn
+        </a>
+        <div class="social-icons">
+          <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+            <i class="bx bxl-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+            <i class="bx bxl-linkedin-square"></i>
+          </a>
         </div>
       </div>
+
+      <form class="contact-box autoBlur" id="contact-form">
+        <p>
+          Whether you're looking to build a new website, improve an existing
+          platform, or bring a unique project to life — I'm here to help.
+        </p>
+
+        <label for="name">Full Name</label>
+        <input id="name" name="name" placeholder="Your full name" type="text" required />
+
+        <label for="email">Email Address</label>
+        <input id="email" name="email" placeholder="Your email" type="email" required />
+
+        <label for="message">Your Message</label>
+        <textarea id="message" name="message" class="input-message" placeholder="Share your thoughts..." required></textarea>
+
+        <button type="submit">Send Message <i class="bx bx-mail-send"></i></button>
+      </form>
     </section>
 
-    <section id="projects">
-      <h2 class="section-title scroll-target">Featured Projects</h2>
-      <p class="section-lead scroll-target">Tilt the cards. The spotlight follows your cursor.</p>
-      <div class="projects-grid">
-        <article class="project-card tilt scroll-target">
-          <div>
-            <h3>BYD Dolphin Surf</h3>
-            <p>Product landing page for BYD’s Ocean Series EV — hero storytelling, feature sections, and polished responsive layout.</p>
-            <div class="project-tags">
-              <span class="tag">HTML</span>
-              <span class="tag">CSS</span>
-              <span class="tag">Landing Page</span>
-            </div>
-          </div>
-          <a class="project-link" href="https://muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website/" target="_blank" rel="noreferrer noopener">View Live Site <span aria-hidden="true">→</span></a>
-        </article>
-
-        <article class="project-card tilt scroll-target">
-          <div>
-            <h3>SMIT Clone Website</h3>
-            <p>Saylani Mass IT Training clone covering courses, campuses, student stories, and a full multi-section marketing layout.</p>
-            <div class="project-tags">
-              <span class="tag">HTML</span>
-              <span class="tag">CSS</span>
-              <span class="tag">Clone</span>
-            </div>
-          </div>
-          <a class="project-link" href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener">View Live Site <span aria-hidden="true">→</span></a>
-        </article>
-
-        <article class="project-card tilt scroll-target">
-          <div>
-            <h3>This Portfolio</h3>
-            <p>The page you are on. A blob, a terminal, particles, and a production-bug emergency.</p>
-            <div class="project-tags">
-              <span class="tag you">you are here</span>
-              <span class="tag">HTML</span>
-              <span class="tag">CSS</span>
-              <span class="tag">JavaScript</span>
-            </div>
-          </div>
-          <a class="project-link" href="#playground">Go squash bugs <span aria-hidden="true">→</span></a>
-        </article>
+    <footer class="footer">
+      <h1>© <span id="year">2026</span>, Made with ❤️ by Muhammad Talha Qamar</h1>
+      <div class="box-icons">
+        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+          <i class="bx bxl-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+          <i class="bx bxl-linkedin-square"></i>
+        </a>
       </div>
-    </section>
-
-    <section id="playground">
-      <h2 class="section-title scroll-target">Bug Hunt</h2>
-      <p class="section-lead scroll-target">They escaped into production. You have 20 seconds. Combos pay extra.</p>
-      <div class="game-panel scroll-target">
-        <div class="hud" aria-hidden="true">
-          <span>Score <strong id="score">0</strong></span>
-          <span>Combo <strong id="combo">x0</strong></span>
-          <span>Time <strong id="time">20</strong></span>
-        </div>
-        <div class="arena" id="arena">
-          <pre class="fake-code" aria-hidden="true">function ship(build) {
-  if (bugs.length) return panic();
-  console.log("clean build");
-  return build.celebrate();
-}
-
-// status: the bugs are unionizing
-const deploy = () => ship({ celebrate });</pre>
-          <div class="game-overlay" id="game-overlay">
-            <h3 id="game-title">Squash the bugs</h3>
-            <p id="game-desc">Click them before they ship. Misses reset your combo.</p>
-            <p class="best">Best score: <strong id="best">0</strong></p>
-            <button class="cta-btn magnet" id="start-game" type="button">Start shift</button>
-          </div>
-        </div>
-        <p id="game-result" class="sr-only" aria-live="polite"></p>
-      </div>
-    </section>
-
-    <section id="contact">
-      <h2 class="section-title scroll-target">Get In Touch</h2>
-      <p class="section-lead scroll-target">Type something. The transmission panel repeats it back, with more drama.</p>
-      <div class="contact-layout">
-        <aside class="transmission scroll-target" id="transmission">
-          <p class="tx-kicker">live transmission</p>
-          <p class="tx-from">From <strong id="tx-who">someone out there</strong></p>
-          <p class="tx-mail" id="tx-mail">no email yet</p>
-          <p class="tx-preview is-empty" id="tx-preview">Your message will appear here as you type…</p>
-          <div class="vibe">
-            <span>vibe</span>
-            <div class="vibe-track"><span id="vibe-fill"></span></div>
-            <span id="vibe-emoji" aria-hidden="true">…</span>
-          </div>
-        </aside>
-
-        <div class="contact-box scroll-target">
-          <form id="contact-form">
-            <div class="stickers" aria-label="Add a sticker">
-              <button type="button" data-sticker="👋" aria-label="Add wave sticker">👋</button>
-              <button type="button" data-sticker="🚀" aria-label="Add rocket sticker">🚀</button>
-              <button type="button" data-sticker="🐛" aria-label="Add bug sticker">🐛</button>
-              <button type="button" data-sticker="☕" aria-label="Add coffee sticker">☕</button>
-              <button type="button" data-sticker="✨" aria-label="Add sparkle sticker">✨</button>
-            </div>
-            <div class="form-group">
-              <label for="name-input">Name</label>
-              <input type="text" id="name-input" name="name" placeholder="Your name" autocomplete="name" required />
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required />
-            </div>
-            <div class="form-group">
-              <div class="label-row">
-                <label for="message">Message</label>
-                <span id="count">0/500</span>
-              </div>
-              <textarea id="message" name="message" rows="4" maxlength="500" placeholder="Your message..." required></textarea>
-            </div>
-            <button class="cta-btn" id="send-btn" type="submit">Send Message</button>
-          </form>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>© <span id="year">2026</span> Muhammad Talha Qamar. Built with HTML, CSS &amp; <button class="text-btn" id="js-word" type="button">JavaScript</button>.</p>
-  </footer>
-
-  <div id="toasts" aria-live="polite" aria-relevant="additions"></div>
+    </footer>
+  </div>
 
   <script src="main.js"></script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, offset: 80 });
+  </script>
 </body>
 </html>
