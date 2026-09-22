@@ -551,7 +551,7 @@ function runCommand(raw) {
     ].join("\n"),
     about: () => "Muhammad Talha Qamar — frontend developer. Responsive, clean web apps with HTML, CSS, and JavaScript. This page is the proof and the playground.",
     skills: () => "HTML5 · CSS3 (grid, flex, keyframes) · JavaScript (ES6+) · Git & GitHub\nPoke the cards below if you want them to talk back.",
-    projects: () => "1. Interactive Web App\n2. Responsive Web Interface\n3. This portfolio (you are standing in it)",
+    projects: () => "1. BYD Dolphin Surf — muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website\n2. SMIT Clone Website — muhammad-talha-qamar.github.io/SMIT-Clone-Website\n3. This portfolio (you are standing in it)",
     party: () => {
       setParty(!partyOn);
       if (partyOn) confetti(50);
