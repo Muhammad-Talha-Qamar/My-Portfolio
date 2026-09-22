@@ -22,44 +22,56 @@
   </script>
 </head>
 <body>
+  <div class="cursor-orb" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
   <div class="container">
-    <video class="back-vid" autoplay loop muted playsinline src="videos/galaxy.mp4"></video>
+    <video class="back-vid" data-parallax="0.04" autoplay loop muted playsinline src="videos/galaxy.mp4"></video>
 
-    <header data-aos="fade-down" data-aos-duration="2000">
-      <a class="left" href="#home">
-        <img src="images/main.png" alt="Talha logo" />
-        <h2><span>Talha</span>Qamar</h2>
-      </a>
+    <header class="site-header" data-aos="fade-down" data-aos-duration="2000">
+      <nav class="nav-inner" aria-label="Primary">
+        <a class="left" href="#home">
+          <img src="images/main.png" alt="Talha logo" />
+          <h2><span>Talha</span>Qamar</h2>
+        </a>
 
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
 
-      <div class="box-icons">
-        <button class="theme-toggle" id="mode-toggle" type="button" aria-label="Switch to light mode" title="Toggle light / dark mode">
-          <i class="bx bx-sun icon-sun"></i>
-          <i class="bx bx-moon icon-moon"></i>
+        <div class="box-icons">
+          <button class="theme-toggle" id="mode-toggle" type="button" aria-label="Switch to light mode" title="Toggle light / dark mode">
+            <i class="bx bx-sun icon-sun"></i>
+            <i class="bx bx-moon icon-moon"></i>
+          </button>
+          <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+            <i class="bx bxl-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/m-talha-qamar-96765b435/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+            <i class="bx bxl-linkedin-square"></i>
+          </a>
+        </div>
+
+        <button class="menu-icon" id="menu-icon" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+          <i class="bx bx-menu"></i>
         </button>
-        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
-          <i class="bx bxl-github"></i>
-        </a>
-        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
-          <i class="bx bxl-linkedin-square"></i>
-        </a>
-      </div>
-
-      <button class="menu-icon" id="menu-icon" type="button" aria-label="Open menu">
-        <i class="bx bx-menu"></i>
-      </button>
+      </nav>
     </header>
 
-    <aside class="sidebar" id="sidebar" aria-label="Mobile menu">
-      <button class="close-icon" id="close-icon" type="button" aria-label="Close menu">
-        <i class="bx bx-x"></i>
-      </button>
+    <div class="nav-overlay" id="nav-overlay" hidden></div>
+
+    <aside class="sidebar" id="sidebar" aria-label="Mobile menu" aria-hidden="true">
+      <div class="sidebar-top">
+        <a class="left sidebar-brand" href="#home">
+          <img src="images/main.png" alt="" />
+          <h2><span>Talha</span>Qamar</h2>
+        </a>
+        <button class="close-icon" id="close-icon" type="button" aria-label="Close menu">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
 
       <ul>
         <li><a href="#home">Home</a></li>
@@ -73,38 +85,38 @@
         <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
           <i class="bx bxl-github"></i>
         </a>
-        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+        <a href="https://www.linkedin.com/in/m-talha-qamar-96765b435/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
           <i class="bx bxl-linkedin-square"></i>
         </a>
       </div>
     </aside>
 
-    <div class="blackhole-box" data-aos="fade-down" data-aos-duration="2000">
+    <div class="blackhole-box" data-aos="fade-down" data-aos-duration="2000" data-parallax="0.08">
       <video autoplay loop muted playsinline src="videos/blackhole.mp4"></video>
     </div>
 
     <section class="hero" id="home">
-      <div class="hero-info autoBlur" data-aos="fade-right" data-aos-duration="1000">
-        <div class="hero-info-title">
+      <div class="hero-info" data-aos="fade-right" data-aos-duration="1000">
+        <div class="hero-info-title" data-aos="zoom-in" data-aos-delay="100">
           <i class="bx bxl-sketch"></i>
           Front-end Developer Portfolio
         </div>
 
-        <h1 data-aos="fade-right" data-aos-duration="3000">
+        <h1 data-aos="fade-right" data-aos-duration="1200" data-aos-delay="200">
           Providing <span class="gradient">the best</span> Project
           <span class="gradient">Experience</span>
         </h1>
 
-        <p>
+        <p data-aos="fade-up" data-aos-delay="400">
           I'm Muhammad Talha Qamar — a frontend developer passionate about building
           modern, interactive, and responsive websites with HTML, CSS, and JavaScript.
         </p>
 
-        <a class="hero-btn" href="#contact"><i class="bx bx-send"></i> Contact Me</a>
+        <a class="hero-btn" href="#contact" data-aos="bounce" data-aos-delay="600" data-magnetic><i class="bx bx-send"></i> Contact Me</a>
       </div>
 
-      <div class="skills-video-box" data-aos="fade-left" data-aos-duration="1500">
-        <div class="hero-photo-wrap autoBlur">
+      <div class="skills-video-box" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="300" data-parallax="0.18">
+        <div class="hero-photo-wrap" data-tilt data-tilt-max="10">
           <img class="hero-photo" src="images/main.png" alt="Muhammad Talha Qamar" />
         </div>
       </div>
@@ -113,9 +125,9 @@
     </section>
 
     <section class="info-section" id="about">
-      <h1 class="section-title autoDisplay">Hello, There👋</h1>
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900">Hello, There👋</h1>
       <div class="info-cards">
-        <div class="card">
+        <div class="card" data-tilt data-spotlight data-aos="fade-right" data-aos-duration="900" data-aos-delay="0">
           <h1>Hi there, I'm Talha</h1>
           <p>
             Frontend developer focused on clean layouts, responsive design, and
@@ -124,7 +136,7 @@
           <img src="images/main.png" alt="Muhammad Talha Qamar" />
         </div>
 
-        <div class="card">
+        <div class="card" data-tilt data-spotlight data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
           <h1>Tech Stack</h1>
           <p>
             I work with semantic HTML5, modern CSS (Flexbox, Grid, animations),
@@ -133,75 +145,75 @@
           <img src="images/grid2.png" alt="Tech stack visual" />
         </div>
 
-        <div class="card">
+        <div class="card" data-tilt data-spotlight data-aos="zoom-in" data-aos-duration="900" data-aos-delay="250">
           <h1>Open to learning, building &amp; shipping</h1>
           <p>
             Always exploring new frontend techniques and ready to collaborate on
             creative web projects.
           </p>
           <video src="videos/glob.mp4" autoplay loop muted playsinline></video>
-          <a class="card-btn" href="#contact"><i class="bx bx-send"></i> Contact Me</a>
+          <a class="card-btn" data-magnetic href="#contact"><i class="bx bx-send"></i> Contact Me</a>
         </div>
 
-        <div class="card">
+        <div class="card" data-tilt data-spotlight data-aos="bounce" data-aos-duration="1000" data-aos-delay="350">
           <h1>My Passion for Coding</h1>
           <p>
             I love solving problems and building things through code. Programming
             isn't just a skill — it's how I turn ideas into polished, interactive
             websites people enjoy using.
           </p>
-          <img src="images/grid4.png" alt="Coding passion visual" />
+          <img class="passion-img" src="images/grid4.png" alt="Coding passion visual" />
         </div>
       </div>
     </section>
 
     <section class="my-project" id="projects">
-      <h1 class="section-title autoDisplay">My Projects 👨‍💻</h1>
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900">My Projects 👨‍💻</h1>
 
-      <div class="project-card">
-        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website/" target="_blank" rel="noreferrer noopener">
+      <div class="project-card" data-tilt data-spotlight>
+        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website/" target="_blank" rel="noreferrer noopener" data-aos="fade-right" data-aos-duration="1000">
           <img src="images/grid1.png" alt="BYD Dolphin Surf website preview" />
           <div class="hover-sign"></div>
         </a>
-        <div class="project-info fadein-left">
+        <div class="project-info" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="150">
           <h1>BYD <span class="gradient">Dolphin Surf</span> Website</h1>
           <p>
             Product landing page for BYD’s Ocean Series EV — hero storytelling,
             feature sections, and a polished responsive layout.
           </p>
-          <a class="project-btn" href="https://muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website/" target="_blank" rel="noreferrer noopener">
+          <a class="project-btn" data-magnetic href="https://muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website/" target="_blank" rel="noreferrer noopener">
             <i class="bx bx-link-external"></i> Website
           </a>
         </div>
       </div>
 
-      <div class="project-card">
-        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener">
+      <div class="project-card" data-tilt data-spotlight>
+        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener" data-aos="fade-left" data-aos-duration="1000">
           <img src="images/grid2.png" alt="SMIT Clone website preview" />
         </a>
-        <div class="project-info fadein-left">
+        <div class="project-info" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="150">
           <h1>SMIT <span class="gradient">Clone</span> Website</h1>
           <p>
             Saylani Mass IT Training clone covering courses, campuses, student
             stories, and a full multi-section marketing layout.
           </p>
-          <a class="project-btn" href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener">
+          <a class="project-btn" data-magnetic href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener">
             <i class="bx bx-link-external"></i> Website
           </a>
         </div>
       </div>
 
-      <div class="project-card">
-        <a class="project-vidbox autoBlur" href="#home">
+      <div class="project-card" data-tilt data-spotlight>
+        <a class="project-vidbox autoBlur" href="#home" data-aos="zoom-in" data-aos-duration="1000">
           <img src="images/main.png" alt="This portfolio preview" />
         </a>
-        <div class="project-info fadein-left">
+        <div class="project-info" data-aos="drop-down" data-aos-duration="1000" data-aos-delay="150">
           <h1>Animated <span class="gradient">Portfolio</span></h1>
           <p>
             This page — a space-themed animated portfolio with scroll effects,
             glowing UI, and a focus on frontend craft.
           </p>
-          <a class="project-btn" href="#home">
+          <a class="project-btn" data-magnetic href="#home">
             <i class="bx bx-link-external"></i> You're here
           </a>
         </div>
@@ -209,27 +221,42 @@
     </section>
 
     <section class="skills-section" id="skills">
-      <h1 class="section-title autoDisplay">My Skills 💪</h1>
-      <div class="skills-box autoDisplay">
-        <img class="skills-image" src="images/digital-brain.png" alt="Digital brain skills visual" />
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900">My Skills 💪</h1>
 
-        <div class="Designer">
-          <h1 class="gradient">Designer <i class="bx bx-laptop"></i></h1>
-          <p>
-            Expertise in HTML, CSS layouts, visual hierarchy, and responsive
-            interfaces that feel polished on every screen size.
-          </p>
+      <div class="skills-box">
+        <div class="skills-stage">
+          <img class="skills-image" src="images/digital-brain.png" alt="" aria-hidden="true" data-aos="zoom-in" data-aos-duration="1100" />
+
+          <article class="skill-panel Designer" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">
+            <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-laptop"></i></div>
+            <h2 class="gradient">Designer</h2>
+            <p>
+              Expertise in HTML, CSS layouts, visual hierarchy, and responsive
+              interfaces that feel polished on every screen size.
+            </p>
+            <ul class="skill-list">
+              <li>HTML &amp; CSS</li>
+              <li>Responsive UI</li>
+              <li>Visual hierarchy</li>
+            </ul>
+          </article>
+
+          <article class="skill-panel coder" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="900" data-aos-delay="200">
+            <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-code-block"></i></div>
+            <h2 class="gradient">Coder</h2>
+            <p>
+              Skilled in JavaScript (ES6+), DOM work, Git &amp; GitHub, and building
+              interactive experiences that ship cleanly.
+            </p>
+            <ul class="skill-list">
+              <li>JavaScript ES6+</li>
+              <li>DOM &amp; interactivity</li>
+              <li>Git &amp; GitHub</li>
+            </ul>
+          </article>
         </div>
 
-        <div class="coder">
-          <h1 class="gradient">Coder <i class="bx bx-code-block"></i></h1>
-          <p>
-            Skilled in JavaScript (ES6+), DOM work, Git &amp; GitHub, and building
-            interactive experiences that ship cleanly.
-          </p>
-        </div>
-
-        <div class="slider" style="--width: 100px; --height: 100px; --quantity: 9;">
+        <div class="slider" style="--width: 100px; --height: 100px; --quantity: 9;" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="250">
           <div class="list">
             <div class="item" style="--position: 1"><img src="images/1.png" alt="Skill icon 1" /></div>
             <div class="item" style="--position: 2"><img src="images/2.png" alt="Skill icon 2" /></div>
@@ -246,52 +273,72 @@
     </section>
 
     <section class="contact-section" id="contact">
-      <h1 class="section-title autoDisplay">Let's talk😊</h1>
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900">Let's talk</h1>
+      <p class="contact-lead" data-aos="fade-up" data-aos-duration="900">
+        Whether you're looking to build a new website, improve an existing
+        platform, or bring a unique project to life — I'm here to help.
+      </p>
 
-      <div class="social-box autoBlur">
-        <a href="mailto:hello@example.com"><i class="bx bxs-envelope"></i> Email me</a>
-        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener">
-          <i class="bx bxl-github"></i> GitHub Profile
-        </a>
-        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener">
-          <i class="bx bxl-linkedin-square"></i> LinkedIn
-        </a>
-        <div class="social-icons">
-          <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+      <div class="contact-layout">
+        <aside class="social-box" data-aos="fade-right" data-aos-duration="1000">
+          <h2 class="contact-aside-title">Reach me directly</h2>
+          <a href="mailto:m.talha.qamar.1st@gmail.com" data-aos="fade-up" data-aos-delay="100">
+            <i class="bx bxs-envelope"></i>
+            <span>
+              <strong>Email</strong>
+              <small>m.talha.qamar.1st@gmail.com</small>
+            </span>
+          </a>
+          <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="200">
             <i class="bx bxl-github"></i>
+            <span>
+              <strong>GitHub</strong>
+              <small>Muhammad-Talha-Qamar</small>
+            </span>
           </a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+          <a href="https://www.linkedin.com/in/m-talha-qamar-96765b435/" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="300">
             <i class="bx bxl-linkedin-square"></i>
+            <span>
+              <strong>LinkedIn</strong>
+              <small>Talha Qamar</small>
+            </span>
           </a>
-        </div>
+        </aside>
+
+        <form class="contact-box" id="contact-form" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="150" novalidate>
+          <div class="contact-field">
+            <label for="name">Full Name</label>
+            <input id="name" name="name" placeholder="Your full name" type="text" autocomplete="name" required />
+          </div>
+
+          <div class="contact-field">
+            <label for="email">Email Address</label>
+            <input id="email" name="email" placeholder="Your email" type="email" autocomplete="email" required />
+          </div>
+
+          <div class="contact-field contact-field--full">
+            <label for="message">Your Message</label>
+            <textarea id="message" name="message" class="input-message" placeholder="Share your thoughts..." required></textarea>
+          </div>
+
+          <input class="contact-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+          <p class="contact-status" id="contact-status" role="status" aria-live="polite" hidden></p>
+
+          <button type="submit" id="contact-submit" data-magnetic data-aos="bounce" data-aos-delay="200">
+            Send Message <i class="bx bx-mail-send"></i>
+          </button>
+        </form>
       </div>
-
-      <form class="contact-box autoBlur" id="contact-form">
-        <p>
-          Whether you're looking to build a new website, improve an existing
-          platform, or bring a unique project to life — I'm here to help.
-        </p>
-
-        <label for="name">Full Name</label>
-        <input id="name" name="name" placeholder="Your full name" type="text" required />
-
-        <label for="email">Email Address</label>
-        <input id="email" name="email" placeholder="Your email" type="email" required />
-
-        <label for="message">Your Message</label>
-        <textarea id="message" name="message" class="input-message" placeholder="Share your thoughts..." required></textarea>
-
-        <button type="submit">Send Message <i class="bx bx-mail-send"></i></button>
-      </form>
     </section>
 
-    <footer class="footer">
+    <footer class="footer" data-aos="fade-up" data-aos-duration="900">
       <h1>© <span id="year">2026</span>, Made with ❤️ by Muhammad Talha Qamar</h1>
       <div class="box-icons">
         <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
           <i class="bx bxl-github"></i>
         </a>
-        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+        <a href="https://www.linkedin.com/in/m-talha-qamar-96765b435/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
           <i class="bx bxl-linkedin-square"></i>
         </a>
       </div>
@@ -301,7 +348,13 @@
   <script src="main.js"></script>
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script>
-    AOS.init({ once: true, offset: 80 });
+    AOS.init({
+      once: false,
+      offset: 80,
+      duration: 700,
+      easing: "ease-out-cubic",
+      mirror: true
+    });
   </script>
 </body>
 </html>
