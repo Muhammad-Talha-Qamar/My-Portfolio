@@ -3,476 +3,281 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Muhammad Talha Qamar — frontend developer. Responsive, clean, and extremely pokeable web apps." />
+  <meta name="theme-color" content="#090a0f" />
   <title>Muhammad Talha Qamar | Portfolio</title>
-  
-  <style>
-    /* --- CSS VARIABLES & RESET --- */
-    :root {
-      --bg: #090a0f;
-      --card-bg: #13151f;
-      --text: #f0f0f5;
-      --text-muted: #8e8ea0;
-      --accent-1: #6366f1;
-      --accent-2: #a855f7;
-      --border: #242738;
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%BE%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    document.documentElement.classList.add("js");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("reduce-motion");
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* --- NAVIGATION --- */
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 1.5rem 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(9, 10, 15, 0.75);
-      backdrop-filter: blur(12px);
-      z-index: 1000;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .logo {
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-    }
-
-    /* --- SECTIONS --- */
-    section {
-      padding: 8rem 8% 4rem;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .section-title {
-      font-size: 2rem;
-      margin-bottom: 3rem;
-      position: relative;
-      display: inline-block;
-    }
-
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 0;
-      width: 40px;
-      height: 3px;
-      background: var(--accent-1);
-      border-radius: 2px;
-    }
-
-    /* --- HERO SECTION --- */
-    .hero {
-      align-items: flex-start;
-      position: relative;
-    }
-
-    .badge {
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: var(--accent-1);
-      font-size: 0.875rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin-bottom: 2.5rem;
-    }
-
-    .hero-btns {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .cta-btn {
-      padding: 0.9rem 2.2rem;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #fff;
-      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .cta-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
-    }
-
-    .secondary-btn {
-      padding: 0.9rem 2.2rem;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      transition: background 0.3s, border-color 0.3s;
-    }
-
-    .secondary-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--accent-1);
-    }
-
-    /* --- SKILLS GRID --- */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      width: 100%;
-    }
-
-    .skill-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 2rem;
-      border-radius: 12px;
-      transition: transform 0.3s, border-color 0.3s;
-    }
-
-    .skill-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent-1);
-    }
-
-    .skill-card h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .skill-card p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    /* --- PROJECTS GRID --- */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      width: 100%;
-    }
-
-    .project-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.3s, border-color 0.3s;
-    }
-
-    .project-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent-2);
-    }
-
-    .project-tags {
-      display: flex;
-      gap: 0.5rem;
-      margin: 1rem 0 1.5rem;
-    }
-
-    .tag {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.75rem;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 4px;
-      color: var(--text-muted);
-    }
-
-    .project-link {
-      color: var(--accent-1);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    /* --- CONTACT --- */
-    .contact-box {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 3rem;
-      border-radius: 16px;
-      max-width: 600px;
-      width: 100%;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 0.8rem;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      outline: none;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      border-color: var(--accent-1);
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      border-top: 1px solid var(--border);
-    }
-
-    /* --- NATIVE SCROLL & FADE ANIMATIONS --- */
-    .animate-hero {
-      animation: heroFadeUp 0.8s ease-out forwards;
-    }
-
-    @keyframes heroFadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .scroll-target {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-
-    .scroll-target.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+    try {
+      var savedTheme = localStorage.getItem("talha-theme");
+      if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+    } catch (err) { /* storage blocked */ }
+  </script>
 </head>
 <body>
+  <a class="skip" href="#about">Skip to content</a>
 
-  <!-- NAVIGATION -->
-  <nav>
-    <div class="logo">&lt;Talha /&gt;</div>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="spotlight" aria-hidden="true"></div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+
+  <div id="boot" role="dialog" aria-label="Loading">
+    <p class="boot-logo">&lt;Talha /&gt;</p>
+    <div class="boot-bar" aria-hidden="true"><span></span></div>
+    <p id="boot-text">teaching pixels to dance…</p>
+    <p class="boot-skip">click anywhere to skip</p>
+  </div>
+
+  <nav aria-label="Primary">
+    <a class="logo" href="#about">&lt;Talha /&gt;</a>
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-panel">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-panel" id="nav-panel">
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#playground">Play</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="icon-btn" id="sound-toggle" type="button" aria-pressed="false" title="Toggle sound effects">sfx off</button>
+        <button class="icon-btn" id="party-toggle" type="button" aria-pressed="false" title="Shortcut: P">Party</button>
+      </div>
+    </div>
   </nav>
 
-  <!-- HERO SECTION -->
-  <section class="hero" id="about">
-    <div class="badge animate-hero">Frontend Developer</div>
-    <h1 class="animate-hero">Hi, I'm <span>Muhammad Talha Qamar</span>.<br>"I build responsive, clean web applications."</h1>
-    <p class="animate-hero">Passionate about creating modern, interactive, and responsive websites using HTML, CSS, and JavaScript.</p>
-    <div class="hero-btns animate-hero">
-      <a href="#projects" class="cta-btn">View Projects</a>
-      <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" class="secondary-btn">GitHub Profile</a>
-    </div>
-  </section>
+  <main>
+    <section class="hero" id="about">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="badge animate-hero">Frontend Developer</div>
+          <p class="rotator animate-hero" id="role">building playful interfaces</p>
+          <h1 class="animate-hero" aria-label="Hi, I'm Muhammad Talha Qamar.">Hi, I'm <span class="name" id="name" aria-hidden="true">Muhammad Talha Qamar.</span></h1>
+          <p class="tagline animate-hero">"I build responsive, clean web applications."</p>
+          <p class="lede animate-hero">Passionate about creating modern, interactive, and responsive websites using HTML, CSS, and JavaScript.</p>
+          <div class="hero-btns animate-hero">
+            <a class="cta-btn magnet" href="#projects">View Projects</a>
+            <a class="secondary-btn magnet" href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener">GitHub Profile</a>
+            <button class="secondary-btn magnet" id="surprise" type="button">Surprise me</button>
+          </div>
+          <p class="hint animate-hero"><kbd>P</kbd> party · <kbd>B</kbd> boop · the terminal loves <kbd>help</kbd></p>
+        </div>
 
-  <!-- SKILLS SECTION -->
-  <section id="skills">
-    <h2 class="section-title scroll-target">Technical Skills</h2>
-    <div class="skills-grid">
-      <div class="skill-card scroll-target">
-        <h3>HTML5</h3>
-        <p>Semantic structuring, accessible element markup, and clean DOM hierarchy.</p>
-      </div>
-      <div class="skill-card scroll-target">
-        <h3>CSS3 & Layouts</h3>
-        <p>Flexbox, CSS Grid, custom properties, keyframes, and responsive layouts.</p>
-      </div>
-      <div class="skill-card scroll-target">
-        <h3>JavaScript (ES6+)</h3>
-        <p>DOM selection & manipulation, event listeners, array methods, and dynamic rendering.</p>
-      </div>
-      <div class="skill-card scroll-target">
-        <h3>Git & GitHub</h3>
-        <p>Version control, managing repositories, hosting projects, and collaboration.</p>
-      </div>
-    </div>
-  </section>
+        <div class="hero-side">
+          <div class="buddy-wrap" id="buddy-wrap">
+            <button class="buddy" id="buddy" type="button" title="Click or press B" aria-label="Boop the blob">
+              <span class="shine" aria-hidden="true"></span>
+              <span class="eye left" aria-hidden="true"><span class="pupil"></span></span>
+              <span class="eye right" aria-hidden="true"><span class="pupil"></span></span>
+              <span class="shades" aria-hidden="true"></span>
+              <span class="mouth" aria-hidden="true"></span>
+            </button>
+            <p class="buddy-status" id="buddy-status">boop me</p>
+          </div>
 
-  <!-- PROJECTS SECTION -->
-  <section id="projects">
-    <h2 class="section-title scroll-target">Featured Projects</h2>
-    <div class="projects-grid">
-      
-      <!-- Project 1 -->
-      <div class="project-card scroll-target">
-        <div>
-          <h3>Interactive Web App</h3>
-          <p>A modern frontend application featuring dynamic JS logic and custom responsive design.</p>
-          <div class="project-tags">
-            <span class="tag">HTML</span>
-            <span class="tag">CSS</span>
-            <span class="tag">JavaScript</span>
+          <div class="terminal" id="terminal">
+            <div class="term-bar">
+              <button class="dot red" id="dot-red" type="button" aria-label="Pretend to close the terminal"></button>
+              <button class="dot yellow" id="dot-yellow" type="button" aria-label="Squash the terminal for a second"></button>
+              <button class="dot green" id="dot-green" type="button" aria-label="Toggle party mode"></button>
+              <span class="term-title">talha — bash</span>
+            </div>
+            <div class="term-body" id="term-body">
+              <div id="term-out" role="log" aria-live="polite" aria-relevant="additions"></div>
+              <form id="term-form" autocomplete="off">
+                <label class="term-prompt">
+                  <span aria-hidden="true">talha@portfolio:~$</span>
+                  <input id="term-cmd" type="text" aria-label="Terminal command" spellcheck="false" autocapitalize="off" placeholder="try help" />
+                </label>
+              </form>
+            </div>
           </div>
         </div>
-        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" class="project-link">View Repository &rarr;</a>
       </div>
+    </section>
 
-      <!-- Project 2 -->
-      <div class="project-card scroll-target">
-        <div>
-          <h3>Responsive Web Interface</h3>
-          <p>Sleek dark-mode showcase built with clean CSS keyframe effects and flex layout.</p>
-          <div class="project-tags">
-            <span class="tag">HTML</span>
-            <span class="tag">CSS Keyframes</span>
-            <span class="tag">CSS Grid</span>
+    <section id="skills">
+      <h2 class="section-title scroll-target">Technical Skills</h2>
+      <p class="section-lead scroll-target">Poke a card. The bars are honest. The quips are not.</p>
+      <div class="skills-grid">
+        <div class="skill-card tilt scroll-target" tabindex="0" role="button" aria-pressed="false" data-skill="HTML5" data-quip="Semantic tags are my love language.">
+          <h3>HTML5</h3>
+          <p>Semantic structuring, accessible element markup, and clean DOM hierarchy.</p>
+          <div class="bar" role="meter" aria-label="HTML5" aria-valuemin="0" aria-valuemax="100" aria-valuenow="90">
+            <span data-level="90"></span>
+          </div>
+          <p class="quip" hidden></p>
+        </div>
+        <div class="skill-card tilt scroll-target" tabindex="0" role="button" aria-pressed="false" data-skill="CSS3 & Layouts" data-quip="If it can be a grid, it will be a grid.">
+          <h3>CSS3 &amp; Layouts</h3>
+          <p>Flexbox, CSS Grid, custom properties, keyframes, and responsive layouts.</p>
+          <div class="bar" role="meter" aria-label="CSS3 and layouts" aria-valuemin="0" aria-valuemax="100" aria-valuenow="86">
+            <span data-level="86"></span>
+          </div>
+          <p class="quip" hidden></p>
+        </div>
+        <div class="skill-card tilt scroll-target" tabindex="0" role="button" aria-pressed="false" data-skill="JavaScript (ES6+)" data-quip="I speak fluent addEventListener.">
+          <h3>JavaScript (ES6+)</h3>
+          <p>DOM selection &amp; manipulation, event listeners, array methods, and dynamic rendering.</p>
+          <div class="bar" role="meter" aria-label="JavaScript" aria-valuemin="0" aria-valuemax="100" aria-valuenow="84">
+            <span data-level="84"></span>
+          </div>
+          <p class="quip" hidden></p>
+        </div>
+        <div class="skill-card tilt scroll-target" tabindex="0" role="button" aria-pressed="false" data-skill="Git & GitHub" data-quip="Commit messages I only slightly regret.">
+          <h3>Git &amp; GitHub</h3>
+          <p>Version control, managing repositories, hosting projects, and collaboration.</p>
+          <div class="bar" role="meter" aria-label="Git and GitHub" aria-valuemin="0" aria-valuemax="100" aria-valuenow="78">
+            <span data-level="78"></span>
+          </div>
+          <p class="quip" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2 class="section-title scroll-target">Featured Projects</h2>
+      <p class="section-lead scroll-target">Tilt the cards. The spotlight follows your cursor.</p>
+      <div class="projects-grid">
+        <article class="project-card tilt scroll-target">
+          <div>
+            <h3>Interactive Web App</h3>
+            <p>A modern frontend application featuring dynamic JS logic and custom responsive design.</p>
+            <div class="project-tags">
+              <span class="tag">HTML</span>
+              <span class="tag">CSS</span>
+              <span class="tag">JavaScript</span>
+            </div>
+          </div>
+          <a class="project-link" href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener">View Repository <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="project-card tilt scroll-target">
+          <div>
+            <h3>Responsive Web Interface</h3>
+            <p>Sleek dark-mode showcase built with clean CSS keyframe effects and flex layout.</p>
+            <div class="project-tags">
+              <span class="tag">HTML</span>
+              <span class="tag">CSS Keyframes</span>
+              <span class="tag">CSS Grid</span>
+            </div>
+          </div>
+          <a class="project-link" href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener">View Repository <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="project-card tilt scroll-target">
+          <div>
+            <h3>This Portfolio</h3>
+            <p>The page you are on. A blob, a terminal, particles, and a production-bug emergency.</p>
+            <div class="project-tags">
+              <span class="tag you">you are here</span>
+              <span class="tag">HTML</span>
+              <span class="tag">CSS</span>
+              <span class="tag">JavaScript</span>
+            </div>
+          </div>
+          <a class="project-link" href="#playground">Go squash bugs <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section id="playground">
+      <h2 class="section-title scroll-target">Bug Hunt</h2>
+      <p class="section-lead scroll-target">They escaped into production. You have 20 seconds. Combos pay extra.</p>
+      <div class="game-panel scroll-target">
+        <div class="hud" aria-hidden="true">
+          <span>Score <strong id="score">0</strong></span>
+          <span>Combo <strong id="combo">x0</strong></span>
+          <span>Time <strong id="time">20</strong></span>
+        </div>
+        <div class="arena" id="arena">
+          <pre class="fake-code" aria-hidden="true">function ship(build) {
+  if (bugs.length) return panic();
+  console.log("clean build");
+  return build.celebrate();
+}
+
+// status: the bugs are unionizing
+const deploy = () => ship({ celebrate });</pre>
+          <div class="game-overlay" id="game-overlay">
+            <h3 id="game-title">Squash the bugs</h3>
+            <p id="game-desc">Click them before they ship. Misses reset your combo.</p>
+            <p class="best">Best score: <strong id="best">0</strong></p>
+            <button class="cta-btn magnet" id="start-game" type="button">Start shift</button>
           </div>
         </div>
-        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" class="project-link">View Repository &rarr;</a>
+        <p id="game-result" class="sr-only" aria-live="polite"></p>
       </div>
+    </section>
 
-    </div>
-  </section>
+    <section id="contact">
+      <h2 class="section-title scroll-target">Get In Touch</h2>
+      <p class="section-lead scroll-target">Type something. The transmission panel repeats it back, with more drama.</p>
+      <div class="contact-layout">
+        <aside class="transmission scroll-target" id="transmission">
+          <p class="tx-kicker">live transmission</p>
+          <p class="tx-from">From <strong id="tx-who">someone out there</strong></p>
+          <p class="tx-mail" id="tx-mail">no email yet</p>
+          <p class="tx-preview is-empty" id="tx-preview">Your message will appear here as you type…</p>
+          <div class="vibe">
+            <span>vibe</span>
+            <div class="vibe-track"><span id="vibe-fill"></span></div>
+            <span id="vibe-emoji" aria-hidden="true">…</span>
+          </div>
+        </aside>
 
-  <!-- CONTACT SECTION -->
-  <section id="contact">
-    <h2 class="section-title scroll-target">Get In Touch</h2>
-    <div class="contact-box scroll-target">
-      <form id="contact-form">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" placeholder="Your name" required />
+        <div class="contact-box scroll-target">
+          <form id="contact-form">
+            <div class="stickers" aria-label="Add a sticker">
+              <button type="button" data-sticker="👋" aria-label="Add wave sticker">👋</button>
+              <button type="button" data-sticker="🚀" aria-label="Add rocket sticker">🚀</button>
+              <button type="button" data-sticker="🐛" aria-label="Add bug sticker">🐛</button>
+              <button type="button" data-sticker="☕" aria-label="Add coffee sticker">☕</button>
+              <button type="button" data-sticker="✨" aria-label="Add sparkle sticker">✨</button>
+            </div>
+            <div class="form-group">
+              <label for="name-input">Name</label>
+              <input type="text" id="name-input" name="name" placeholder="Your name" autocomplete="name" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required />
+            </div>
+            <div class="form-group">
+              <div class="label-row">
+                <label for="message">Message</label>
+                <span id="count">0/500</span>
+              </div>
+              <textarea id="message" name="message" rows="4" maxlength="500" placeholder="Your message..." required></textarea>
+            </div>
+            <button class="cta-btn" id="send-btn" type="submit">Send Message</button>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="your@email.com" required />
-        </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" rows="4" placeholder="Your message..." required></textarea>
-        </div>
-        <button type="submit" class="cta-btn" style="width: 100%;">Send Message</button>
-      </form>
-    </div>
-  </section>
+      </div>
+    </section>
+  </main>
 
   <footer>
-    <p> 2026 Muhammad Talha Qamar. Built with HTML, CSS & JS.</p>
+    <p>© <span id="year">2026</span> Muhammad Talha Qamar. Built with HTML, CSS &amp; <button class="text-btn" id="js-word" type="button">JavaScript</button>.</p>
   </footer>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
+  <div id="toasts" aria-live="polite" aria-relevant="additions"></div>
 
-      // Reveal elements on scroll using native IntersectionObserver
-      const observerOptions = {
-        threshold: 0.15
-      };
-
-      const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      // Target cards and section titles for scroll animations
-      const scrollElements = document.querySelectorAll(".scroll-target");
-      scrollElements.forEach(el => observer.observe(el));
-
-      // Contact Form Handler
-      const contactForm = document.getElementById("contact-form");
-      if (contactForm) {
-        contactForm.addEventListener("submit", (e) => {
-          e.preventDefault();
-          alert("Thanks! Your message has been sent.");
-          contactForm.reset();
-        });
-      }
-
-    });
-  </script>
+  <script src="main.js"></script>
 </body>
 </html>
