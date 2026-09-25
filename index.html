@@ -22,10 +22,16 @@
   </script>
 </head>
 <body>
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
   <div class="cursor-orb" aria-hidden="true"></div>
   <div class="cursor-ring" aria-hidden="true"></div>
+  <div class="bg-layer" aria-hidden="true">
+    <video class="back-vid" data-parallax="0.08" autoplay loop muted playsinline src="videos/galaxy.mp4"></video>
+    <canvas class="bg-canvas" id="bg-canvas"></canvas>
+    <div class="bg-aurora"></div>
+    <div class="bg-glow"></div>
+  </div>
   <div class="container">
-    <video class="back-vid" data-parallax="0.04" autoplay loop muted playsinline src="videos/galaxy.mp4"></video>
 
     <header class="site-header">
       <nav class="nav-inner" aria-label="Primary">
@@ -91,10 +97,6 @@
       </div>
     </aside>
 
-    <div class="blackhole-box" data-aos="fade-down" data-aos-duration="2000" data-parallax="0.08">
-      <video autoplay loop muted playsinline src="videos/blackhole.mp4"></video>
-    </div>
-
     <section class="hero" id="home">
       <div class="hero-info" data-aos="fade-right" data-aos-duration="1000">
         <div class="hero-info-title" data-aos="zoom-in" data-aos-delay="100">
@@ -102,7 +104,7 @@
           Front-end Developer Portfolio
         </div>
 
-        <h1 data-aos="fade-right" data-aos-duration="1200" data-aos-delay="200">
+        <h1 class="hero-title" data-split data-aos="fade-right" data-aos-duration="1200" data-aos-delay="200">
           Providing <span class="gradient">the best</span> Project
           <span class="gradient">Experience</span>
         </h1>
@@ -115,9 +117,14 @@
         <a class="hero-btn" href="#contact" data-aos="bounce" data-aos-delay="600" data-magnetic><i class="bx bx-send"></i> Contact Me</a>
       </div>
 
-      <div class="skills-video-box" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="300" data-parallax="0.18">
-        <div class="hero-photo-wrap" data-tilt data-tilt-max="10">
-          <img class="hero-photo" src="images/main.png" alt="Muhammad Talha Qamar" />
+      <div class="skills-video-box" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="300" data-parallax="0.1">
+        <div class="hero-photo-wrap hero-photo-float" data-tilt data-tilt-max="14">
+          <div class="hero-orbit" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="hero-photo-frame" data-spotlight>
+            <img class="hero-photo" src="images/main.png" alt="Muhammad Talha Qamar" />
+          </div>
         </div>
       </div>
 
@@ -125,10 +132,10 @@
     </section>
 
     <section class="info-section" id="about">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900">Hello, There👋</h1>
+        <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split>Hello, There</h1>
       <div class="info-cards">
         <div class="card" data-tilt data-spotlight data-aos="fade-right" data-aos-duration="900" data-aos-delay="0">
-          <h1>Hi there, I'm Talha</h1>
+          <h1 data-split>Hi there, I'm Talha</h1>
           <p>
             Frontend developer focused on clean layouts, responsive design, and
             interactive web experiences built with HTML, CSS, and JavaScript.
@@ -137,7 +144,7 @@
         </div>
 
         <div class="card" data-tilt data-spotlight data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
-          <h1>Tech Stack</h1>
+          <h1 data-split>Tech Stack</h1>
           <p>
             I work with semantic HTML5, modern CSS (Flexbox, Grid, animations),
             JavaScript ES6+, and Git &amp; GitHub for version control.
@@ -146,39 +153,114 @@
         </div>
 
         <div class="card" data-tilt data-spotlight data-aos="zoom-in" data-aos-duration="900" data-aos-delay="250">
-          <h1>Open to learning, building &amp; shipping</h1>
+          <h1 data-split>Open to learning, building &amp; shipping</h1>
           <p>
             Always exploring new frontend techniques and ready to collaborate on
             creative web projects.
           </p>
-          <div class="card-video-wrap" aria-hidden="true">
+          <div class="card-video-wrap" data-globe aria-hidden="true">
             <video src="videos/glob.mp4" autoplay loop muted playsinline></video>
+            <span class="globe-specular"></span>
           </div>
           <a class="card-btn" data-magnetic href="#contact"><i class="bx bx-send"></i> Contact Me</a>
         </div>
 
         <div class="card" data-tilt data-spotlight data-aos="bounce" data-aos-duration="1000" data-aos-delay="350">
-          <h1>My Passion for Coding</h1>
+          <h1 data-split>My Passion for Coding</h1>
           <p>
             I love solving problems and building things through code. Programming
             isn't just a skill — it's how I turn ideas into polished, interactive
             websites people enjoy using.
           </p>
-          <img class="passion-img" src="images/grid4.png" alt="Coding passion visual" />
+          <div class="passion-keyboard" data-passion-keys>
+            <img class="passion-img" src="images/grid4.png" alt="Coding passion visual" />
+            <svg class="passion-keys-svg" viewBox="0 0 1000 403" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <filter id="passion-key-glow" x="-120%" y="-120%" width="340%" height="340%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="tight" />
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="bloom" />
+                  <feMerge>
+                    <feMergeNode in="bloom" />
+                    <feMergeNode in="bloom" />
+                    <feMergeNode in="tight" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <!-- Top row -->
+              <rect class="passion-key" data-key x="272" y="109" width="56" height="68" rx="14" />
+              <rect class="passion-key" data-key x="353" y="109" width="56" height="68" rx="14" />
+              <rect class="passion-key" data-key x="432" y="109" width="57" height="68" rx="14" />
+              <rect class="passion-key" data-key x="511" y="109" width="57" height="68" rx="14" />
+              <rect class="passion-key" data-key x="591" y="109" width="56" height="68" rx="14" />
+              <!-- Middle row -->
+              <rect class="passion-key" data-key x="272" y="189" width="137" height="68" rx="14" />
+              <rect class="passion-key" data-key x="432" y="189" width="57" height="68" rx="14" />
+              <rect class="passion-key" data-key x="511" y="189" width="57" height="68" rx="14" />
+              <rect class="passion-key" data-key x="591" y="189" width="56" height="68" rx="14" />
+              <rect class="passion-key" data-key x="671" y="189" width="56" height="68" rx="14" />
+              <!-- Bottom row -->
+              <rect class="passion-key" data-key x="276" y="266" width="50" height="72" rx="14" />
+              <rect class="passion-key" data-key x="355" y="266" width="290" height="72" rx="16" />
+              <rect class="passion-key" data-key x="674" y="266" width="50" height="72" rx="14" />
+            </svg>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="my-project" id="projects">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900">My Projects 👨‍💻</h1>
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split>My Projects</h1>
 
-      <div class="project-card" data-tilt data-spotlight>
-        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website/" target="_blank" rel="noreferrer noopener" data-aos="fade-right" data-aos-duration="1000">
-          <img src="images/grid1.png" alt="BYD Dolphin Surf website preview" />
-          <div class="hover-sign"></div>
+      <div class="project-card" data-aos="fade-right" data-aos-duration="1000">
+        <a class="project-vidbox autoBlur" href="#contact" data-tilt data-spotlight data-tilt-max="14">
+          <img class="project-thumb--gaze" src="images/grid1.png" alt="DepthForge interactive 3D slider preview" />
+          <div class="hover-sign"><span>View</span></div>
         </a>
         <div class="project-info" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="150">
-          <h1>BYD <span class="gradient">Dolphin Surf</span> Website</h1>
+          <p class="project-tag">Slider Revolution</p>
+          <h1 class="project-title" data-split>
+            <span class="gradient">DepthForge</span>
+            <span class="project-title-sub">Interactive 3D Slider for WordPress</span>
+          </h1>
+          <p>
+            Immersive 3D depth, smooth layer motion, and interactive slide
+            controls built as a custom experience for WordPress.
+          </p>
+          <a class="project-btn" data-magnetic href="#contact">
+            <i class="bx bx-link-external"></i> Inquire
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card" data-aos="fade-left" data-aos-duration="1000">
+        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener" data-tilt data-spotlight data-tilt-max="14">
+          <img src="images/grid2.png" alt="Modern UI/UX hero section preview" />
+          <div class="hover-sign"><span>View</span></div>
+        </a>
+        <div class="project-info" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="150">
+          <p class="project-tag">Hero Section</p>
+          <h1 class="project-title" data-split>
+            Modern <span class="gradient">UI/UX</span> Design
+            <span class="project-title-sub">with Micro Interactions</span>
+          </h1>
+          <p>
+            Motion hierarchy, polished entrance animations, and micro
+            interactions in a conversion-led hero layout.
+          </p>
+          <a class="project-btn" data-magnetic href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener">
+            <i class="bx bx-link-external"></i> Website
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card" data-aos="fade-right" data-aos-duration="1000">
+        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/BYD-Dolphin-Surf-website/" target="_blank" rel="noreferrer noopener" data-tilt data-spotlight data-tilt-max="14">
+          <img class="project-thumb--byd" src="images/byd-studio.png" alt="BYD Dolphin Surf website preview" />
+          <div class="hover-sign"><span>View</span></div>
+        </a>
+        <div class="project-info" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="150">
+          <h1 data-split>BYD <span class="gradient">Dolphin Surf</span> Website</h1>
           <p>
             Product landing page for BYD’s Ocean Series EV — hero storytelling,
             feature sections, and a polished responsive layout.
@@ -189,28 +271,13 @@
         </div>
       </div>
 
-      <div class="project-card" data-tilt data-spotlight>
-        <a class="project-vidbox autoBlur" href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener" data-aos="fade-left" data-aos-duration="1000">
-          <img src="images/grid2.png" alt="SMIT Clone website preview" />
-        </a>
-        <div class="project-info" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="150">
-          <h1>SMIT <span class="gradient">Clone</span> Website</h1>
-          <p>
-            Saylani Mass IT Training clone covering courses, campuses, student
-            stories, and a full multi-section marketing layout.
-          </p>
-          <a class="project-btn" data-magnetic href="https://muhammad-talha-qamar.github.io/SMIT-Clone-Website/" target="_blank" rel="noreferrer noopener">
-            <i class="bx bx-link-external"></i> Website
-          </a>
-        </div>
-      </div>
-
-      <div class="project-card" data-tilt data-spotlight>
-        <a class="project-vidbox autoBlur" href="#home" data-aos="zoom-in" data-aos-duration="1000">
-          <img src="images/main.png" alt="This portfolio preview" />
+      <div class="project-card" data-aos="zoom-in" data-aos-duration="1000">
+        <a class="project-vidbox autoBlur" href="#home" data-tilt data-spotlight data-tilt-max="14">
+          <img class="project-thumb--portrait" src="images/main.png" alt="This portfolio preview" />
+          <div class="hover-sign"><span>Here</span></div>
         </a>
         <div class="project-info" data-aos="drop-down" data-aos-duration="1000" data-aos-delay="150">
-          <h1>Animated <span class="gradient">Portfolio</span></h1>
+          <h1 data-split>Animated <span class="gradient">Portfolio</span></h1>
           <p>
             This page — a space-themed animated portfolio with scroll effects,
             glowing UI, and a focus on frontend craft.
@@ -223,7 +290,7 @@
     </section>
 
     <section class="skills-section" id="skills">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900">My Skills 💪</h1>
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split>My Skills</h1>
 
       <div class="skills-box">
         <div class="skills-stage">
@@ -231,7 +298,7 @@
 
           <article class="skill-panel Designer" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">
             <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-laptop"></i></div>
-            <h2 class="gradient">Designer</h2>
+            <h2 class="gradient" data-split>Designer</h2>
             <p>
               Expertise in HTML, CSS layouts, visual hierarchy, and responsive
               interfaces that feel polished on every screen size.
@@ -245,7 +312,7 @@
 
           <article class="skill-panel coder" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="900" data-aos-delay="200">
             <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-code-block"></i></div>
-            <h2 class="gradient">Coder</h2>
+            <h2 class="gradient" data-split>Coder</h2>
             <p>
               Skilled in JavaScript (ES6+), DOM work, Git &amp; GitHub, and building
               interactive experiences that ship cleanly.
@@ -275,7 +342,7 @@
     </section>
 
     <section class="contact-section" id="contact">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900">Let's talk</h1>
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split>Let's talk</h1>
       <p class="contact-lead" data-aos="fade-up" data-aos-duration="900">
         Whether you're looking to build a new website, improve an existing
         platform, or bring a unique project to life — I'm here to help.
@@ -283,7 +350,7 @@
 
       <div class="contact-layout">
         <aside class="social-box" data-aos="fade-right" data-aos-duration="1000">
-          <h2 class="contact-aside-title">Reach me directly</h2>
+          <h2 class="contact-aside-title" data-split>Reach me directly</h2>
           <a href="mailto:m.talha.qamar.1st@gmail.com" data-aos="fade-up" data-aos-delay="100">
             <i class="bx bxs-envelope"></i>
             <span>
@@ -334,15 +401,31 @@
       </div>
     </section>
 
-    <footer class="footer" data-aos="fade-up" data-aos-duration="900">
-      <h1>© <span id="year">2026</span>, Made with ❤️ by Muhammad Talha Qamar</h1>
-      <div class="box-icons">
-        <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
-          <i class="bx bxl-github"></i>
+    <footer class="footer" data-animate="fade-up">
+      <div class="footer-inner">
+        <a class="footer-brand" href="#home">
+          <img src="images/main.png" alt="" />
+          <span><strong>Talha</strong> Qamar</span>
         </a>
-        <a href="https://www.linkedin.com/in/m-talha-qamar-96765b435/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
-          <i class="bx bxl-linkedin-square"></i>
-        </a>
+
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#skills">Skills</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="footer-meta">
+          <p class="footer-copy">© <span id="year">2026</span> Muhammad Talha Qamar</p>
+          <div class="footer-socials">
+            <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+              <i class="bx bxl-github"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/m-talha-qamar-96765b435/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+              <i class="bx bxl-linkedin-square"></i>
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   </div>
