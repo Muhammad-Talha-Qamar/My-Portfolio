@@ -524,8 +524,8 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   /* Image hover parallax — all major pictures */
   if (finePointer) {
     const motionTargets = [
-      { box: ".project-vidbox", media: "img:not(.project-thumb--gaze), video", x: 28, y: 20, scale: 1.12, follow: 0.14 },
-      { box: ".card", media: "img", x: 18, y: 14, scale: 1.08, follow: 0.14 },
+      { box: ".project-vidbox", media: "video", x: 28, y: 20, scale: 1.12, follow: 0.14 },
+      { box: ".card", media: "img", x: 10, y: 8, scale: 1.04, follow: 0.14 },
       { box: ".hero-photo-wrap", media: ".hero-photo, img", x: 12, y: 9, scale: 1.08, follow: 0.14 },
       { box: ".passion-keyboard", media: ".passion-img, img", x: 14, y: 10, scale: 1.05, follow: 0.14 },
       { box: ".left", media: "img", x: 6, y: 6, scale: 1.08, follow: 0.14 },
@@ -583,12 +583,12 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       });
     });
 
-    /* Man in DepthForge preview — turns to look at the cursor */
-    document.querySelectorAll(".project-thumb--gaze").forEach((el) => {
+    /* Project previews — image turns to look at the cursor */
+    document.querySelectorAll(".project-vidbox img").forEach((el) => {
       const host = el.closest(".project-vidbox") || el.parentElement;
       if (!host || boundMedia.has(el)) return;
       boundMedia.add(el);
-      el.classList.add("img-motion");
+      el.classList.add("img-motion", "project-thumb--gaze");
       host.classList.add("img-motion-host", "gaze-host");
 
       const maxX = 16;

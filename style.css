@@ -750,11 +750,11 @@ html[data-mode="light"] .hero-photo-wrap{
 .card h1{
     position: absolute;
     margin: 0;
-    bottom: 38%;
+    bottom: 26%;
     left: 5%;
     right: 5%;
     font-size: clamp(1.1rem, 2.2vw, 1.55rem);
-    z-index: 1;
+    z-index: 2;
     color: lightgray;
     line-height: 1.25;
 }
@@ -764,22 +764,79 @@ html[data-mode="light"] .hero-photo-wrap{
     bottom: 4%;
     left: 5%;
     right: 5%;
-    z-index: 1;
+    z-index: 2;
     max-width: 100%;
     color: gray;
     font-size: clamp(0.75rem, 1.5vw, 0.85rem);
     line-height: 1.45;
 }
 
-.card img{
-    width: 80%;
-    height: 50%;
+.card > img{
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    translate: -50% 0;
+    width: 78%;
+    height: 40%;
     object-fit: cover;
+    object-position: center;
     border-radius: 16px;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.card:first-child img{
+/* Cards 1–2: image + text stack in flow so title/body never overlap */
+.info-cards .card:nth-child(1),
+.info-cards .card:nth-child(2){
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.55rem;
+    min-height: 0;
+    height: auto;
+    padding: 1.1rem 1.15rem 1.25rem;
+}
+
+.info-cards .card:nth-child(1) > img,
+.info-cards .card:nth-child(2) > img{
+    position: relative;
+    top: auto;
+    left: auto;
+    translate: none;
+    order: -1;
+    width: 100%;
+    height: 7.75rem;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.info-cards .card:nth-child(1) h1,
+.info-cards .card:nth-child(2) h1{
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    margin: 0;
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+}
+
+.info-cards .card:nth-child(1) p,
+.info-cards .card:nth-child(2) p{
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    margin: 0;
+}
+
+.card:first-child > img{
     object-position: center top;
+}
+
+.card:nth-child(2) > img{
+    object-fit: contain;
+    object-position: center;
 }
 
 .card-video-wrap{
@@ -1036,8 +1093,9 @@ html[data-mode="light"] .passion-key{
     text-decoration: none;
     overflow: hidden;
     border-radius: 20px;
+    border: 1.5px solid rgba(140, 175, 255, 0.55);
     background: rgba(8, 12, 28, 0.55);
-    box-shadow: 0 0 0 1px rgba(140, 175, 255, 0.18);
+    box-shadow: 0 0 0 1px rgba(114, 161, 222, 0.12);
 }
 
 .project-vidbox video,
@@ -1047,7 +1105,9 @@ html[data-mode="light"] .passion-key{
     width: 100%;
     height: clamp(240px, 28vw, 320px);
     box-shadow: none;
-    border-radius: 20px;
+    border: none;
+    border-radius: 14px;
+    outline: none;
     transition: box-shadow 0.5s ease;
     will-change: transform;
     pointer-events: none;
@@ -1055,7 +1115,7 @@ html[data-mode="light"] .passion-key{
 
 .project-card video:hover,
 .project-vidbox:hover img{
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    box-shadow: none;
 }
 
 .project-thumb--byd{
@@ -2285,12 +2345,31 @@ body.nav-open{
     }
 
     .info-cards{
-        grid-template-columns: auto;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: auto;
     }
 
     .card:nth-child(3){
-        grid-column: span 2;
-        height: 70vh;
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        height: auto;
+        min-height: 100%;
+    }
+
+    .card:nth-child(4){
+        grid-column: 1 / -1;
+    }
+
+    .info-cards .card:nth-child(1),
+    .info-cards .card:nth-child(2){
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .info-cards .card:nth-child(1) > img,
+    .info-cards .card:nth-child(2) > img{
+        width: 100%;
+        height: clamp(8.5rem, 18vw, 11rem);
     }
 
     .info-cards .card h1{
@@ -2507,12 +2586,27 @@ body.nav-open{
 
 
     .info-cards{
-        grid-template-columns: auto;
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: none;
     }
 
     .card:nth-child(3){
-        grid-column: span 2;
-        height: 70vh;
+        grid-column: auto;
+        height: auto;
+        min-height: 28rem;
+    }
+
+    .info-cards .card:nth-child(1),
+    .info-cards .card:nth-child(2){
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .info-cards .card:nth-child(1) > img,
+    .info-cards .card:nth-child(2) > img{
+        width: 100%;
+        height: clamp(8rem, 28vw, 11rem);
     }
 
     .card-video-wrap{
@@ -2706,9 +2800,25 @@ body.nav-open{
         min-height: 20rem;
     }
 
+    .info-cards .card:nth-child(1),
+    .info-cards .card:nth-child(2){
+        min-height: 0;
+    }
+
+    .info-cards .card:nth-child(1) > img,
+    .info-cards .card:nth-child(2) > img{
+        height: 7rem;
+    }
+
     .card h1{
         bottom: 30%;
-        font-size: 5px;
+        font-size: clamp(1rem, 5vw, 1.25rem);
+    }
+
+    .info-cards .card:nth-child(1) h1,
+    .info-cards .card:nth-child(2) h1{
+        bottom: auto;
+        font-size: clamp(1rem, 5vw, 1.25rem);
     }
 
     .project-card {
@@ -3005,19 +3115,22 @@ header ul a.is-active::after,
 
 .card h1,
 .card p,
-.card-video-wrap,
-.card video,
-.card img,
 .card .card-btn,
 .card button,
 .skill-panel > *,
 .project-card > *{
-    z-index: 1;
+    z-index: 2;
+}
+
+.card-video-wrap,
+.card video,
+.card img,
+.card .passion-keyboard{
+    z-index: 0;
 }
 
 .card:hover,
-.skill-panel:hover,
-.project-card:hover{
+.skill-panel:hover{
     border-color: rgba(140, 175, 255, 0.55);
     box-shadow: 0 18px 40px rgba(40, 70, 160, 0.28);
 }
@@ -3061,7 +3174,7 @@ header ul a.is-active::after,
 }
 
 .project-vidbox{
-    transition: transform 0.4s var(--ease-spring), filter 0.4s ease, box-shadow 0.4s ease;
+    transition: transform 0.4s var(--ease-spring), filter 0.4s ease, box-shadow 0.4s ease, border-color 0.35s ease;
 }
 
 .project-vidbox[data-tilt]{
@@ -3072,9 +3185,10 @@ header ul a.is-active::after,
 
 .project-vidbox[data-tilt].is-tilting,
 .project-vidbox[data-tilt]:hover{
-    --lift: -10px;
-    --pscale: 1.03;
-    box-shadow: 0 18px 36px rgba(40, 70, 160, 0.35);
+    --lift: -8px;
+    --pscale: 1.02;
+    border-color: rgba(170, 200, 255, 0.75);
+    box-shadow: 0 0 0 1px rgba(114, 161, 222, 0.2), 0 16px 32px rgba(40, 70, 160, 0.22);
 }
 
 .project-vidbox img,
