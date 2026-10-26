@@ -10,5 +10,7 @@ After completing any code or content changes in this project:
 1. Commit the relevant changes with a concise message (why, not what)
 2. Push to `origin` on the current branch immediately
 3. Do not ask for confirmation before commit or push
+4. Watch the triggered GitHub Actions run (e.g. Deploy to Hostinger) until it finishes
+5. When it succeeds (or fails), report the status to the user briefly, including the run URL if useful
 
 Follow the existing git safety protocol (no force push to main/master, no amending pushed commits, no secrets in commits). This project rule overrides the default "only commit when asked" preference for this repository.
