@@ -1,0 +1,14 @@
+---
+description: Always commit and push after making changes
+alwaysApply: true
+---
+
+# Auto commit and push
+
+After completing any code or content changes in this project:
+
+1. Commit the relevant changes with a concise message (why, not what)
+2. Push to `origin` on the current branch immediately
+3. Do not ask for confirmation before commit or push
+
+Follow the existing git safety protocol (no force push to main/master, no amending pushed commits, no secrets in commits). This project rule overrides the default "only commit when asked" preference for this repository.
