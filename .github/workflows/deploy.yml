@@ -30,6 +30,8 @@ jobs:
             --exclude='.DS_Store' \
             --exclude='smit' \
             --exclude='dual-cop' \
+            --exclude='foodpanda' \
+            --exclude='byd' \
             --exclude='.htaccess.lifepilot.bak' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes" \
             ./ \
