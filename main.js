@@ -305,12 +305,18 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     });
   }
 
+  let cursorRaf = 0;
+
   function updateCursor() {
     if (!finePointer || !orb || !ring) return;
     orb.style.transform = `translate3d(${pointer.x}px, ${pointer.y}px, 0)`;
-    ringPos.x = lerp(ringPos.x, pointer.x, 0.18);
-    ringPos.y = lerp(ringPos.y, pointer.y, 0.18);
+    ringPos.x = lerp(ringPos.x, pointer.x, 0.22);
+    ringPos.y = lerp(ringPos.y, pointer.y, 0.22);
     ring.style.transform = `translate3d(${ringPos.x}px, ${ringPos.y}px, 0)`;
+    const settling =
+      Math.abs(ringPos.x - pointer.x) > 0.4 || Math.abs(ringPos.y - pointer.y) > 0.4;
+    if (settling) cursorRaf = requestAnimationFrame(updateCursor);
+    else cursorRaf = 0;
   }
 
   function onPointerMove(e) {
@@ -326,11 +332,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
         pointerTick = false;
       });
     }
-  }
-
-  function cursorLoop() {
-    updateCursor();
-    requestAnimationFrame(cursorLoop);
+    if (!cursorRaf) cursorRaf = requestAnimationFrame(updateCursor);
   }
 
   if (finePointer) {
@@ -338,7 +340,6 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     document.addEventListener("mouseenter", () => root.classList.add("cursor-on"));
     document.addEventListener("mouseleave", () => root.classList.remove("cursor-on"));
-    cursorLoop();
 
     document.querySelectorAll("a, button, .card, .skill-panel, .project-vidbox, input, textarea").forEach((el) => {
       el.addEventListener("pointerenter", () => root.classList.add("cursor-hover"));
@@ -521,16 +522,13 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     });
   }
 
-  /* Image hover parallax — all major pictures */
+  /* Image hover parallax — keep light, skip project carousel thumbs */
   if (finePointer) {
     const motionTargets = [
-      { box: ".project-vidbox", media: "video", x: 28, y: 20, scale: 1.12, follow: 0.14 },
-      { box: ".card", media: "img", x: 10, y: 8, scale: 1.04, follow: 0.14 },
-      { box: ".hero-photo-wrap", media: ".hero-photo, img", x: 12, y: 9, scale: 1.08, follow: 0.14 },
-      { box: ".passion-keyboard", media: ".passion-img, img", x: 14, y: 10, scale: 1.05, follow: 0.14 },
-      { box: ".left", media: "img", x: 6, y: 6, scale: 1.08, follow: 0.14 },
-      { box: ".footer-brand", media: "img", x: 6, y: 6, scale: 1.08, follow: 0.14 },
-      { box: ".slider .item", media: "img", x: 10, y: 10, scale: 1.1, follow: 0.14 },
+      { box: ".card", media: "img", x: 8, y: 6, scale: 1.03, follow: 0.18 },
+      { box: ".hero-photo-wrap", media: ".hero-photo, img", x: 10, y: 8, scale: 1.05, follow: 0.18 },
+      { box: ".passion-keyboard", media: ".passion-img, img", x: 10, y: 8, scale: 1.04, follow: 0.18 },
+      { box: ".slider .item", media: "img", x: 8, y: 8, scale: 1.06, follow: 0.18 },
     ];
 
     const boundMedia = new WeakSet();
@@ -545,7 +543,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
 
         const state = { x: 0, y: 0, tx: 0, ty: 0, s: 1, ts: 1 };
         let raf = 0;
-        const ease = follow || 0.14;
+        const ease = follow || 0.18;
 
         function tick() {
           state.x = lerp(state.x, state.tx, ease);
@@ -580,57 +578,6 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
           state.ts = 1;
           ensureTick();
         });
-      });
-    });
-
-    /* Project previews — image turns to look at the cursor */
-    document.querySelectorAll(".project-vidbox img").forEach((el) => {
-      const host = el.closest(".project-vidbox") || el.parentElement;
-      if (!host || boundMedia.has(el)) return;
-      boundMedia.add(el);
-      el.classList.add("img-motion", "project-thumb--gaze");
-      host.classList.add("img-motion-host", "gaze-host");
-
-      const maxX = 16;
-      const maxY = 22;
-      const state = { rx: 0, ry: 0, trx: 0, tryY: 0, s: 1, ts: 1 };
-      let raf = 0;
-
-      function tick() {
-        state.rx = lerp(state.rx, state.trx, 0.16);
-        state.ry = lerp(state.ry, state.tryY, 0.16);
-        state.s = lerp(state.s, state.ts, 0.14);
-        el.style.transform =
-          `perspective(700px) rotateX(${state.rx.toFixed(2)}deg) rotateY(${state.ry.toFixed(2)}deg)` +
-          ` scale(${state.s.toFixed(3)})`;
-        const moving =
-          Math.abs(state.rx - state.trx) > 0.02 ||
-          Math.abs(state.ry - state.tryY) > 0.02 ||
-          Math.abs(state.s - state.ts) > 0.002;
-        if (moving) raf = requestAnimationFrame(tick);
-        else raf = 0;
-      }
-
-      function ensureTick() {
-        if (!raf) raf = requestAnimationFrame(tick);
-      }
-
-      host.addEventListener("pointermove", (e) => {
-        const rect = host.getBoundingClientRect();
-        const px = (e.clientX - rect.left) / rect.width - 0.5;
-        const py = (e.clientY - rect.top) / rect.height - 0.5;
-        /* Face turns toward the cursor */
-        state.tryY = px * maxY * 2;
-        state.trx = -py * maxX * 2;
-        state.ts = 1.06;
-        ensureTick();
-      });
-
-      host.addEventListener("pointerleave", () => {
-        state.trx = 0;
-        state.tryY = 0;
-        state.ts = 1;
-        ensureTick();
       });
     });
   }
@@ -860,8 +807,13 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     chargeEl.setAttribute("aria-hidden", "true");
     document.body.appendChild(chargeEl);
 
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    const isNarrow = () => w < 800;
+
     function particleCount() {
-      return Math.min(150, Math.max(50, Math.floor((w * h) / 14000)));
+      const dens = isCoarse || isNarrow() ? 70000 : 42000;
+      const max = isCoarse || isNarrow() ? 28 : 48;
+      return Math.min(max, Math.max(16, Math.floor((w * h) / dens)));
     }
 
     function makeParticle() {
@@ -947,7 +899,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     }
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, isCoarse || isNarrow() ? 1 : 1.25);
       w = window.innerWidth;
       h = window.innerHeight;
       canvas.width = Math.floor(w * dpr);
@@ -957,8 +909,10 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const count = particleCount();
       if (particles.length !== count) particles = Array.from({ length: count }, makeParticle);
-      if (orbs.length < 5) orbs = Array.from({ length: 5 }, makeOrb);
-      if (dust.length < 40) dust = Array.from({ length: 40 }, makeDust);
+      const orbTarget = isCoarse || isNarrow() ? 2 : 3;
+      if (orbs.length !== orbTarget) orbs = Array.from({ length: orbTarget }, makeOrb);
+      const dustTarget = isCoarse || isNarrow() ? 0 : 18;
+      if (dust.length !== dustTarget) dust = Array.from({ length: dustTarget }, makeDust);
     }
 
     function drawAuroraOverlay(light) {
@@ -973,13 +927,22 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       }
     }
 
+    let frameSkip = 0;
+
     function draw() {
+      rafId = requestAnimationFrame(draw);
+      if (document.hidden) return;
+      /* Cap ~30fps when idle to keep scrolling smooth */
+      frameSkip ^= 1;
+      if (frameSkip && !mouse.down && mouse.speed < 2) return;
+
       ctx.clearRect(0, 0, w, h);
       tick += 1;
       const light = root.dataset.mode === "light";
       const mx = mouse.x;
       const my = mouse.y;
-      const connectDist = Math.min(140, w * 0.12);
+      const connectDist = Math.min(110, w * 0.1);
+      const linkStep = isCoarse || isNarrow() ? 3 : 2;
 
       const sy = window.scrollY;
       scrollVel = lerp(scrollVel, sy - lastScrollY, 0.25);
@@ -1141,16 +1104,17 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
         ctx.fillStyle = `hsla(${p.hue}, 85%, ${light ? 42 : 74}%, ${alpha})`;
         ctx.fill();
 
-        if (mouse.active && dist < 160) {
+        if (mouse.active && dist < 130) {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mx, my);
-          ctx.strokeStyle = `hsla(${p.hue}, 90%, ${light ? 45 : 72}%, ${(1 - dist / 160) * 0.35})`;
-          ctx.lineWidth = 0.75;
+          ctx.strokeStyle = `hsla(${p.hue}, 90%, ${light ? 45 : 72}%, ${(1 - dist / 130) * 0.28})`;
+          ctx.lineWidth = 0.7;
           ctx.stroke();
         }
 
-        for (let j = i + 1; j < particles.length; j++) {
+        /* Bounded neighbor checks — avoid O(n²) constellation cost */
+        for (let j = i + linkStep; j < Math.min(particles.length, i + 10); j += linkStep) {
           const q = particles[j];
           const d = Math.hypot(p.x - q.x, p.y - q.y);
           if (d < connectDist) {
@@ -1158,9 +1122,9 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(q.x, q.y);
             ctx.strokeStyle = light
-              ? `rgba(70, 100, 180, ${(1 - d / connectDist) * 0.15})`
-              : `rgba(140, 175, 255, ${(1 - d / connectDist) * 0.22})`;
-            ctx.lineWidth = 0.55;
+              ? `rgba(70, 100, 180, ${(1 - d / connectDist) * 0.12})`
+              : `rgba(140, 175, 255, ${(1 - d / connectDist) * 0.18})`;
+            ctx.lineWidth = 0.5;
             ctx.stroke();
           }
         }
@@ -1180,8 +1144,8 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
         ctx.fill();
       }
 
-      /* Meteors — more frequent */
-      if (Math.random() < 0.012 + warp * 0.04 && meteors.length < 5) spawnMeteor();
+      /* Meteors — sparse */
+      if (Math.random() < 0.004 + warp * 0.015 && meteors.length < 2) spawnMeteor();
       for (let i = meteors.length - 1; i >= 0; i--) {
         const m = meteors[i];
         m.x += m.vx;
@@ -1257,7 +1221,6 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
         }
       }
 
-      rafId = requestAnimationFrame(draw);
     }
 
     function isUiTarget(t) {
@@ -1314,27 +1277,31 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       if (!mouse.down) return;
       mouse.down = false;
       chargeEl.classList.remove("is-charging");
-      const power = 0.7 + mouse.charge * 2.2;
-      const count = Math.floor(24 + mouse.charge * 50);
+      const power = 0.55 + mouse.charge * 1.4;
+      const count = Math.floor(12 + mouse.charge * 18);
       spawnBurst(mouse.chargeX || e.clientX, mouse.chargeY || e.clientY, count, power);
-      if (mouse.charge > 0.55) {
-        for (let i = 0; i < 3; i++) spawnMeteor();
-      }
       mouse.charge = 0;
     });
 
     window.addEventListener("dblclick", (e) => {
       if (isUiTarget(e.target)) return;
-      spawnBurst(e.clientX, e.clientY, 60, 2.4);
-      for (let i = 0; i < 5; i++) spawnMeteor();
+      spawnBurst(e.clientX, e.clientY, 18, 1.4);
     });
 
     /* Theme toggle flash */
     modeToggle?.addEventListener("click", () => {
-      spawnBurst(window.innerWidth / 2, window.innerHeight * 0.2, 36, 1.4);
+      spawnBurst(window.innerWidth / 2, window.innerHeight * 0.2, 16, 1);
     });
 
-    window.addEventListener("resize", resize, { passive: true });
+    let resizeTimer = 0;
+    window.addEventListener(
+      "resize",
+      () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(resize, 120);
+      },
+      { passive: true }
+    );
     resize();
     draw();
 
@@ -1342,8 +1309,18 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       if (document.hidden) {
         cancelAnimationFrame(rafId);
         rafId = 0;
+        document.querySelectorAll("video").forEach((v) => {
+          try {
+            v.pause();
+          } catch (_) {
+            /* ignore */
+          }
+        });
       } else if (!rafId) {
         draw();
+        document.querySelectorAll("video[autoplay]").forEach((v) => {
+          v.play().catch(() => {});
+        });
       }
     });
   }
@@ -1490,6 +1467,35 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   });
 })();
 
+
+(() => {
+  const vid = document.querySelector(".back-vid");
+  const globe = document.querySelector(".card-video-wrap video");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = window.matchMedia("(max-width: 800px)").matches;
+  if (vid && (reduce || mobile)) {
+    vid.removeAttribute("autoplay");
+    vid.pause();
+    vid.removeAttribute("src");
+    vid.load();
+    vid.style.display = "none";
+  }
+  if (globe) {
+    const playWhenVisible = () => {
+      if (reduce || mobile) {
+        globe.pause();
+        return;
+      }
+      const io = new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) globe.play().catch(() => {});
+        else globe.pause();
+      }, { threshold: 0.15 });
+      io.observe(globe);
+    };
+    if ("IntersectionObserver" in window) playWhenVisible();
+  }
+})();
+
 (() => {
   const root = document.querySelector("[data-projects-carousel]");
   if (!root) return;
@@ -1503,7 +1509,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   const cards = [...(track?.querySelectorAll(":scope > .project-card") || [])];
   if (!track || !viewport || cards.length === 0) return;
 
-  const AUTOPLAY_MS = 5200;
+  const AUTOPLAY_MS = 6500;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   let page = 0;
@@ -1726,6 +1732,17 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   // Wait a frame so fonts/layout settle before first measure
   requestAnimationFrame(() => {
     layout();
-    startAutoplay();
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (entry?.isIntersecting) startAutoplay();
+          else stopAutoplay();
+        },
+        { threshold: 0.2 }
+      );
+      io.observe(root);
+    } else {
+      startAutoplay();
+    }
   });
 })();

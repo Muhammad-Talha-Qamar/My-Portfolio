@@ -1246,14 +1246,41 @@ html[data-mode="light"] .passion-key{
     align-items: stretch;
     gap: 0.75rem;
     justify-content: flex-start;
-    opacity: 0.72;
-    transform: translateY(6px) scale(0.985);
-    transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0.78;
+    transform: translateY(4px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    content-visibility: auto;
+    contain-intrinsic-size: 280px;
 }
 
 .project-card.is-active{
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
+}
+
+@media screen and (max-width: 900px){
+    .back-vid{
+        display: none !important;
+    }
+
+    .bg-aurora,
+    .bg-glow{
+        opacity: 0.45;
+        filter: blur(18px);
+    }
+
+    .site-header .nav-inner,
+    .projects-nav,
+    .hover-sign span{
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .back-vid{
+        display: none !important;
+    }
 }
 
 .project-card:last-of-type {
@@ -2226,23 +2253,14 @@ html[data-mode="light"] .menu-icon{
 
 /* BLUR EFFECT ANIMAION */
 
+/* Disabled: scroll-linked blur was a major jank source on project cards */
 .autoBlur{
-    animation: autoBlurAnimation linear both;
-    animation-timeline: view();
-    animation-range: entry 0% exit 100%;
+    animation: none;
 }
 @keyframes autoBlurAnimation{
-    0%{
-        filter: blur(20px);
-        opacity: 0.55;
-    }
-    12%, 88%{
-        filter: blur(0);
+    0%, 100%{
+        filter: none;
         opacity: 1;
-    }
-    100%{
-        filter: blur(12px);
-        opacity: 0.85;
     }
 }
 
