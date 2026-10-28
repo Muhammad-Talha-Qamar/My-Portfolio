@@ -32,6 +32,12 @@ jobs:
             --exclude='dual-cop' \
             --exclude='foodpanda' \
             --exclude='byd' \
+            --exclude='saffron-kitchen' \
+            --exclude='kfc' \
+            --exclude='mirage-works' \
+            --exclude='olx' \
+            --exclude='systems-website' \
+            --exclude='systes-website' \
             --exclude='.htaccess.lifepilot.bak' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes" \
             ./ \
