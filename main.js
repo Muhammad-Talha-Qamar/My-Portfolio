@@ -1499,18 +1499,23 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   const prevBtn = root.querySelector("[data-projects-prev]");
   const nextBtn = root.querySelector("[data-projects-next]");
   const dotsWrap = root.querySelector("[data-projects-dots]");
-  const cards = [...(track?.children || [])];
+  const progressBar = root.querySelector("[data-projects-progress]");
+  const cards = [...(track?.querySelectorAll(":scope > .project-card") || [])];
   if (!track || !viewport || cards.length === 0) return;
 
-  let index = 0;
+  const AUTOPLAY_MS = 5200;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let page = 0;
   let perView = 3;
-  let pages = 1;
+  let pageCount = 1;
   let autoTimer = 0;
+  let pointerId = null;
   let pointerStartX = 0;
   let pointerDelta = 0;
   let dragging = false;
-
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let suppressClick = false;
+  let cardStep = 0;
 
   function readPerView() {
     const raw = getComputedStyle(root).getPropertyValue("--projects-per-view").trim();
@@ -1518,31 +1523,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     return Number.isFinite(n) && n > 0 ? n : 1;
   }
 
-  function maxIndex() {
-    return Math.max(0, cards.length - perView);
-  }
-
-  function pageCount() {
-    return maxIndex() + 1;
-  }
-
-  function renderDots() {
-    if (!dotsWrap) return;
-    dotsWrap.innerHTML = "";
-    pages = pageCount();
-    for (let i = 0; i < pages; i += 1) {
-      const dot = document.createElement("button");
-      dot.type = "button";
-      dot.className = "projects-dot";
-      dot.setAttribute("role", "tab");
-      dot.setAttribute("aria-label", `Go to projects group ${i + 1}`);
-      dot.setAttribute("aria-selected", i === index ? "true" : "false");
-      dot.addEventListener("click", () => goTo(i, true));
-      dotsWrap.appendChild(dot);
-    }
-  }
-
-  function stepSize() {
+  function measureCardStep() {
     const card = cards[0];
     if (!card) return 0;
     const styles = getComputedStyle(track);
@@ -1550,96 +1531,171 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     return card.getBoundingClientRect().width + gap;
   }
 
-  function syncUi() {
-    const offset = -(index * stepSize());
-    track.style.transform = `translate3d(${offset}px, 0, 0)`;
-    if (prevBtn) prevBtn.disabled = index <= 0;
-    if (nextBtn) nextBtn.disabled = index >= maxIndex();
-    dotsWrap?.querySelectorAll(".projects-dot").forEach((dot, i) => {
-      dot.setAttribute("aria-selected", i === index ? "true" : "false");
+  function pageOffset(pageIndex) {
+    const start = pageIndex * perView;
+    const maxStart = Math.max(0, cards.length - perView);
+    return Math.min(start, maxStart);
+  }
+
+  function renderDots() {
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = "";
+    for (let i = 0; i < pageCount; i += 1) {
+      const start = pageOffset(i) + 1;
+      const end = Math.min(pageOffset(i) + perView, cards.length);
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "projects-dot";
+      dot.setAttribute("role", "tab");
+      dot.setAttribute("aria-label", `Projects ${start} to ${end}`);
+      dot.setAttribute("aria-selected", i === page ? "true" : "false");
+      dot.addEventListener("click", () => goTo(i, { user: true }));
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  function markActiveCards() {
+    const start = pageOffset(page);
+    cards.forEach((card, i) => {
+      const active = i >= start && i < start + perView;
+      card.classList.toggle("is-active", active);
+      card.setAttribute("aria-hidden", active ? "false" : "true");
     });
   }
 
-  function goTo(next, userInitiated = false) {
-    index = Math.max(0, Math.min(maxIndex(), next));
-    syncUi();
-    if (userInitiated) restartAutoplay();
+  function syncUi({ animate = true } = {}) {
+    cardStep = measureCardStep();
+    const offset = -(pageOffset(page) * cardStep);
+    if (!animate) track.style.transition = "none";
+    track.style.transform = `translate3d(${offset}px, 0, 0)`;
+    if (!animate) {
+      void track.offsetWidth;
+      track.style.transition = "";
+    }
+    dotsWrap?.querySelectorAll(".projects-dot").forEach((dot, i) => {
+      dot.setAttribute("aria-selected", i === page ? "true" : "false");
+    });
+    markActiveCards();
   }
 
-  function next() {
-    goTo(index >= maxIndex() ? 0 : index + 1, true);
-  }
-
-  function prev() {
-    goTo(index <= 0 ? maxIndex() : index - 1, true);
-  }
-
-  function layout() {
-    perView = readPerView();
-    index = Math.min(index, maxIndex());
-    renderDots();
-    syncUi();
+  function restartProgress() {
+    if (!progressBar) return;
+    progressBar.style.animation = "none";
+    void progressBar.offsetWidth;
+    if (prefersReducedMotion || pageCount <= 1) {
+      progressBar.style.width = "0%";
+      return;
+    }
+    progressBar.style.animation = `projects-progress ${AUTOPLAY_MS}ms linear forwards`;
   }
 
   function stopAutoplay() {
     window.clearInterval(autoTimer);
     autoTimer = 0;
+    root.classList.add("is-paused");
   }
 
   function startAutoplay() {
-    if (prefersReducedMotion || pageCount() <= 1) return;
+    if (prefersReducedMotion || pageCount <= 1) return;
     stopAutoplay();
+    root.classList.remove("is-paused");
+    restartProgress();
     autoTimer = window.setInterval(() => {
-      goTo(index >= maxIndex() ? 0 : index + 1);
-    }, 4500);
+      goTo(page + 1);
+    }, AUTOPLAY_MS);
   }
 
-  function restartAutoplay() {
-    stopAutoplay();
-    startAutoplay();
+  function goTo(nextPage, { user = false } = {}) {
+    page = ((nextPage % pageCount) + pageCount) % pageCount;
+    syncUi();
+    if (user) startAutoplay();
+    else restartProgress();
   }
 
-  prevBtn?.addEventListener("click", prev);
-  nextBtn?.addEventListener("click", next);
+  function next(user = true) {
+    goTo(page + 1, { user });
+  }
 
-  root.addEventListener("keydown", (e) => {
+  function prev(user = true) {
+    goTo(page - 1, { user });
+  }
+
+  function layout() {
+    perView = readPerView();
+    pageCount = Math.max(1, Math.ceil(cards.length / perView));
+    page = Math.min(page, pageCount - 1);
+    renderDots();
+    syncUi({ animate: false });
+  }
+
+  prevBtn?.addEventListener("click", () => prev(true));
+  nextBtn?.addEventListener("click", () => next(true));
+
+  viewport.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
-      prev();
+      prev(true);
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
-      next();
+      next(true);
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      goTo(0, { user: true });
+    } else if (e.key === "End") {
+      e.preventDefault();
+      goTo(pageCount - 1, { user: true });
     }
   });
+
+  viewport.addEventListener(
+    "click",
+    (e) => {
+      if (!suppressClick) return;
+      e.preventDefault();
+      e.stopPropagation();
+      suppressClick = false;
+    },
+    true
+  );
 
   viewport.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
     dragging = true;
+    suppressClick = false;
+    pointerId = e.pointerId;
     pointerStartX = e.clientX;
     pointerDelta = 0;
+    root.classList.add("is-dragging");
     stopAutoplay();
+    cardStep = measureCardStep();
     track.style.transition = "none";
     viewport.setPointerCapture?.(e.pointerId);
   });
 
   viewport.addEventListener("pointermove", (e) => {
-    if (!dragging) return;
+    if (!dragging || e.pointerId !== pointerId) return;
     pointerDelta = e.clientX - pointerStartX;
-    const offset = -index * stepSize() + pointerDelta;
-    track.style.transform = `translate3d(${offset}px, 0, 0)`;
+    if (Math.abs(pointerDelta) > 8) suppressClick = true;
+    const base = -(pageOffset(page) * cardStep);
+    track.style.transform = `translate3d(${base + pointerDelta}px, 0, 0)`;
   });
 
   function endDrag(e) {
-    if (!dragging) return;
+    if (!dragging || (e && pointerId != null && e.pointerId !== pointerId)) return;
     dragging = false;
+    root.classList.remove("is-dragging");
     track.style.transition = "";
-    const threshold = Math.min(90, viewport.clientWidth * 0.18);
-    if (pointerDelta > threshold) goTo(index - 1, true);
-    else if (pointerDelta < -threshold) goTo(index + 1, true);
-    else syncUi();
-    restartAutoplay();
+    const threshold = Math.max(56, Math.min(140, viewport.clientWidth * 0.16));
+    if (pointerDelta > threshold) prev(true);
+    else if (pointerDelta < -threshold) next(true);
+    else {
+      syncUi();
+      startAutoplay();
+    }
+    pointerId = null;
+    pointerDelta = 0;
     try {
-      viewport.releasePointerCapture?.(e.pointerId);
+      if (e?.pointerId != null) viewport.releasePointerCapture?.(e.pointerId);
     } catch (_) {
       /* ignore */
     }
@@ -1648,11 +1704,11 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   viewport.addEventListener("pointerup", endDrag);
   viewport.addEventListener("pointercancel", endDrag);
 
-  root.addEventListener("pointerenter", stopAutoplay);
-  root.addEventListener("pointerleave", startAutoplay);
-
-  window.addEventListener("resize", () => {
-    layout();
+  root.addEventListener("pointerenter", () => {
+    stopAutoplay();
+  });
+  root.addEventListener("pointerleave", () => {
+    if (!dragging) startAutoplay();
   });
 
   document.addEventListener("visibilitychange", () => {
@@ -1660,6 +1716,16 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     else startAutoplay();
   });
 
-  layout();
-  startAutoplay();
+  if (typeof ResizeObserver !== "undefined") {
+    const ro = new ResizeObserver(() => layout());
+    ro.observe(viewport);
+  } else {
+    window.addEventListener("resize", layout);
+  }
+
+  // Wait a frame so fonts/layout settle before first measure
+  requestAnimationFrame(() => {
+    layout();
+    startAutoplay();
+  });
 })();

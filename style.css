@@ -1075,121 +1075,185 @@ html[data-mode="light"] .passion-key{
 }
 
 .projects-carousel{
-    --projects-gap: 1.1rem;
+    --projects-gap: 1.15rem;
     --projects-per-view: 3;
+    --projects-slide-w: calc((100cqi - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
     position: relative;
     width: 100%;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-areas:
-        "prev viewport next"
-        "dots dots dots";
-    align-items: center;
-    column-gap: 0.65rem;
-    row-gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
 }
 
 .projects-viewport{
-    grid-area: viewport;
+    position: relative;
     overflow: hidden;
     width: 100%;
     min-width: 0;
     touch-action: pan-y;
-    border-radius: 16px;
+    border-radius: 18px;
+    container-type: inline-size;
+    container-name: projects;
+    outline: none;
+    mask-image: linear-gradient(90deg, transparent 0, #000 1.2%, #000 98.8%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1.2%, #000 98.8%, transparent 100%);
+}
+
+.projects-viewport:focus-visible{
+    box-shadow: 0 0 0 2px rgba(114, 161, 222, 0.65);
 }
 
 .projects-track{
     display: flex;
+    align-items: stretch;
     gap: var(--projects-gap);
     width: max-content;
-    min-width: 100%;
     will-change: transform;
-    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: grab;
+}
+
+.projects-carousel.is-dragging .projects-track{
+    cursor: grabbing;
+    transition: none;
+}
+
+.projects-carousel.is-dragging .project-vidbox,
+.projects-carousel.is-dragging .project-vidbox *{
+    pointer-events: none;
+}
+
+.projects-controls{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    width: 100%;
+}
+
+.projects-pager{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-width: min(11rem, 46vw);
 }
 
 .projects-nav{
-    width: 2.55rem;
-    height: 2.55rem;
+    width: 2.7rem;
+    height: 2.7rem;
     border-radius: 999px;
-    border: 1px solid rgba(140, 175, 255, 0.45);
-    background: rgba(8, 12, 28, 0.72);
+    border: 1px solid rgba(140, 175, 255, 0.5);
+    background: linear-gradient(180deg, rgba(28, 42, 78, 0.92), rgba(10, 16, 34, 0.88));
     color: #eef3ff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 8px 22px rgba(20, 40, 100, 0.28);
-    transition: transform 0.3s var(--ease-spring, cubic-bezier(0.22, 1, 0.36, 1)), border-color 0.25s ease, background-color 0.25s ease, opacity 0.25s ease;
+    box-shadow: 0 10px 24px rgba(20, 40, 100, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: transform 0.3s var(--ease-spring, cubic-bezier(0.22, 1, 0.36, 1)), border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
     z-index: 2;
+    flex: 0 0 auto;
 }
 
 .projects-nav i{
-    font-size: 1.55rem;
+    font-size: 1.6rem;
     line-height: 1;
 }
 
 .projects-nav:hover{
-    transform: scale(1.06);
-    border-color: rgba(170, 200, 255, 0.8);
-    background: rgba(20, 35, 70, 0.9);
+    transform: translateY(-1px) scale(1.05);
+    border-color: rgba(180, 210, 255, 0.9);
+    box-shadow: 0 14px 28px rgba(40, 70, 160, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .projects-nav:active{
     transform: scale(0.96);
 }
 
-.projects-nav:disabled{
-    opacity: 0.35;
-    cursor: default;
-    transform: none;
+.projects-nav:focus-visible{
+    outline: 2px solid rgba(140, 175, 255, 0.85);
+    outline-offset: 2px;
 }
 
-.projects-nav--prev{ grid-area: prev; }
-.projects-nav--next{ grid-area: next; }
-
 .projects-dots{
-    grid-area: dots;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.45rem;
+    gap: 0.4rem;
     flex-wrap: wrap;
 }
 
 .projects-dot{
-    width: 0.55rem;
-    height: 0.55rem;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 999px;
-    border: 1px solid rgba(140, 175, 255, 0.55);
-    background: rgba(114, 161, 222, 0.22);
+    border: 1px solid rgba(140, 175, 255, 0.5);
+    background: rgba(114, 161, 222, 0.2);
     padding: 0;
     cursor: pointer;
-    transition: width 0.3s ease, background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 
 .projects-dot[aria-selected="true"]{
-    width: 1.35rem;
-    background: #72a1de;
-    border-color: rgba(180, 210, 255, 0.9);
+    width: 1.5rem;
+    background: linear-gradient(90deg, #72a1de, #9ec0ff);
+    border-color: rgba(190, 215, 255, 0.95);
 }
 
 .projects-dot:hover{
-    transform: scale(1.12);
+    transform: scale(1.1);
     border-color: rgba(180, 210, 255, 0.85);
+}
+
+.projects-progress{
+    width: min(7.5rem, 100%);
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(114, 161, 222, 0.18);
+    overflow: hidden;
+}
+
+.projects-progress-bar{
+    display: block;
+    height: 100%;
+    width: 0%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #72a1de, #b7d2ff);
+    transform-origin: left center;
+}
+
+.projects-carousel.is-paused .projects-progress-bar,
+.projects-carousel.is-dragging .projects-progress-bar{
+    animation-play-state: paused !important;
+}
+
+@keyframes projects-progress {
+    from { width: 0%; }
+    to { width: 100%; }
 }
 
 .project-card {
     display: flex;
     flex-direction: column;
-    flex: 0 0 calc((100% - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
-    width: calc((100% - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
-    max-width: calc((100% - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
+    flex: 0 0 var(--projects-slide-w);
+    width: var(--projects-slide-w);
+    max-width: var(--projects-slide-w);
     height: auto;
     min-height: 0;
     min-width: 0;
     align-items: stretch;
-    gap: 0.7rem;
+    gap: 0.75rem;
     justify-content: flex-start;
+    opacity: 0.72;
+    transform: translateY(6px) scale(0.985);
+    transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.project-card.is-active{
+    opacity: 1;
+    transform: translateY(0) scale(1);
 }
 
 .project-card:last-of-type {
@@ -1992,10 +2056,10 @@ html[data-mode="light"] .project-info p:not(.project-tag){
 }
 
 html[data-mode="light"] .projects-nav{
-    background: rgba(255, 255, 255, 0.86);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(238, 242, 255, 0.92));
     color: #1c2340;
     border-color: #9eb0e0;
-    box-shadow: 0 8px 20px rgba(80, 110, 180, 0.18);
+    box-shadow: 0 8px 20px rgba(80, 110, 180, 0.16);
 }
 
 html[data-mode="light"] .projects-dot{
@@ -2004,8 +2068,16 @@ html[data-mode="light"] .projects-dot{
 }
 
 html[data-mode="light"] .projects-dot[aria-selected="true"]{
-    background: #3a5fd4;
+    background: linear-gradient(90deg, #3a5fd4, #6d8dff);
     border-color: #3a5fd4;
+}
+
+html[data-mode="light"] .projects-progress{
+    background: rgba(80, 110, 180, 0.16);
+}
+
+html[data-mode="light"] .projects-progress-bar{
+    background: linear-gradient(90deg, #3a5fd4, #6d8dff);
 }
 
 html[data-mode="light"] .project-tag{
@@ -2545,6 +2617,11 @@ body.nav-open{
         --projects-gap: 1rem;
     }
 
+    .projects-viewport{
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+
 }
 
 @media screen and (max-width: 980px){
@@ -2825,12 +2902,15 @@ body.nav-open{
     .projects-carousel{
         --projects-per-view: 2;
         --projects-gap: 0.95rem;
-        column-gap: 0.4rem;
     }
 
     .projects-nav{
-        width: 2.25rem;
-        height: 2.25rem;
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+
+    .projects-controls{
+        gap: 0.7rem;
     }
 
     .project-card{
@@ -2995,13 +3075,16 @@ body.nav-open{
 
     .projects-carousel{
         --projects-per-view: 1;
-        --projects-gap: 0;
-        column-gap: 0.35rem;
+        --projects-gap: 0.75rem;
     }
 
     .projects-nav{
-        width: 2.1rem;
-        height: 2.1rem;
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .projects-pager{
+        min-width: min(11rem, 48vw);
     }
 
     .project-info p{
