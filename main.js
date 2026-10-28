@@ -1537,10 +1537,21 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     return card.getBoundingClientRect().width + gap;
   }
 
+  function maxPixelOffset() {
+    const trackWidth = track.scrollWidth;
+    const viewWidth = viewport.clientWidth;
+    return Math.max(0, trackWidth - viewWidth);
+  }
+
   function pageOffset(pageIndex) {
     const start = pageIndex * perView;
     const maxStart = Math.max(0, cards.length - perView);
     return Math.min(start, maxStart);
+  }
+
+  function pixelOffsetForPage(pageIndex) {
+    const raw = pageOffset(pageIndex) * (cardStep || measureCardStep());
+    return Math.min(raw, maxPixelOffset());
   }
 
   function renderDots() {
@@ -1571,7 +1582,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
 
   function syncUi({ animate = true } = {}) {
     cardStep = measureCardStep();
-    const offset = -(pageOffset(page) * cardStep);
+    const offset = -pixelOffsetForPage(page);
     if (!animate) track.style.transition = "none";
     track.style.transform = `translate3d(${offset}px, 0, 0)`;
     if (!animate) {
@@ -1682,7 +1693,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     if (!dragging || e.pointerId !== pointerId) return;
     pointerDelta = e.clientX - pointerStartX;
     if (Math.abs(pointerDelta) > 8) suppressClick = true;
-    const base = -(pageOffset(page) * cardStep);
+    const base = -pixelOffsetForPage(page);
     track.style.transform = `translate3d(${base + pointerDelta}px, 0, 0)`;
   });
 
@@ -1691,7 +1702,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     dragging = false;
     root.classList.remove("is-dragging");
     track.style.transition = "";
-    const threshold = Math.max(56, Math.min(140, viewport.clientWidth * 0.16));
+    const threshold = Math.max(36, Math.min(120, viewport.clientWidth * 0.12));
     if (pointerDelta > threshold) prev(true);
     else if (pointerDelta < -threshold) next(true);
     else {

@@ -1089,7 +1089,8 @@ html[data-mode="light"] .passion-key{
 .projects-carousel{
     --projects-gap: 1.15rem;
     --projects-per-view: 3;
-    --projects-slide-w: calc((100cqi - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
+    --projects-peek: 0px;
+    --projects-slide-w: calc((100cqi - var(--projects-peek) - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
     position: relative;
     width: 100%;
     display: flex;
@@ -1447,6 +1448,18 @@ html[data-mode="light"] .passion-key{
 .project-vidbox:hover .hover-sign,
 .project-vidbox:focus-visible .hover-sign{
     opacity: 1;
+}
+
+@media (hover: none) and (pointer: coarse){
+    .project-card.is-active .project-vidbox .hover-sign{
+        opacity: 0.92;
+        background: linear-gradient(180deg, transparent 35%, rgba(6, 10, 24, 0.45));
+    }
+
+    .project-card.is-active .project-vidbox .hover-sign span{
+        transform: translateY(0) scale(1);
+        opacity: 0.95;
+    }
 }
 
 .hover-sign span{
@@ -2651,6 +2664,7 @@ body.nav-open{
     .projects-carousel{
         --projects-per-view: 2;
         --projects-gap: 1rem;
+        --projects-peek: 0px;
     }
 
     .projects-viewport{
@@ -2932,12 +2946,19 @@ body.nav-open{
         margin-top: 72px;
         margin-bottom: 44px;
         gap: 1rem;
-        width: 92%;
+        width: min(100%, 92%);
     }
 
     .projects-carousel{
-        --projects-per-view: 2;
-        --projects-gap: 0.95rem;
+        --projects-per-view: 1;
+        --projects-gap: 0.85rem;
+        --projects-peek: 2.75rem;
+    }
+
+    .projects-viewport{
+        border-radius: 14px;
+        mask-image: linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+        -webkit-mask-image: linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
     }
 
     .projects-nav{
@@ -2946,19 +2967,51 @@ body.nav-open{
     }
 
     .projects-controls{
-        gap: 0.7rem;
+        gap: 0.65rem;
+    }
+
+    .projects-pager{
+        min-width: 0;
+        flex: 1 1 auto;
+        max-width: min(14rem, 58vw);
+    }
+
+    .projects-dots{
+        gap: 0.35rem;
+        max-width: 100%;
+    }
+
+    .projects-progress{
+        width: min(6.5rem, 100%);
     }
 
     .project-card{
         flex-direction: column;
         margin-left: 0;
-        gap: 0.6rem;
+        gap: 0.55rem;
         min-height: 0;
     }
     
     .project-vidbox{
         min-width: 0;
         width: 100%;
+        border-radius: 12px;
+        aspect-ratio: 16 / 10;
+    }
+
+    .project-info{
+        padding: 0 0.1rem 0.15rem;
+    }
+
+    .project-info h1,
+    .project-info h2,
+    .project-title{
+        font-size: clamp(1.02rem, 4.2vw, 1.18rem);
+    }
+
+    .project-info p:not(.project-tag){
+        font-size: 0.84rem;
+        -webkit-line-clamp: 3;
     }
 
     .project-info h1,
@@ -3109,18 +3162,46 @@ body.nav-open{
         height: auto;
     }
 
+    .my-project{
+        width: min(100%, 94%);
+        margin-top: 64px;
+        margin-bottom: 40px;
+    }
+
     .projects-carousel{
         --projects-per-view: 1;
-        --projects-gap: 0.75rem;
+        --projects-gap: 0.7rem;
+        --projects-peek: 2.6rem;
+        gap: 0.95rem;
+    }
+
+    .projects-viewport{
+        border-radius: 12px;
+        mask-image: linear-gradient(90deg, #000 0, #000 90%, transparent 100%);
+        -webkit-mask-image: linear-gradient(90deg, #000 0, #000 90%, transparent 100%);
     }
 
     .projects-nav{
-        width: 2.25rem;
-        height: 2.25rem;
+        width: 2.2rem;
+        height: 2.2rem;
+    }
+
+    .projects-nav i{
+        font-size: 1.4rem;
     }
 
     .projects-pager{
-        min-width: min(11rem, 48vw);
+        min-width: 0;
+        max-width: min(12rem, 56vw);
+    }
+
+    .projects-dot{
+        width: 0.42rem;
+        height: 0.42rem;
+    }
+
+    .projects-dot[aria-selected="true"]{
+        width: 1.2rem;
     }
 
     .project-info p{
@@ -3129,6 +3210,10 @@ body.nav-open{
 
     .project-info{
         margin-left: 0;
+    }
+
+    .project-vidbox{
+        aspect-ratio: 16 / 11;
     }
 
     .skills-box{
