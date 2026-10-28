@@ -1489,3 +1489,177 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     });
   });
 })();
+
+(() => {
+  const root = document.querySelector("[data-projects-carousel]");
+  if (!root) return;
+
+  const track = root.querySelector("[data-projects-track]");
+  const viewport = root.querySelector("[data-projects-viewport]");
+  const prevBtn = root.querySelector("[data-projects-prev]");
+  const nextBtn = root.querySelector("[data-projects-next]");
+  const dotsWrap = root.querySelector("[data-projects-dots]");
+  const cards = [...(track?.children || [])];
+  if (!track || !viewport || cards.length === 0) return;
+
+  let index = 0;
+  let perView = 3;
+  let pages = 1;
+  let autoTimer = 0;
+  let pointerStartX = 0;
+  let pointerDelta = 0;
+  let dragging = false;
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function readPerView() {
+    const raw = getComputedStyle(root).getPropertyValue("--projects-per-view").trim();
+    const n = Number.parseInt(raw, 10);
+    return Number.isFinite(n) && n > 0 ? n : 1;
+  }
+
+  function maxIndex() {
+    return Math.max(0, cards.length - perView);
+  }
+
+  function pageCount() {
+    return maxIndex() + 1;
+  }
+
+  function renderDots() {
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = "";
+    pages = pageCount();
+    for (let i = 0; i < pages; i += 1) {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "projects-dot";
+      dot.setAttribute("role", "tab");
+      dot.setAttribute("aria-label", `Go to projects group ${i + 1}`);
+      dot.setAttribute("aria-selected", i === index ? "true" : "false");
+      dot.addEventListener("click", () => goTo(i, true));
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  function stepSize() {
+    const card = cards[0];
+    if (!card) return 0;
+    const styles = getComputedStyle(track);
+    const gap = Number.parseFloat(styles.columnGap || styles.gap) || 0;
+    return card.getBoundingClientRect().width + gap;
+  }
+
+  function syncUi() {
+    const offset = -(index * stepSize());
+    track.style.transform = `translate3d(${offset}px, 0, 0)`;
+    if (prevBtn) prevBtn.disabled = index <= 0;
+    if (nextBtn) nextBtn.disabled = index >= maxIndex();
+    dotsWrap?.querySelectorAll(".projects-dot").forEach((dot, i) => {
+      dot.setAttribute("aria-selected", i === index ? "true" : "false");
+    });
+  }
+
+  function goTo(next, userInitiated = false) {
+    index = Math.max(0, Math.min(maxIndex(), next));
+    syncUi();
+    if (userInitiated) restartAutoplay();
+  }
+
+  function next() {
+    goTo(index >= maxIndex() ? 0 : index + 1, true);
+  }
+
+  function prev() {
+    goTo(index <= 0 ? maxIndex() : index - 1, true);
+  }
+
+  function layout() {
+    perView = readPerView();
+    index = Math.min(index, maxIndex());
+    renderDots();
+    syncUi();
+  }
+
+  function stopAutoplay() {
+    window.clearInterval(autoTimer);
+    autoTimer = 0;
+  }
+
+  function startAutoplay() {
+    if (prefersReducedMotion || pageCount() <= 1) return;
+    stopAutoplay();
+    autoTimer = window.setInterval(() => {
+      goTo(index >= maxIndex() ? 0 : index + 1);
+    }, 4500);
+  }
+
+  function restartAutoplay() {
+    stopAutoplay();
+    startAutoplay();
+  }
+
+  prevBtn?.addEventListener("click", prev);
+  nextBtn?.addEventListener("click", next);
+
+  root.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      prev();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      next();
+    }
+  });
+
+  viewport.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    dragging = true;
+    pointerStartX = e.clientX;
+    pointerDelta = 0;
+    stopAutoplay();
+    track.style.transition = "none";
+    viewport.setPointerCapture?.(e.pointerId);
+  });
+
+  viewport.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    pointerDelta = e.clientX - pointerStartX;
+    const offset = -index * stepSize() + pointerDelta;
+    track.style.transform = `translate3d(${offset}px, 0, 0)`;
+  });
+
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    track.style.transition = "";
+    const threshold = Math.min(90, viewport.clientWidth * 0.18);
+    if (pointerDelta > threshold) goTo(index - 1, true);
+    else if (pointerDelta < -threshold) goTo(index + 1, true);
+    else syncUi();
+    restartAutoplay();
+    try {
+      viewport.releasePointerCapture?.(e.pointerId);
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  viewport.addEventListener("pointerup", endDrag);
+  viewport.addEventListener("pointercancel", endDrag);
+
+  root.addEventListener("pointerenter", stopAutoplay);
+  root.addEventListener("pointerleave", startAutoplay);
+
+  window.addEventListener("resize", () => {
+    layout();
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopAutoplay();
+    else startAutoplay();
+  });
+
+  layout();
+  startAutoplay();
+})();

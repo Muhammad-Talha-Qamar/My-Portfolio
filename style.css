@@ -1074,19 +1074,119 @@ html[data-mode="light"] .passion-key{
     font-size: clamp(0.92rem, 1.5vw, 1.05rem);
 }
 
-.projects-grid{
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.15rem 1.1rem;
+.projects-carousel{
+    --projects-gap: 1.1rem;
+    --projects-per-view: 3;
+    position: relative;
     width: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+        "prev viewport next"
+        "dots dots dots";
+    align-items: center;
+    column-gap: 0.65rem;
+    row-gap: 1rem;
+}
+
+.projects-viewport{
+    grid-area: viewport;
+    overflow: hidden;
+    width: 100%;
+    min-width: 0;
+    touch-action: pan-y;
+    border-radius: 16px;
+}
+
+.projects-track{
+    display: flex;
+    gap: var(--projects-gap);
+    width: max-content;
+    min-width: 100%;
+    will-change: transform;
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.projects-nav{
+    width: 2.55rem;
+    height: 2.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(140, 175, 255, 0.45);
+    background: rgba(8, 12, 28, 0.72);
+    color: #eef3ff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(20, 40, 100, 0.28);
+    transition: transform 0.3s var(--ease-spring, cubic-bezier(0.22, 1, 0.36, 1)), border-color 0.25s ease, background-color 0.25s ease, opacity 0.25s ease;
+    z-index: 2;
+}
+
+.projects-nav i{
+    font-size: 1.55rem;
+    line-height: 1;
+}
+
+.projects-nav:hover{
+    transform: scale(1.06);
+    border-color: rgba(170, 200, 255, 0.8);
+    background: rgba(20, 35, 70, 0.9);
+}
+
+.projects-nav:active{
+    transform: scale(0.96);
+}
+
+.projects-nav:disabled{
+    opacity: 0.35;
+    cursor: default;
+    transform: none;
+}
+
+.projects-nav--prev{ grid-area: prev; }
+.projects-nav--next{ grid-area: next; }
+
+.projects-dots{
+    grid-area: dots;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.projects-dot{
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(140, 175, 255, 0.55);
+    background: rgba(114, 161, 222, 0.22);
+    padding: 0;
+    cursor: pointer;
+    transition: width 0.3s ease, background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.projects-dot[aria-selected="true"]{
+    width: 1.35rem;
+    background: #72a1de;
+    border-color: rgba(180, 210, 255, 0.9);
+}
+
+.projects-dot:hover{
+    transform: scale(1.12);
+    border-color: rgba(180, 210, 255, 0.85);
 }
 
 .project-card {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    flex: 0 0 calc((100% - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
+    width: calc((100% - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
+    max-width: calc((100% - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
     height: auto;
     min-height: 0;
+    min-width: 0;
     align-items: stretch;
     gap: 0.7rem;
     justify-content: flex-start;
@@ -1891,6 +1991,23 @@ html[data-mode="light"] .project-info p:not(.project-tag){
     color: rgba(40, 50, 80, 0.78);
 }
 
+html[data-mode="light"] .projects-nav{
+    background: rgba(255, 255, 255, 0.86);
+    color: #1c2340;
+    border-color: #9eb0e0;
+    box-shadow: 0 8px 20px rgba(80, 110, 180, 0.18);
+}
+
+html[data-mode="light"] .projects-dot{
+    background: rgba(80, 110, 180, 0.18);
+    border-color: #9eb0e0;
+}
+
+html[data-mode="light"] .projects-dot[aria-selected="true"]{
+    background: #3a5fd4;
+    border-color: #3a5fd4;
+}
+
 html[data-mode="light"] .project-tag{
     color: #3a5fd4;
 }
@@ -2423,9 +2540,9 @@ body.nav-open{
         width: min(960px, 92%);
     }
 
-    .projects-grid{
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1rem;
+    .projects-carousel{
+        --projects-per-view: 2;
+        --projects-gap: 1rem;
     }
 
 }
@@ -2705,9 +2822,15 @@ body.nav-open{
         width: 92%;
     }
 
-    .projects-grid{
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.95rem;
+    .projects-carousel{
+        --projects-per-view: 2;
+        --projects-gap: 0.95rem;
+        column-gap: 0.4rem;
+    }
+
+    .projects-nav{
+        width: 2.25rem;
+        height: 2.25rem;
     }
 
     .project-card{
@@ -2870,9 +2993,15 @@ body.nav-open{
         height: auto;
     }
 
-    .projects-grid{
-        grid-template-columns: 1fr;
-        gap: 1.1rem;
+    .projects-carousel{
+        --projects-per-view: 1;
+        --projects-gap: 0;
+        column-gap: 0.35rem;
+    }
+
+    .projects-nav{
+        width: 2.1rem;
+        height: 2.1rem;
     }
 
     .project-info p{
