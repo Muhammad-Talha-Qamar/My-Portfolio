@@ -928,14 +928,15 @@ html[data-mode="light"] .hero-photo-wrap{
 .card button,
 .card-btn{
     position: absolute;
-    bottom: 5%;
+    bottom: 6%;
     left: 5%;
+    z-index: 3;
     padding: 10px 25px;
-    border: 1px solid gray;
-    background-color: #0f1217;
-    color: gray;
+    border: 1px solid rgba(140, 175, 255, 0.45);
+    background-color: rgba(15, 18, 23, 0.88);
+    color: #e8eefc;
     border-radius: 20px;
-    box-shadow: 0 0 5px lightgray;
+    box-shadow: 0 0 8px rgba(114, 161, 222, 0.25);
     cursor: pointer;
     transition: 0.3s;
     text-decoration: none;
@@ -946,8 +947,19 @@ html[data-mode="light"] .hero-photo-wrap{
 
 .card button:hover,
 .card-btn:hover{
-    box-shadow: 0 0 15px lightgray;
-    opacity: 0.7;
+    box-shadow: 0 0 15px rgba(114, 161, 222, 0.45);
+    opacity: 0.9;
+    border-color: rgba(170, 200, 255, 0.75);
+}
+
+/* Intro card CTA — sit above the portrait, not over the globe card */
+.info-cards .card:nth-child(1) .card-btn{
+    bottom: 8%;
+    left: 6%;
+}
+
+.info-cards .card:nth-child(1) p{
+    bottom: 18%;
 }
 
 .card:hover{
@@ -960,11 +972,11 @@ html[data-mode="light"] .hero-photo-wrap{
 }
 
 .card:nth-child(3) p{
-    bottom: 12%;
+    bottom: 8%;
 }
 
 .card:nth-child(3) h1{
-    bottom: 21%;
+    bottom: 16%;
 }
 
 .card:nth-child(4){
