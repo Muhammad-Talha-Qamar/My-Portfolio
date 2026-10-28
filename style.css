@@ -1398,10 +1398,16 @@ html[data-mode="light"] .passion-key{
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 1;
+    opacity: 0;
     pointer-events: none;
     z-index: 2;
     transition: opacity 0.35s ease;
+    background: linear-gradient(180deg, rgba(6, 10, 24, 0.08), rgba(6, 10, 24, 0.42));
+}
+
+.project-vidbox:hover .hover-sign,
+.project-vidbox:focus-visible .hover-sign{
+    opacity: 1;
 }
 
 .hover-sign span{
