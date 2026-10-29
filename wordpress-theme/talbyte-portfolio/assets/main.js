@@ -276,31 +276,86 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   if (isLite) root.classList.add("is-lite");
   if (reduceMotion) root.classList.add("reduce-motion");
 
-  /* Lite / reduced motion: keep nav + progress only — no cursor/canvas/tilt jank */
+  function bindAnchorNav() {
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const id = link.getAttribute("href");
+        if (!id || id === "#") return;
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start",
+        });
+        history.pushState(null, "", id);
+      });
+    });
+  }
+
+  function bindSkillChipIndexes() {
+    document.querySelectorAll(".skill-list").forEach((list) => {
+      [...list.children].forEach((item, i) => {
+        item.style.setProperty("--i", String(i));
+      });
+    });
+  }
+
+  function revealMotionImmediate() {
+    document.querySelectorAll("[data-reveal]").forEach((el) => {
+      el.classList.add("is-revealed");
+    });
+    document.querySelectorAll("[data-animate], .skill-panel").forEach((el) => {
+      el.classList.add("is-inview");
+    });
+  }
+
+  /* Lite / reduced motion: keep nav + progress — skip cursor/canvas/tilt jank */
   if (isLite) {
     const canvas = document.getElementById("bg-canvas");
     if (canvas) canvas.remove();
     document.querySelector(".cursor-orb")?.remove();
     document.querySelector(".cursor-ring")?.remove();
-    if (progress) {
-      window.addEventListener(
-        "scroll",
-        () => {
-          const max = document.documentElement.scrollHeight - window.innerHeight;
-          const ratio = max > 0 ? window.scrollY / max : 0;
-          progress.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
-        },
-        { passive: true }
-      );
-    }
+    revealMotionImmediate();
+    bindSkillChipIndexes();
+    bindAnchorNav();
+
+    let liteTick = false;
+    let lastActive = "";
+    const onLiteScroll = () => {
+      const y = window.scrollY || 0;
+      if (header) header.classList.toggle("is-scrolled", y > 24);
+      if (progress) {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? y / max : 0;
+        progress.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
+      }
+      let current = sections[0]?.id || "home";
+      const marker = y + window.innerHeight * 0.35;
+      for (const section of sections) {
+        if (section.offsetTop <= marker) current = section.id;
+      }
+      if (current !== lastActive) {
+        lastActive = current;
+        navLinks.forEach((link) => {
+          const href = link.getAttribute("href") || "";
+          link.classList.toggle("is-active", href === `#${current}`);
+        });
+      }
+    };
     window.addEventListener(
       "scroll",
       () => {
-        const y = window.scrollY || 0;
-        if (header) header.classList.toggle("is-scrolled", y > 24);
+        if (liteTick) return;
+        liteTick = true;
+        requestAnimationFrame(() => {
+          onLiteScroll();
+          liteTick = false;
+        });
       },
       { passive: true }
     );
+    onLiteScroll();
     return;
   }
 
@@ -726,7 +781,8 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     }
   }
 
-  /* Scroll: progress + header + active nav */
+  /* Scroll: progress + header + active nav (offsetTop — no layout thrash) */
+  let lastActive = "";
   function onScroll() {
     const y = window.scrollY || 0;
     if (header) header.classList.toggle("is-scrolled", y > 24);
@@ -739,29 +795,34 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     }
 
     let current = sections[0]?.id || "home";
+    const marker = y + window.innerHeight * 0.35;
     for (const section of sections) {
-      if (section.getBoundingClientRect().top <= window.innerHeight * 0.35) {
-        current = section.id;
-      }
+      if (section.offsetTop <= marker) current = section.id;
     }
+    if (current === lastActive) return;
+    lastActive = current;
     navLinks.forEach((link) => {
       const href = link.getAttribute("href") || "";
       link.classList.toggle("is-active", href === `#${current}`);
     });
   }
 
-  window.addEventListener("scroll", () => {
-    if (!scrollTick) {
-      requestAnimationFrame(() => {
-        onScroll();
-        scrollTick = false;
-      });
-      scrollTick = true;
-    }
-  }, { passive: true });
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!scrollTick) {
+        requestAnimationFrame(() => {
+          onScroll();
+          scrollTick = false;
+        });
+        scrollTick = true;
+      }
+    },
+    { passive: true }
+  );
   onScroll();
 
-  /* Reveal-on-view for section titles */
+  /* Reveal-on-view for section titles — early rootMargin so motion starts on time */
   const revealEls = document.querySelectorAll("[data-reveal]");
   if (revealEls.length && "IntersectionObserver" in window) {
     const io = new IntersectionObserver(
@@ -773,19 +834,14 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
           }
         });
       },
-      { threshold: 0.35, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.08, rootMargin: "0px 0px 12% 0px" }
     );
     revealEls.forEach((el) => io.observe(el));
   } else {
     revealEls.forEach((el) => el.classList.add("is-revealed"));
   }
 
-  /* Skill chips: staggered lift */
-  document.querySelectorAll(".skill-list").forEach((list) => {
-    [...list.children].forEach((item, i) => {
-      item.style.setProperty("--i", String(i));
-    });
-  });
+  bindSkillChipIndexes();
 
   /* Ripple on primary actions */
   document.querySelectorAll(".hero-btn, .card-btn, .project-btn, .contact-box button, .theme-toggle").forEach((el) => {
@@ -802,18 +858,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     });
   });
 
-  /* Smooth section focus for keyboard nav */
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener("click", (e) => {
-      const id = link.getAttribute("href");
-      if (!id || id === "#") return;
-      const target = document.querySelector(id);
-      if (!target) return;
-      e.preventDefault();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-      history.pushState(null, "", id);
-    });
-  });
+  bindAnchorNav();
 
   /* Interactive cosmos — deferred + lighter so scroll stays smooth */
   const canvas = document.getElementById("bg-canvas");
@@ -1529,7 +1574,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
           motionIo.unobserve(entry.target);
         });
       },
-      { threshold: 0.2, rootMargin: "0px 0px -6% 0px" }
+      { threshold: 0.05, rootMargin: "0px 0px 15% 0px" }
     );
     motionEls.forEach((el, i) => {
       el.style.setProperty("--stagger", String(i % 4));

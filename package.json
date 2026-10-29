@@ -1,7 +1,7 @@
 {
   "name": "talbyte-portfolio",
   "private": true,
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Asset build for the Talbyte WordPress theme",
   "scripts": {
     "build": "node scripts/build-assets.mjs",

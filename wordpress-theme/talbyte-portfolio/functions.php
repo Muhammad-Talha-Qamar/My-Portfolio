@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '1.0.4' );
+define( 'TALBYTE_THEME_VERSION', '1.0.5' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -91,10 +91,16 @@ add_action( 'wp_head', 'talbyte_resource_hints', 1 );
  * Print preconnect / preload hints.
  */
 function talbyte_resource_hints() {
-	$css = talbyte_asset_file( 'style.css', 'dist/style.min.css' );
+	$css  = talbyte_asset_file( 'style.css', 'dist/style.min.css' );
 	$href = get_template_directory_uri() . '/assets/' . $css . '?ver=' . rawurlencode( TALBYTE_THEME_VERSION );
+	$hero = talbyte_image_url( talbyte_option( 'hero_photo', null ), talbyte_defaults()['hero_photo'] );
 	echo '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />' . "\n";
+	echo '<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />' . "\n";
 	echo '<link rel="preload" href="' . esc_url( $href ) . '" as="style" />' . "\n";
+	if ( $hero ) {
+		$type = str_ends_with( strtolower( wp_parse_url( $hero, PHP_URL_PATH ) ?: '' ), '.webp' ) ? 'image/webp' : 'image/jpeg';
+		echo '<link rel="preload" href="' . esc_url( $hero ) . '" as="image" type="' . esc_attr( $type ) . '" fetchpriority="high" />' . "\n";
+	}
 }
 
 /**

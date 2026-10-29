@@ -31,13 +31,13 @@ if ( empty( $icon_urls ) ) {
 $qty = count( $icon_urls );
 ?>
     <section class="skills-section" id="skills">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
 
       <div class="skills-box">
         <div class="skills-stage">
-          <img class="skills-image" src="<?php echo esc_url( $brain ); ?>" alt="" aria-hidden="true" loading="lazy" decoding="async" data-aos="zoom-in" data-aos-duration="1100" />
+          <img class="skills-image" src="<?php echo esc_url( $brain ); ?>" alt="" aria-hidden="true" loading="lazy" decoding="async" width="640" height="640" data-aos="zoom-in" data-aos-duration="420" />
 
-          <article class="skill-panel Designer" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">
+          <article class="skill-panel Designer" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="400" data-aos-delay="40">
             <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-laptop"></i></div>
             <h2 class="gradient" data-split><?php echo esc_html( $designer_title ); ?></h2>
             <p><?php echo esc_html( $designer_body ); ?></p>
@@ -48,7 +48,7 @@ $qty = count( $icon_urls );
             </ul>
           </article>
 
-          <article class="skill-panel coder" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="900" data-aos-delay="200">
+          <article class="skill-panel coder" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="400" data-aos-delay="80">
             <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-code-block"></i></div>
             <h2 class="gradient" data-split><?php echo esc_html( $coder_title ); ?></h2>
             <p><?php echo esc_html( $coder_body ); ?></p>
@@ -60,10 +60,10 @@ $qty = count( $icon_urls );
           </article>
         </div>
 
-        <div class="slider" style="--width: 100px; --height: 100px; --quantity: <?php echo (int) $qty; ?>;" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="250">
+        <div class="slider" style="--width: 100px; --height: 100px; --quantity: <?php echo (int) $qty; ?>;" data-aos="fade-up" data-aos-duration="400" data-aos-delay="100">
           <div class="list">
             <?php foreach ( $icon_urls as $i => $url ) : ?>
-            <div class="item" style="--position: <?php echo (int) ( $i + 1 ); ?>"><img src="<?php echo esc_url( $url ); ?>" alt="Skill icon <?php echo (int) ( $i + 1 ); ?>" /></div>
+            <div class="item" style="--position: <?php echo (int) ( $i + 1 ); ?>"><img src="<?php echo esc_url( $url ); ?>" alt="Skill icon <?php echo (int) ( $i + 1 ); ?>" width="100" height="100" loading="lazy" decoding="async" /></div>
             <?php endforeach; ?>
           </div>
         </div>

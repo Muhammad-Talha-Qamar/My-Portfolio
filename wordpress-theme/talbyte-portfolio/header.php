@@ -52,7 +52,7 @@ if ( ! $bg_video ) {
     <header class="site-header">
       <nav class="nav-inner" aria-label="Primary">
         <a class="left" href="#home">
-          <img src="<?php echo esc_url( $logo ); ?>" alt="<?php echo esc_attr( $brand_first . ' logo' ); ?>" />
+          <img src="<?php echo esc_url( $logo ); ?>" alt="<?php echo esc_attr( $brand_first . ' logo' ); ?>" width="48" height="48" decoding="async" fetchpriority="high" />
           <h2><span><?php echo esc_html( $brand_first ); ?> </span><?php echo esc_html( $brand_last ); ?></h2>
         </a>
 

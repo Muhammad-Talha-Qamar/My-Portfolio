@@ -65,18 +65,18 @@ if ( empty( $projects ) ) {
 }
 ?>
     <section class="my-project" id="projects">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
-      <p class="projects-lead" data-aos="fade-up" data-aos-duration="800">
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
+      <p class="projects-lead" data-aos="fade-up" data-aos-duration="380">
         <?php echo talbyte_title_html( $lead, $lead_hl ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
       </p>
 
-      <div class="projects-carousel" data-projects-carousel data-aos="fade-up" data-aos-duration="900">
+      <div class="projects-carousel" data-projects-carousel data-aos="fade-up" data-aos-duration="400">
         <div class="projects-viewport" data-projects-viewport tabindex="0" aria-roledescription="carousel" aria-label="Featured projects">
           <div class="projects-track" data-projects-track>
-            <?php foreach ( $projects as $project ) : ?>
+            <?php foreach ( $projects as $i => $project ) : ?>
             <article class="project-card">
               <a class="project-vidbox" href="<?php echo esc_url( $project['url'] ); ?>" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="<?php echo esc_url( $project['thumb'] ); ?>" alt="<?php echo esc_attr( $project['alt'] ); ?>" loading="lazy" />
+                <img class="project-thumb--gaze" src="<?php echo esc_url( $project['thumb'] ); ?>" alt="<?php echo esc_attr( $project['alt'] ); ?>" width="720" height="450" decoding="async" <?php echo $i < 3 ? 'fetchpriority="high"' : 'loading="lazy"'; ?> />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">

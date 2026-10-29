@@ -1,20 +1,20 @@
 {
-  "builtAt": "2026-10-29T06:24:32.922Z",
+  "builtAt": "2026-10-29T06:51:43.968Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 89054,
-    "after": 65349
+    "before": 90772,
+    "after": 66491
   },
   "js": {
     "main": {
       "file": "dist/main.min.js",
-      "before": 63612,
-      "after": 35202
+      "before": 64885,
+      "after": 35755
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
-      "before": 436,
-      "after": 341
+      "before": 1076,
+      "after": 693
     }
   },
   "webp": [
@@ -41,6 +41,66 @@
       "destRel": "images/main.webp",
       "before": 60121,
       "after": 37338
+    },
+    {
+      "srcRel": "images/thumbs/byd.jpg",
+      "destRel": "images/thumbs/byd.webp",
+      "before": 83061,
+      "after": 20136
+    },
+    {
+      "srcRel": "images/thumbs/dual-cop.jpg",
+      "destRel": "images/thumbs/dual-cop.webp",
+      "before": 87100,
+      "after": 18504
+    },
+    {
+      "srcRel": "images/thumbs/foodpanda.jpg",
+      "destRel": "images/thumbs/foodpanda.webp",
+      "before": 67183,
+      "after": 18820
+    },
+    {
+      "srcRel": "images/thumbs/kfc.jpg",
+      "destRel": "images/thumbs/kfc.webp",
+      "before": 89101,
+      "after": 25412
+    },
+    {
+      "srcRel": "images/thumbs/lifepilot.jpg",
+      "destRel": "images/thumbs/lifepilot.webp",
+      "before": 29854,
+      "after": 4368
+    },
+    {
+      "srcRel": "images/thumbs/mirage-works.jpg",
+      "destRel": "images/thumbs/mirage-works.webp",
+      "before": 64091,
+      "after": 16232
+    },
+    {
+      "srcRel": "images/thumbs/olx.jpg",
+      "destRel": "images/thumbs/olx.webp",
+      "before": 85767,
+      "after": 23610
+    },
+    {
+      "srcRel": "images/thumbs/saffron-kitchen.jpg",
+      "destRel": "images/thumbs/saffron-kitchen.webp",
+      "before": 127818,
+      "after": 35762
+    },
+    {
+      "srcRel": "images/thumbs/smit.jpg",
+      "destRel": "images/thumbs/smit.webp",
+      "before": 66319,
+      "after": 17670
+    },
+    {
+      "srcRel": "images/thumbs/systems-website.jpg",
+      "destRel": "images/thumbs/systems-website.webp",
+      "before": 34384,
+      "after": 8974
     }
   ]
 }

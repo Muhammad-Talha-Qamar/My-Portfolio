@@ -7,9 +7,11 @@
   <meta name="theme-color" content="#050816" id="theme-color" />
   <title>Muhammad Talha Qamar | Portfolio</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%BE%3C/text%3E%3C/svg%3E" />
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-  <link rel="stylesheet" href="style.css?v=20261029b" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preload" href="images/main.webp" as="image" type="image/webp" fetchpriority="high" />
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+  <link rel="stylesheet" href="style.css?v=20261029c" />
   <script>
     try {
       var savedMode = localStorage.getItem("talha-mode");
@@ -36,7 +38,7 @@
     <header class="site-header">
       <nav class="nav-inner" aria-label="Primary">
         <a class="left" href="#home">
-          <img src="images/main.jpg" alt="Talha logo" />
+          <img src="images/main.webp" alt="Talha logo" width="48" height="48" decoding="async" fetchpriority="high" />
           <h2><span>Talha </span>Qamar</h2>
         </a>
 
@@ -71,7 +73,7 @@
     <aside class="sidebar" id="sidebar" aria-label="Mobile menu" aria-hidden="true">
       <div class="sidebar-top">
         <a class="left sidebar-brand" href="#home">
-          <img src="images/main.jpg" alt="" />
+          <img src="images/main.webp" alt="" width="48" height="48" decoding="async" />
           <h2><span>Talha</span>Qamar</h2>
         </a>
         <button class="close-icon" id="close-icon" type="button" aria-label="Close menu">
@@ -98,32 +100,32 @@
     </aside>
 
     <section class="hero" id="home">
-      <div class="hero-info" data-aos="fade-right" data-aos-duration="1000">
-        <div class="hero-info-title" data-aos="zoom-in" data-aos-delay="100">
+      <div class="hero-info">
+        <div class="hero-info-title">
           <i class="bx bxl-sketch"></i>
           Front-end Developer Portfolio
         </div>
 
-        <h1 class="hero-title" data-split data-aos="fade-right" data-aos-duration="1200" data-aos-delay="200">
+        <h1 class="hero-title" data-split>
           Providing <span class="gradient">the best</span> Project
           <span class="gradient">Experience</span>
         </h1>
 
-        <p data-aos="fade-up" data-aos-delay="400">
+        <p>
           I'm Muhammad Talha Qamar — a frontend developer passionate about building
           modern, interactive, and responsive websites with HTML, CSS, and JavaScript.
         </p>
 
-        <a class="hero-btn" href="#contact" data-aos="bounce" data-aos-delay="600" data-magnetic><i class="bx bx-send"></i> Contact Me</a>
+        <a class="hero-btn" href="#contact" data-magnetic><i class="bx bx-send"></i> Contact Me</a>
       </div>
 
-      <div class="skills-video-box" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="300" data-parallax="0.1">
+      <div class="skills-video-box" data-parallax="0.1">
         <div class="hero-photo-wrap hero-photo-float" data-tilt data-tilt-max="14">
           <div class="hero-orbit" aria-hidden="true">
             <span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
           <div class="hero-photo-frame" data-spotlight>
-            <img class="hero-photo" src="images/main.jpg" alt="Muhammad Talha Qamar" width="900" height="600" decoding="async" fetchpriority="high" />
+            <img class="hero-photo" src="images/main.webp" alt="Muhammad Talha Qamar" width="900" height="600" decoding="async" fetchpriority="high" />
           </div>
         </div>
       </div>
@@ -132,28 +134,28 @@
     </section>
 
     <section class="info-section" id="about">
-        <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split>Hello, There</h1>
+        <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split>Hello, There</h1>
       <div class="info-cards">
-        <div class="card" data-tilt data-spotlight data-aos="fade-right" data-aos-duration="900" data-aos-delay="0">
+        <div class="card" data-tilt data-spotlight data-aos="fade-right" data-aos-duration="400" data-aos-delay="0">
           <h1 data-split>Hi there, I'm Talha</h1>
           <p>
             Frontend developer focused on clean layouts, responsive design, and
             interactive web experiences built with HTML, CSS, and JavaScript.
           </p>
           <a class="card-btn" data-magnetic href="#contact"><i class="bx bx-send"></i> Contact Me</a>
-          <img src="images/main.jpg" alt="Muhammad Talha Qamar" />
+          <img src="images/main.webp" alt="Muhammad Talha Qamar" width="480" height="320" loading="lazy" decoding="async" />
         </div>
 
-        <div class="card" data-tilt data-spotlight data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
+        <div class="card" data-tilt data-spotlight data-aos="fade-left" data-aos-duration="400" data-aos-delay="40">
           <h1 data-split>Tech Stack</h1>
           <p>
             I work with semantic HTML5, modern CSS (Flexbox, Grid, animations),
             JavaScript ES6+, and Git &amp; GitHub for version control.
           </p>
-          <img src="images/grid2.png" alt="Tech stack visual" />
+          <img src="images/grid2.webp" alt="Tech stack visual" width="640" height="400" loading="lazy" decoding="async" />
         </div>
 
-        <div class="card" data-tilt data-spotlight data-aos="zoom-in" data-aos-duration="900" data-aos-delay="250">
+        <div class="card" data-tilt data-spotlight data-aos="zoom-in" data-aos-duration="400" data-aos-delay="80">
           <h1 data-split>Open to learning, building &amp; shipping</h1>
           <p>
             Always exploring new frontend techniques and ready to collaborate on
@@ -165,7 +167,7 @@
           </div>
         </div>
 
-        <div class="card" data-tilt data-spotlight data-aos="bounce" data-aos-duration="1000" data-aos-delay="350">
+        <div class="card" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="400" data-aos-delay="120">
           <h1 data-split>My Passion for Coding</h1>
           <p>
             I love solving problems and building things through code. Programming
@@ -173,7 +175,7 @@
             websites people enjoy using.
           </p>
           <div class="passion-keyboard" data-passion-keys>
-            <img class="passion-img" src="images/grid4.png" alt="Coding passion visual" />
+            <img class="passion-img" src="images/grid4.webp" alt="Coding passion visual" width="640" height="260" loading="lazy" decoding="async" />
             <svg class="passion-keys-svg" viewBox="0 0 1000 403" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
               <defs>
                 <filter id="passion-key-glow" x="-120%" y="-120%" width="340%" height="340%">
@@ -210,17 +212,17 @@
     </section>
 
     <section class="my-project" id="projects">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split>My Projects</h1>
-      <p class="projects-lead" data-aos="fade-up" data-aos-duration="800">
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split>My Projects</h1>
+      <p class="projects-lead" data-aos="fade-up" data-aos-duration="380">
         Live builds on <span class="gradient">talbyte.com</span> subdomains — clones, product sites, and apps.
       </p>
 
-      <div class="projects-carousel" data-projects-carousel data-aos="fade-up" data-aos-duration="900">
+      <div class="projects-carousel" data-projects-carousel data-aos="fade-up" data-aos-duration="400">
         <div class="projects-viewport" data-projects-viewport tabindex="0" aria-roledescription="carousel" aria-label="Featured projects">
           <div class="projects-track" data-projects-track>
             <article class="project-card">
               <a class="project-vidbox" href="https://dual-cop.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/dual-cop.jpg" alt="Dual Cop Game homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/dual-cop.webp" alt="Dual Cop Game homepage" width="720" height="450" decoding="async" fetchpriority="high" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -232,7 +234,7 @@
 
             <article class="project-card">
               <a class="project-vidbox" href="https://smit.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/smit.jpg" alt="SMIT homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/smit.webp" alt="SMIT homepage" width="720" height="450" decoding="async" fetchpriority="high" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -244,7 +246,7 @@
 
             <article class="project-card">
               <a class="project-vidbox" href="https://byd.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/byd.jpg" alt="BYD Dolphin Surf homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/byd.webp" alt="BYD Dolphin Surf homepage" width="720" height="450" decoding="async" fetchpriority="high" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -256,7 +258,7 @@
 
             <article class="project-card">
               <a class="project-vidbox" href="https://foodpanda.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/foodpanda.jpg" alt="foodpanda homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/foodpanda.webp" alt="foodpanda homepage" width="720" height="450" loading="lazy" decoding="async" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -268,7 +270,7 @@
 
             <article class="project-card">
               <a class="project-vidbox" href="https://saffron-kitchen.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/saffron-kitchen.jpg" alt="Saffron Kitchen homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/saffron-kitchen.webp" alt="Saffron Kitchen homepage" width="720" height="450" loading="lazy" decoding="async" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -280,7 +282,7 @@
 
             <article class="project-card">
               <a class="project-vidbox" href="https://kfc.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/kfc.jpg" alt="KFC web app homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/kfc.webp" alt="KFC web app homepage" width="720" height="450" loading="lazy" decoding="async" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -292,7 +294,7 @@
 
             <article class="project-card">
               <a class="project-vidbox" href="https://mirage-works.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/mirage-works.jpg" alt="Mirage Works homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/mirage-works.webp" alt="Mirage Works homepage" width="720" height="450" loading="lazy" decoding="async" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -304,7 +306,7 @@
 
             <article class="project-card">
               <a class="project-vidbox" href="https://olx.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/olx.jpg" alt="OLX homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/olx.webp" alt="OLX homepage" width="720" height="450" loading="lazy" decoding="async" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -316,7 +318,7 @@
 
             <article class="project-card">
               <a class="project-vidbox" href="https://systems-website.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/systems-website.jpg" alt="Systems Limited homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/systems-website.webp" alt="Systems Limited homepage" width="720" height="450" loading="lazy" decoding="async" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -328,7 +330,7 @@
 
             <article class="project-card">
               <a class="project-vidbox" href="https://lifepilot.talbyte.com/" target="_blank" rel="noreferrer noopener">
-                <img class="project-thumb--gaze" src="images/thumbs/lifepilot.jpg" alt="LifePilot homepage" loading="lazy" />
+                <img class="project-thumb--gaze" src="images/thumbs/lifepilot.webp" alt="LifePilot homepage" width="720" height="450" loading="lazy" decoding="async" />
                 <div class="hover-sign"><span>View</span></div>
               </a>
               <div class="project-info">
@@ -360,13 +362,13 @@
     </section>
 
     <section class="skills-section" id="skills">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split>My Skills</h1>
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split>My Skills</h1>
 
       <div class="skills-box">
         <div class="skills-stage">
-          <img class="skills-image" src="images/digital-brain.png" alt="" aria-hidden="true" data-aos="zoom-in" data-aos-duration="1100" />
+          <img class="skills-image" src="images/digital-brain.webp" alt="" aria-hidden="true" width="640" height="640" loading="lazy" decoding="async" data-aos="zoom-in" data-aos-duration="420" />
 
-          <article class="skill-panel Designer" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">
+          <article class="skill-panel Designer" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="400" data-aos-delay="40">
             <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-laptop"></i></div>
             <h2 class="gradient" data-split>Designer</h2>
             <p>
@@ -380,7 +382,7 @@
             </ul>
           </article>
 
-          <article class="skill-panel coder" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="900" data-aos-delay="200">
+          <article class="skill-panel coder" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="400" data-aos-delay="80">
             <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-code-block"></i></div>
             <h2 class="gradient" data-split>Coder</h2>
             <p>
@@ -395,47 +397,47 @@
           </article>
         </div>
 
-        <div class="slider" style="--width: 100px; --height: 100px; --quantity: 9;" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="250">
+        <div class="slider" style="--width: 100px; --height: 100px; --quantity: 9;" data-aos="fade-up" data-aos-duration="400" data-aos-delay="100">
           <div class="list">
-            <div class="item" style="--position: 1"><img src="images/1.png" alt="Skill icon 1" /></div>
-            <div class="item" style="--position: 2"><img src="images/2.png" alt="Skill icon 2" /></div>
-            <div class="item" style="--position: 3"><img src="images/3.webp" alt="Skill icon 3" /></div>
-            <div class="item" style="--position: 4"><img src="images/4.webp" alt="Skill icon 4" /></div>
-            <div class="item" style="--position: 5"><img src="images/5.png" alt="Skill icon 5" /></div>
-            <div class="item" style="--position: 6"><img src="images/6.png" alt="Skill icon 6" /></div>
-            <div class="item" style="--position: 7"><img src="images/7.png" alt="Skill icon 7" /></div>
-            <div class="item" style="--position: 8"><img src="images/8.png" alt="Skill icon 8" /></div>
-            <div class="item" style="--position: 9"><img src="images/9.png" alt="Skill icon 9" /></div>
+            <div class="item" style="--position: 1"><img src="images/1.png" alt="Skill icon 1" width="100" height="100" loading="lazy" decoding="async" /></div>
+            <div class="item" style="--position: 2"><img src="images/2.png" alt="Skill icon 2" width="100" height="100" loading="lazy" decoding="async" /></div>
+            <div class="item" style="--position: 3"><img src="images/3.webp" alt="Skill icon 3" width="100" height="100" loading="lazy" decoding="async" /></div>
+            <div class="item" style="--position: 4"><img src="images/4.webp" alt="Skill icon 4" width="100" height="100" loading="lazy" decoding="async" /></div>
+            <div class="item" style="--position: 5"><img src="images/5.png" alt="Skill icon 5" width="100" height="100" loading="lazy" decoding="async" /></div>
+            <div class="item" style="--position: 6"><img src="images/6.png" alt="Skill icon 6" width="100" height="100" loading="lazy" decoding="async" /></div>
+            <div class="item" style="--position: 7"><img src="images/7.png" alt="Skill icon 7" width="100" height="100" loading="lazy" decoding="async" /></div>
+            <div class="item" style="--position: 8"><img src="images/8.png" alt="Skill icon 8" width="100" height="100" loading="lazy" decoding="async" /></div>
+            <div class="item" style="--position: 9"><img src="images/9.png" alt="Skill icon 9" width="100" height="100" loading="lazy" decoding="async" /></div>
           </div>
         </div>
       </div>
     </section>
 
     <section class="contact-section" id="contact">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split>Let's talk</h1>
-      <p class="contact-lead" data-aos="fade-up" data-aos-duration="900">
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split>Let's talk</h1>
+      <p class="contact-lead" data-aos="fade-up" data-aos-duration="380">
         Whether you're looking to build a new website, improve an existing
         platform, or bring a unique project to life — I'm here to help.
       </p>
 
       <div class="contact-layout">
-        <aside class="social-box" data-aos="fade-right" data-aos-duration="1000">
+        <aside class="social-box" data-aos="fade-right" data-aos-duration="400">
           <h2 class="contact-aside-title" data-split>Reach me directly</h2>
-          <a href="mailto:m.talha.qamar.1st@gmail.com" data-aos="fade-up" data-aos-delay="100">
+          <a href="mailto:m.talha.qamar.1st@gmail.com" data-aos="fade-up" data-aos-delay="40">
             <i class="bx bxs-envelope"></i>
             <span>
               <strong>Email</strong>
               <small>m.talha.qamar.1st@gmail.com</small>
             </span>
           </a>
-          <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="200">
+          <a href="https://github.com/Muhammad-Talha-Qamar" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="80">
             <i class="bx bxl-github"></i>
             <span>
               <strong>GitHub</strong>
               <small>Muhammad-Talha-Qamar</small>
             </span>
           </a>
-          <a href="https://www.linkedin.com/in/m-talha-qamar-96765b435/" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="300">
+          <a href="https://www.linkedin.com/in/m-talha-qamar-96765b435/" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="120">
             <i class="bx bxl-linkedin-square"></i>
             <span>
               <strong>LinkedIn</strong>
@@ -444,7 +446,7 @@
           </a>
         </aside>
 
-        <form class="contact-box" id="contact-form" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="150" novalidate>
+        <form class="contact-box" id="contact-form" data-aos="fade-left" data-aos-duration="400" data-aos-delay="60" novalidate>
           <div class="contact-field">
             <label for="name">Full Name</label>
             <input id="name" name="name" placeholder="Your full name" type="text" autocomplete="name" required />
@@ -464,7 +466,7 @@
 
           <p class="contact-status" id="contact-status" role="status" aria-live="polite" hidden></p>
 
-          <button type="submit" id="contact-submit" data-magnetic data-aos="bounce" data-aos-delay="200">
+          <button type="submit" id="contact-submit" data-magnetic data-aos="fade-up" data-aos-delay="80">
             Send Message <i class="bx bx-mail-send"></i>
           </button>
         </form>
@@ -474,7 +476,7 @@
     <footer class="footer" data-animate="fade-up">
       <div class="footer-inner">
         <a class="footer-brand" href="#home">
-          <img src="images/main.jpg" alt="" />
+          <img src="images/main.webp" alt="" width="40" height="40" loading="lazy" decoding="async" />
           <span><strong>Talha</strong> Qamar</span>
         </a>
 
@@ -500,20 +502,35 @@
     </footer>
   </div>
 
-  <script src="main.js?v=20261029b" defer></script>
-  <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
+  <script src="main.js?v=20261029c" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       if (typeof AOS === "undefined") return;
-      var lite = window.matchMedia("(max-width: 1100px), (prefers-reduced-motion: reduce), (update: slow)").matches;
+      var lite = window.matchMedia("(max-width: 1100px), (prefers-reduced-motion: reduce), (update: slow)").matches
+        || !!(navigator.connection && navigator.connection.saveData);
+      document.querySelectorAll(".hero [data-aos]").forEach(function (el) {
+        el.classList.add("aos-animate");
+      });
       AOS.init({
         once: true,
-        offset: 48,
-        duration: lite ? 0 : 450,
+        offset: 24,
+        duration: lite ? 0 : 380,
+        delay: 0,
         easing: "ease-out-cubic",
         mirror: false,
-        disable: lite
+        disable: lite,
+        throttleDelay: 32,
+        debounceDelay: 24
       });
+      if (!lite) {
+        window.setTimeout(function () {
+          document.querySelectorAll("[data-aos]:not(.aos-animate)").forEach(function (el) {
+            var rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 0.92) el.classList.add("aos-animate");
+          });
+        }, 900);
+      }
     });
   </script>
 </body>

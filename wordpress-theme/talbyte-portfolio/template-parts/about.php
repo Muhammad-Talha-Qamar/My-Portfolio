@@ -14,11 +14,11 @@ if ( ! is_array( $cards ) || empty( $cards ) ) {
 	$cards = $d['about_cards'];
 }
 
-$aos = array( 'fade-right', 'fade-left', 'zoom-in', 'bounce' );
-$delays = array( 0, 150, 250, 350 );
+$aos = array( 'fade-right', 'fade-left', 'zoom-in', 'fade-up' );
+$delays = array( 0, 40, 80, 120 );
 ?>
     <section class="info-section" id="about">
-        <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
+        <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
       <div class="info-cards">
         <?php foreach ( $cards as $i => $card ) :
 			$type  = isset( $card['type'] ) ? $card['type'] : 'image';
@@ -27,7 +27,7 @@ $delays = array( 0, 150, 250, 350 );
 			$anim  = $aos[ $i % count( $aos ) ];
 			$delay = $delays[ $i % count( $delays ) ];
 			?>
-        <div class="card" data-tilt data-spotlight data-aos="<?php echo esc_attr( $anim ); ?>" data-aos-duration="<?php echo $i === 3 ? '1000' : '900'; ?>" data-aos-delay="<?php echo (int) $delay; ?>">
+        <div class="card" data-tilt data-spotlight data-aos="<?php echo esc_attr( $anim ); ?>" data-aos-duration="400" data-aos-delay="<?php echo (int) $delay; ?>">
           <h1 data-split><?php echo esc_html( $c_title ); ?></h1>
           <p><?php echo esc_html( $body ); ?></p>
           <?php if ( $type === 'image_cta' ) : ?>

@@ -90,6 +90,27 @@ for (const img of [
   if (r) images.push(r);
 }
 
+const thumbsDir = path.join(themeAssets, 'images/thumbs');
+try {
+  const { readdir } = await import('node:fs/promises');
+  const thumbs = (await readdir(thumbsDir)).filter((f) => /\.jpe?g$/i.test(f));
+  for (const f of thumbs) {
+    const srcRel = `images/thumbs/${f}`;
+    const src = path.join(themeAssets, srcRel);
+    const destRel = srcRel.replace(/\.jpe?g$/i, '.webp');
+    const dest = path.join(themeAssets, destRel);
+    await sharp(src)
+      .resize({ width: 720, withoutEnlargement: true })
+      .webp({ quality: 72, effort: 4 })
+      .toFile(dest);
+    const before = (await readFile(src)).length;
+    const after = (await readFile(dest)).length;
+    images.push({ srcRel, destRel, before, after });
+  }
+} catch {
+  /* thumbs optional */
+}
+
 const manifest = {
   builtAt: new Date().toISOString(),
   css: { file: 'dist/style.min.css', ...css },

@@ -22,29 +22,29 @@ $message_label  = talbyte_option( 'form_message_label', $d['form_message_label']
 $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
 ?>
     <section class="contact-section" id="contact">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="900" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
-      <p class="contact-lead" data-aos="fade-up" data-aos-duration="900">
+      <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
+      <p class="contact-lead" data-aos="fade-up" data-aos-duration="380">
         <?php echo esc_html( $lead ); ?>
       </p>
 
       <div class="contact-layout">
-        <aside class="social-box" data-aos="fade-right" data-aos-duration="1000">
+        <aside class="social-box" data-aos="fade-right" data-aos-duration="400">
           <h2 class="contact-aside-title" data-split><?php echo esc_html( $aside ); ?></h2>
-          <a href="mailto:<?php echo esc_attr( $email ); ?>" data-aos="fade-up" data-aos-delay="100">
+          <a href="mailto:<?php echo esc_attr( $email ); ?>" data-aos="fade-up" data-aos-delay="40">
             <i class="bx bxs-envelope"></i>
             <span>
               <strong>Email</strong>
               <small><?php echo esc_html( $email ); ?></small>
             </span>
           </a>
-          <a href="<?php echo esc_url( $github_url ); ?>" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="200">
+          <a href="<?php echo esc_url( $github_url ); ?>" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="80">
             <i class="bx bxl-github"></i>
             <span>
               <strong>GitHub</strong>
               <small><?php echo esc_html( $github_label ); ?></small>
             </span>
           </a>
-          <a href="<?php echo esc_url( $linkedin_url ); ?>" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="300">
+          <a href="<?php echo esc_url( $linkedin_url ); ?>" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="120">
             <i class="bx bxl-linkedin-square"></i>
             <span>
               <strong>LinkedIn</strong>
@@ -53,7 +53,7 @@ $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
           </a>
         </aside>
 
-        <form class="contact-box" id="contact-form" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="150" novalidate>
+        <form class="contact-box" id="contact-form" data-aos="fade-left" data-aos-duration="400" data-aos-delay="60" novalidate>
           <div class="contact-field">
             <label for="name"><?php echo esc_html( $name_label ); ?></label>
             <input id="name" name="name" placeholder="Your full name" type="text" autocomplete="name" required />
@@ -73,7 +73,7 @@ $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
 
           <p class="contact-status" id="contact-status" role="status" aria-live="polite" hidden></p>
 
-          <button type="submit" id="contact-submit" data-magnetic data-aos="bounce" data-aos-delay="200">
+          <button type="submit" id="contact-submit" data-magnetic data-aos="fade-up" data-aos-delay="80">
             <?php echo esc_html( $submit ); ?> <i class="bx bx-mail-send"></i>
           </button>
         </form>
