@@ -4198,9 +4198,67 @@ html[data-mode="light"] .hover-sign span{
     }
 }
 
-.info-cards{
+.info-cards,
+.my-project,
+.skills-section,
+.contact-section,
+.footer{
     content-visibility: auto;
-    contain-intrinsic-size: 700px;
+    contain-intrinsic-size: 800px;
+}
+
+/* Lite / phone / tablet: kill expensive paint work so scroll stays smooth */
+html.is-lite .bg-aurora,
+html.is-lite .bg-glow,
+html.is-lite .back-vid,
+html.is-lite .bg-canvas,
+html.is-lite .cursor-orb,
+html.is-lite .cursor-ring,
+html.is-lite .charge-ring,
+html.is-lite .hero-orbit{
+    display: none !important;
+    animation: none !important;
+}
+
+html.is-lite .bg-layer{
+    background: radial-gradient(ellipse at 30% 20%, rgba(60, 90, 180, 0.22), transparent 55%),
+                radial-gradient(ellipse at 70% 80%, rgba(80, 40, 140, 0.18), transparent 50%),
+                #050816;
+}
+
+html.is-lite[data-mode="light"] .bg-layer{
+    background: radial-gradient(ellipse at 30% 20%, rgba(140, 170, 255, 0.35), transparent 55%),
+                radial-gradient(ellipse at 70% 80%, rgba(200, 180, 255, 0.28), transparent 50%),
+                #eef2ff;
+}
+
+html.is-lite .site-header,
+html.is-lite .nav-inner,
+html.is-lite .card,
+html.is-lite .project-card,
+html.is-lite .skill-panel{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+@media (max-width: 1100px), (prefers-reduced-motion: reduce), (update: slow){
+    .bg-aurora,
+    .bg-glow,
+    .back-vid,
+    .bg-canvas,
+    .hero-orbit{
+        animation: none !important;
+    }
+    .bg-aurora{
+        filter: blur(18px);
+        opacity: 0.45;
+    }
+    .site-header .nav-inner,
+    .card,
+    .project-card{
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
 }
 
 

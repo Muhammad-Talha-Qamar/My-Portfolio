@@ -41,7 +41,7 @@ if ( ! $bg_video ) {
   <div class="cursor-orb" aria-hidden="true"></div>
   <div class="cursor-ring" aria-hidden="true"></div>
   <div class="bg-layer" aria-hidden="true">
-    <video class="back-vid" data-parallax="0.08" loop muted playsinline preload="none" src="<?php echo esc_url( $bg_video ); ?>"></video>
+    <video class="back-vid" data-parallax="0.08" data-src="<?php echo esc_url( $bg_video ); ?>" loop muted playsinline preload="none"></video>
     <canvas class="bg-canvas" id="bg-canvas"></canvas>
     <div class="bg-aurora"></div>
     <div class="bg-glow"></div>

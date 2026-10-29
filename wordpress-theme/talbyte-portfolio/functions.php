@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '1.0.0' );
+define( 'TALBYTE_THEME_VERSION', '1.0.2' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -16,8 +16,15 @@ require_once get_template_directory() . '/inc/seed.php';
 
 add_action( 'after_setup_theme', 'talbyte_theme_setup' );
 add_action( 'wp_enqueue_scripts', 'talbyte_enqueue_assets' );
+add_action( 'wp_enqueue_scripts', 'talbyte_dequeue_bloat', 100 );
+add_action( 'wp_footer', 'talbyte_dequeue_bloat', 1 );
 add_filter( 'document_title_parts', 'talbyte_document_title' );
 add_action( 'wp_head', 'talbyte_meta_description', 1 );
+add_filter( 'emoji_svg_url', '__return_false' );
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
+remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+remove_action( 'admin_print_styles', 'print_emoji_styles' );
 
 /**
  * Theme supports.
@@ -53,6 +60,33 @@ function talbyte_enqueue_assets() {
 			'contactEmail' => $email,
 		)
 	);
+}
+
+/**
+ * Strip WordPress / Hostinger front-end bloat that causes jank.
+ */
+function talbyte_dequeue_bloat() {
+	if ( is_admin() ) {
+		return;
+	}
+
+	wp_dequeue_style( 'wp-block-library' );
+	wp_dequeue_style( 'wp-block-library-theme' );
+	wp_dequeue_style( 'classic-theme-styles' );
+	wp_dequeue_style( 'global-styles' );
+	wp_dequeue_style( 'wc-blocks-style' );
+
+	wp_dequeue_script( 'wp-embed' );
+	wp_deregister_script( 'wp-embed' );
+
+	// Hostinger Reach chat embed — heavy and unrelated to the portfolio UI.
+	wp_dequeue_script( 'hostinger-reach-tracking' );
+	wp_dequeue_script( 'hostinger-reach' );
+	wp_dequeue_script( 'hostinger-reach-frontend' );
+	wp_dequeue_style( 'hostinger-reach' );
+
+	wp_dequeue_script( 'hostinger-frontend' );
+	wp_dequeue_style( 'hostinger-frontend' );
 }
 
 /**
