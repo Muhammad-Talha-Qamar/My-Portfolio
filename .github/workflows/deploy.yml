@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to talbyte.com
+    name: Deploy WordPress theme to talbyte.com
     runs-on: ubuntu-latest
 
     steps:
@@ -22,26 +22,18 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p "${{ secrets.SSH_PORT }}" -T 30 "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
 
-      - name: Deploy via rsync
+      - name: Deploy theme only (never wipe WordPress root)
         run: |
+          REMOTE_THEME="${{ secrets.DEPLOY_PATH }}/wp-content/themes/talbyte-portfolio"
+          ssh -i ~/.ssh/deploy_key -p "${{ secrets.SSH_PORT }}" \
+            -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+            "mkdir -p '${REMOTE_THEME}'"
           rsync -avz --delete \
-            --exclude='.git' \
-            --exclude='.github' \
             --exclude='.DS_Store' \
-            --exclude='smit' \
-            --exclude='dual-cop' \
-            --exclude='foodpanda' \
-            --exclude='byd' \
-            --exclude='saffron-kitchen' \
-            --exclude='kfc' \
-            --exclude='mirage-works' \
-            --exclude='olx' \
-            --exclude='systems-website' \
-            --exclude='systes-website' \
-            --exclude='.htaccess.lifepilot.bak' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes" \
-            ./ \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/"
+            ./wordpress-theme/talbyte-portfolio/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${REMOTE_THEME}/"
 
       - name: Cleanup SSH key
         if: always()

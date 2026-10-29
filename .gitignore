@@ -1,0 +1,5 @@
+
+# Local backups / secrets / packaging
+.wp-credentials.txt
+backups/
+talbyte-portfolio-theme.zip
