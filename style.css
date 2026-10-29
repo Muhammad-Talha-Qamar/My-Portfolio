@@ -813,9 +813,7 @@ html[data-mode="light"] .hero-photo-wrap{
 .info-cards .card:nth-child(1) h1,
 .info-cards .card:nth-child(2) h1{
     position: relative;
-    bottom: auto;
-    left: auto;
-    right: auto;
+    inset: auto;
     margin: 0;
     font-size: clamp(1.05rem, 2vw, 1.35rem);
 }
@@ -823,9 +821,7 @@ html[data-mode="light"] .hero-photo-wrap{
 .info-cards .card:nth-child(1) p,
 .info-cards .card:nth-child(2) p{
     position: relative;
-    bottom: auto;
-    left: auto;
-    right: auto;
+    inset: auto;
     margin: 0;
 }
 
@@ -951,14 +947,12 @@ html[data-mode="light"] .hero-photo-wrap{
     border-color: rgba(170, 200, 255, 0.75);
 }
 
-/* Intro card CTA — sit above the portrait, not over the globe card */
+/* Intro card CTA — normal document flow (absolute bottom-% overlaps title/body) */
 .info-cards .card:nth-child(1) .card-btn{
-    bottom: 8%;
-    left: 6%;
-}
-
-.info-cards .card:nth-child(1) p{
-    bottom: 18%;
+    position: relative;
+    inset: auto;
+    align-self: flex-start;
+    margin-top: 0.35rem;
 }
 
 .card:hover{
