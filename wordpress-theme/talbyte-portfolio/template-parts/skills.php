@@ -35,7 +35,7 @@ $qty = count( $icon_urls );
 
       <div class="skills-box">
         <div class="skills-stage">
-          <img class="skills-image" src="<?php echo esc_url( $brain ); ?>" alt="" aria-hidden="true" data-aos="zoom-in" data-aos-duration="1100" />
+          <img class="skills-image" src="<?php echo esc_url( $brain ); ?>" alt="" aria-hidden="true" loading="lazy" decoding="async" data-aos="zoom-in" data-aos-duration="1100" />
 
           <article class="skill-panel Designer" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">
             <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-laptop"></i></div>

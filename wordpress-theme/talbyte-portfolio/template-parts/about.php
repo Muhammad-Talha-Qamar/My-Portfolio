@@ -32,9 +32,9 @@ $delays = array( 0, 150, 250, 350 );
           <p><?php echo esc_html( $body ); ?></p>
           <?php if ( $type === 'image_cta' ) : ?>
           <a class="card-btn" data-magnetic href="<?php echo esc_url( isset( $card['href'] ) ? $card['href'] : '#contact' ); ?>"><i class="bx bx-send"></i> <?php echo esc_html( isset( $card['cta'] ) ? $card['cta'] : 'Contact Me' ); ?></a>
-          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/main.jpg' ) ); ?>" alt="<?php echo esc_attr( talbyte_option( 'display_name', $d['display_name'] ) ); ?>" />
+          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/main.jpg' ) ); ?>" alt="<?php echo esc_attr( talbyte_option( 'display_name', $d['display_name'] ) ); ?>" loading="lazy" decoding="async" />
           <?php elseif ( $type === 'image' ) : ?>
-          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/grid2.png' ) ); ?>" alt="<?php echo esc_attr( $c_title ); ?>" />
+          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/grid2.png' ) ); ?>" alt="<?php echo esc_attr( $c_title ); ?>" loading="lazy" decoding="async" />
           <?php elseif ( $type === 'video' ) :
 				$raw_video = isset( $card['video'] ) ? $card['video'] : '';
 				if ( is_array( $raw_video ) && ! empty( $raw_video['url'] ) ) {
@@ -53,7 +53,7 @@ $delays = array( 0, 150, 250, 350 );
           </div>
           <?php else : ?>
           <div class="passion-keyboard" data-passion-keys>
-            <img class="passion-img" src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/grid4.png' ) ); ?>" alt="Coding passion visual" />
+            <img class="passion-img" src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/grid4.png' ) ); ?>" alt="Coding passion visual" loading="lazy" decoding="async" />
             <svg class="passion-keys-svg" viewBox="0 0 1000 403" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
               <defs>
                 <filter id="passion-key-glow" x="-120%" y="-120%" width="340%" height="340%">

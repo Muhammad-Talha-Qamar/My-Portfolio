@@ -35,6 +35,7 @@ if ( ! $bg_video ) {
   </script>
   <?php wp_head(); ?>
 </head>
+<?php /* preconnect/preload printed from talbyte_resource_hints in functions.php */ ?>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>

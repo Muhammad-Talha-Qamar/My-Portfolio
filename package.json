@@ -1,0 +1,14 @@
+{
+  "name": "talbyte-portfolio",
+  "private": true,
+  "version": "1.0.4",
+  "description": "Asset build for the Talbyte WordPress theme",
+  "scripts": {
+    "build": "node scripts/build-assets.mjs",
+    "build:theme": "npm run build"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "sharp": "^0.33.5"
+  }
+}

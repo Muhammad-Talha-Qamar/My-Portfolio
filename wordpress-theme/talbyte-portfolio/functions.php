@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '1.0.3' );
+define( 'TALBYTE_THEME_VERSION', '1.0.4' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -36,19 +36,39 @@ function talbyte_theme_setup() {
 }
 
 /**
+ * Prefer minified dist assets from `npm run build` when present.
+ *
+ * @param string $source Relative path under assets/ (e.g. style.css).
+ * @param string $built  Relative path under assets/dist/ (e.g. style.min.css).
+ * @return string Relative assets path to enqueue.
+ */
+function talbyte_asset_file( $source, $built ) {
+	$built_path = get_template_directory() . '/assets/' . ltrim( $built, '/' );
+	if ( file_exists( $built_path ) ) {
+		return ltrim( $built, '/' );
+	}
+	return ltrim( $source, '/' );
+}
+
+/**
  * Enqueue design CSS/JS + CDN libs.
  */
 function talbyte_enqueue_assets() {
-	$uri = get_template_directory_uri();
+	$uri = get_template_directory_uri() . '/assets';
 	$ver = TALBYTE_THEME_VERSION;
 
-	wp_enqueue_style( 'boxicons', 'https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css', array(), '2.1.4' );
-	wp_enqueue_style( 'aos', 'https://unpkg.com/aos@next/dist/aos.css', array(), null );
-	wp_enqueue_style( 'talbyte-portfolio', $uri . '/assets/style.css', array( 'boxicons', 'aos' ), $ver );
+	$css      = talbyte_asset_file( 'style.css', 'dist/style.min.css' );
+	$js_main  = talbyte_asset_file( 'main.js', 'dist/main.min.js' );
+	$js_aos   = talbyte_asset_file( 'aos-init.js', 'dist/aos-init.min.js' );
 
-	wp_enqueue_script( 'talbyte-main', $uri . '/assets/main.js', array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_enqueue_script( 'aos', 'https://unpkg.com/aos@next/dist/aos.js', array(), null, array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_enqueue_script( 'talbyte-aos-init', $uri . '/assets/aos-init.js', array( 'aos' ), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	// jsDelivr is usually faster/cached than unpkg for first paint.
+	wp_enqueue_style( 'boxicons', 'https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css', array(), '2.1.4' );
+	wp_enqueue_style( 'aos', 'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css', array(), '2.3.4' );
+	wp_enqueue_style( 'talbyte-portfolio', $uri . '/' . $css, array( 'boxicons', 'aos' ), $ver );
+
+	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'aos', 'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js', array(), '2.3.4', array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-aos-init', $uri . '/' . $js_aos, array( 'aos' ), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 
 	$d     = talbyte_defaults();
 	$email = talbyte_option( 'email', $d['email'] );
@@ -60,6 +80,21 @@ function talbyte_enqueue_assets() {
 			'contactEmail' => $email,
 		)
 	);
+}
+
+/**
+ * Faster first connection to CDN + preload theme CSS.
+ */
+add_action( 'wp_head', 'talbyte_resource_hints', 1 );
+
+/**
+ * Print preconnect / preload hints.
+ */
+function talbyte_resource_hints() {
+	$css = talbyte_asset_file( 'style.css', 'dist/style.min.css' );
+	$href = get_template_directory_uri() . '/assets/' . $css . '?ver=' . rawurlencode( TALBYTE_THEME_VERSION );
+	echo '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />' . "\n";
+	echo '<link rel="preload" href="' . esc_url( $href ) . '" as="style" />' . "\n";
 }
 
 /**

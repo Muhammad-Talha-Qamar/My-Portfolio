@@ -49,7 +49,15 @@ function talbyte_field( $key, $post_id = null, $default = '' ) {
  * @return string
  */
 function talbyte_asset( $path ) {
-	return get_template_directory_uri() . '/assets/' . ltrim( $path, '/' );
+	$path = ltrim( $path, '/' );
+	$webp = preg_replace( '/\.(png|jpe?g)$/i', '.webp', $path );
+	if ( $webp && $webp !== $path ) {
+		$webp_file = get_template_directory() . '/assets/' . $webp;
+		if ( file_exists( $webp_file ) ) {
+			return get_template_directory_uri() . '/assets/' . $webp;
+		}
+	}
+	return get_template_directory_uri() . '/assets/' . $path;
 }
 
 /**
