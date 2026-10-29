@@ -69,7 +69,6 @@ button{
     height: 100%;
     object-fit: cover;
     mix-blend-mode: overlay;
-    will-change: transform;
 }
 
 .bg-canvas{
@@ -1075,6 +1074,8 @@ html[data-mode="light"] .passion-key{
     margin-top: 100px;
     margin-bottom: 64px;
     scroll-margin-top: 90px;
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
 }
 
 .projects-lead{
@@ -1507,6 +1508,8 @@ html[data-mode="light"] .passion-key{
     width: 100%;
     padding: 4rem 0 5rem;
     box-sizing: border-box;
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
 }
 
 .skills-section .section-title{
@@ -1724,6 +1727,8 @@ html[data-mode="light"] .passion-key{
     scroll-margin-top: 90px;
     padding: 4rem 0 5rem;
     box-sizing: border-box;
+    content-visibility: auto;
+    contain-intrinsic-size: 1100px;
 }
 
 .contact-section .section-title{
@@ -3981,17 +3986,12 @@ html[data-mode="light"] .scroll-progress{
 }
 
 .slider .list .item img{
-    animation: iconGlow 3.2s ease-in-out infinite;
-    animation-delay: calc(var(--position) * 0.18s);
-}
-
-@keyframes iconGlow{
-    0%, 100%{ filter: brightness(1) drop-shadow(0 0 0 transparent); }
-    50%{ filter: brightness(1.12) drop-shadow(0 0 10px rgba(140, 180, 255, 0.45)); }
+    /* avoid perpetual filter animation — it costs GPU while scrolling */
+    filter: none;
 }
 
 .slider .item:hover img{
-    animation-play-state: paused;
+    filter: none;
 }
 
 .theme-toggle .icon-sun,
@@ -4186,6 +4186,21 @@ html[data-mode="light"] .hover-sign span{
     .cursor-ring{
         display: none;
     }
+}
+
+/* Keep AOS elements visible if the library is disabled or late */
+@media (max-width: 1100px), (prefers-reduced-motion: reduce){
+    [data-aos]{
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        pointer-events: auto !important;
+    }
+}
+
+.info-cards{
+    content-visibility: auto;
+    contain-intrinsic-size: 700px;
 }
 
 

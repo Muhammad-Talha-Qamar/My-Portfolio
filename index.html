@@ -9,7 +9,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%BE%3C/text%3E%3C/svg%3E" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-  <link rel="stylesheet" href="style.css?v=20261029" />
+  <link rel="stylesheet" href="style.css?v=20261029b" />
   <script>
     try {
       var savedMode = localStorage.getItem("talha-mode");
@@ -26,7 +26,7 @@
   <div class="cursor-orb" aria-hidden="true"></div>
   <div class="cursor-ring" aria-hidden="true"></div>
   <div class="bg-layer" aria-hidden="true">
-    <video class="back-vid" data-parallax="0.08" autoplay loop muted playsinline preload="metadata" src="videos/galaxy.mp4"></video>
+    <video class="back-vid" data-parallax="0.08" loop muted playsinline preload="none" src="videos/galaxy.mp4"></video>
     <canvas class="bg-canvas" id="bg-canvas"></canvas>
     <div class="bg-aurora"></div>
     <div class="bg-glow"></div>
@@ -36,7 +36,7 @@
     <header class="site-header">
       <nav class="nav-inner" aria-label="Primary">
         <a class="left" href="#home">
-          <img src="images/main.png" alt="Talha logo" />
+          <img src="images/main.jpg" alt="Talha logo" />
           <h2><span>Talha </span>Qamar</h2>
         </a>
 
@@ -71,7 +71,7 @@
     <aside class="sidebar" id="sidebar" aria-label="Mobile menu" aria-hidden="true">
       <div class="sidebar-top">
         <a class="left sidebar-brand" href="#home">
-          <img src="images/main.png" alt="" />
+          <img src="images/main.jpg" alt="" />
           <h2><span>Talha</span>Qamar</h2>
         </a>
         <button class="close-icon" id="close-icon" type="button" aria-label="Close menu">
@@ -123,7 +123,7 @@
             <span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
           <div class="hero-photo-frame" data-spotlight>
-            <img class="hero-photo" src="images/main.png" alt="Muhammad Talha Qamar" />
+            <img class="hero-photo" src="images/main.jpg" alt="Muhammad Talha Qamar" width="900" height="600" decoding="async" fetchpriority="high" />
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@
             interactive web experiences built with HTML, CSS, and JavaScript.
           </p>
           <a class="card-btn" data-magnetic href="#contact"><i class="bx bx-send"></i> Contact Me</a>
-          <img src="images/main.png" alt="Muhammad Talha Qamar" />
+          <img src="images/main.jpg" alt="Muhammad Talha Qamar" />
         </div>
 
         <div class="card" data-tilt data-spotlight data-aos="fade-left" data-aos-duration="900" data-aos-delay="150">
@@ -160,7 +160,7 @@
             creative web projects.
           </p>
           <div class="card-video-wrap" data-globe aria-hidden="true">
-            <video src="videos/glob.mp4" autoplay loop muted playsinline preload="none"></video>
+            <video data-src="videos/glob.mp4" loop muted playsinline preload="none"></video>
             <span class="globe-specular"></span>
           </div>
         </div>
@@ -474,7 +474,7 @@
     <footer class="footer" data-animate="fade-up">
       <div class="footer-inner">
         <a class="footer-brand" href="#home">
-          <img src="images/main.png" alt="" />
+          <img src="images/main.jpg" alt="" />
           <span><strong>Talha</strong> Qamar</span>
         </a>
 
@@ -500,16 +500,20 @@
     </footer>
   </div>
 
-  <script src="main.js?v=20261029"></script>
-  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script src="main.js?v=20261029b" defer></script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js" defer></script>
   <script>
-    AOS.init({
-      once: true,
-      offset: 60,
-      duration: 550,
-      easing: "ease-out-cubic",
-      mirror: false,
-      disable: window.matchMedia("(max-width: 700px), (prefers-reduced-motion: reduce)").matches
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof AOS === "undefined") return;
+      var lite = window.matchMedia("(max-width: 1100px), (prefers-reduced-motion: reduce), (update: slow)").matches;
+      AOS.init({
+        once: true,
+        offset: 48,
+        duration: lite ? 0 : 450,
+        easing: "ease-out-cubic",
+        mirror: false,
+        disable: lite
+      });
     });
   </script>
 </body>

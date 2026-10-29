@@ -76,15 +76,17 @@ function setMode(mode) {
     /* private mode */
   }
   const toLight = next === "dark";
-  modeToggle.setAttribute("aria-label", toLight ? "Switch to light mode" : "Switch to dark mode");
-  modeToggle.title = toLight ? "Switch to light mode" : "Switch to dark mode";
+  if (modeToggle) {
+    modeToggle.setAttribute("aria-label", toLight ? "Switch to light mode" : "Switch to dark mode");
+    modeToggle.title = toLight ? "Switch to light mode" : "Switch to dark mode";
+  }
   const meta = document.getElementById("theme-color");
   if (meta) meta.setAttribute("content", next === "light" ? "#eef2ff" : "#050816");
 }
 
 setMode(document.documentElement.dataset.mode || "dark");
 
-modeToggle.addEventListener("click", () => {
+modeToggle?.addEventListener("click", () => {
   setMode(document.documentElement.dataset.mode === "light" ? "dark" : "light");
 });
 
@@ -160,13 +162,12 @@ if (contactForm) {
 }
 
 document.querySelectorAll(".project-vidbox img").forEach((img) => {
-  const sign = img.parentElement.querySelector(".hover-sign");
-  img.parentElement.addEventListener("mouseenter", () => {
-    if (sign) sign.classList.add("active");
-  });
-  img.parentElement.addEventListener("mouseleave", () => {
-    if (sign) sign.classList.remove("active");
-  });
+  const parent = img.parentElement;
+  if (!parent) return;
+  const sign = parent.querySelector(".hover-sign");
+  if (!sign) return;
+  parent.addEventListener("mouseenter", () => sign.classList.add("active"));
+  parent.addEventListener("mouseleave", () => sign.classList.remove("active"));
 });
 
 /* Interactive passion keyboard — key borders glow toward the cursor */
@@ -601,54 +602,77 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
         tcy: 0,
         hovering: false,
       };
-      const idleAmpX = 20;
-      const idleAmpY = 16;
-      const cursorAmpX = 42;
-      const cursorAmpY = 32;
+      const idleAmpX = 14;
+      const idleAmpY = 10;
+      const cursorAmpX = 28;
+      const cursorAmpY = 22;
       const t0 = performance.now();
-      let visible = true;
+      let visible = false;
+      let brainRaf = 0;
+
+      function frame(now) {
+        brainRaf = 0;
+        if (!visible || document.hidden) return;
+
+        const t = (now - t0) / 1000;
+        const idleX = Math.sin(t * 0.75) * idleAmpX + Math.sin(t * 1.35) * 5;
+        const idleY = Math.cos(t * 0.6) * idleAmpY + Math.sin(t * 0.95) * 4;
+        const idleR = Math.sin(t * 0.45) * 3.5 + Math.cos(t * 0.8) * 1.5;
+        const idleS = 1 + Math.sin(t * 0.7) * 0.025;
+
+        state.cx = lerp(state.cx, state.tcx, 0.18);
+        state.cy = lerp(state.cy, state.tcy, 0.18);
+
+        const targetX = idleX + state.cx;
+        const targetY = idleY + state.cy;
+        const targetR = idleR + (state.hovering ? state.cx * 0.08 : 0);
+        const targetS = state.hovering ? 1.06 : idleS;
+
+        state.x = lerp(state.x, targetX, 0.12);
+        state.y = lerp(state.y, targetY, 0.12);
+        state.r = lerp(state.r, targetR, 0.1);
+        state.s = lerp(state.s, targetS, 0.12);
+
+        brain.style.transform =
+          `translate3d(${state.x.toFixed(2)}px, ${state.y.toFixed(2)}px, 0)` +
+          ` rotate(${state.r.toFixed(2)}deg)` +
+          ` scale(${state.s.toFixed(3)})`;
+
+        brainRaf = requestAnimationFrame(frame);
+      }
+
+      function startBrain() {
+        if (!brainRaf && visible && !document.hidden) {
+          brainRaf = requestAnimationFrame(frame);
+        }
+      }
+
+      function stopBrain() {
+        if (brainRaf) {
+          cancelAnimationFrame(brainRaf);
+          brainRaf = 0;
+        }
+      }
 
       if ("IntersectionObserver" in window) {
         const io = new IntersectionObserver(
           ([entry]) => {
-            visible = entry.isIntersecting;
+            visible = !!entry?.isIntersecting;
+            if (visible) startBrain();
+            else stopBrain();
           },
-          { rootMargin: "80px", threshold: 0 }
+          { rootMargin: "40px", threshold: 0.05 }
         );
         io.observe(brain);
+      } else {
+        visible = true;
+        startBrain();
       }
 
-      function frame(now) {
-        if (visible) {
-          const t = (now - t0) / 1000;
-          const idleX =
-            Math.sin(t * 0.75) * idleAmpX + Math.sin(t * 1.35) * 7;
-          const idleY =
-            Math.cos(t * 0.6) * idleAmpY + Math.sin(t * 0.95) * 6;
-          const idleR = Math.sin(t * 0.45) * 5 + Math.cos(t * 0.8) * 2;
-          const idleS = 1 + Math.sin(t * 0.7) * 0.035;
-
-          state.cx = lerp(state.cx, state.tcx, 0.18);
-          state.cy = lerp(state.cy, state.tcy, 0.18);
-
-          const targetX = idleX + state.cx;
-          const targetY = idleY + state.cy;
-          const targetR = idleR + (state.hovering ? state.cx * 0.08 : 0);
-          const targetS = state.hovering ? 1.1 : idleS;
-
-          state.x = lerp(state.x, targetX, 0.12);
-          state.y = lerp(state.y, targetY, 0.12);
-          state.r = lerp(state.r, targetR, 0.1);
-          state.s = lerp(state.s, targetS, 0.12);
-
-          brain.style.transform =
-            `translate3d(${state.x.toFixed(2)}px, ${state.y.toFixed(2)}px, 0)` +
-            ` rotate(${state.r.toFixed(2)}deg)` +
-            ` scale(${state.s.toFixed(3)})`;
-        }
-        requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stopBrain();
+        else startBrain();
+      });
 
       if (finePointer) {
         brain.addEventListener("pointerenter", () => {
@@ -811,9 +835,9 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     const isNarrow = () => w < 800;
 
     function particleCount() {
-      const dens = isCoarse || isNarrow() ? 70000 : 42000;
-      const max = isCoarse || isNarrow() ? 28 : 48;
-      return Math.min(max, Math.max(16, Math.floor((w * h) / dens)));
+      const dens = isCoarse || isNarrow() ? 160000 : 110000;
+      const max = isCoarse || isNarrow() ? 12 : 22;
+      return Math.min(max, Math.max(8, Math.floor((w * h) / dens)));
     }
 
     function makeParticle() {
@@ -909,10 +933,11 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const count = particleCount();
       if (particles.length !== count) particles = Array.from({ length: count }, makeParticle);
-      const orbTarget = isCoarse || isNarrow() ? 2 : 3;
+      const orbTarget = isCoarse || isNarrow() ? 1 : 2;
       if (orbs.length !== orbTarget) orbs = Array.from({ length: orbTarget }, makeOrb);
-      const dustTarget = isCoarse || isNarrow() ? 0 : 18;
-      if (dust.length !== dustTarget) dust = Array.from({ length: dustTarget }, makeDust);
+      dust = [];
+      meteors = [];
+      spirals = [];
     }
 
     function drawAuroraOverlay(light) {
@@ -928,11 +953,42 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     }
 
     let frameSkip = 0;
+    let scrolling = false;
+    let scrollIdleTimer = 0;
+
+    function stopDraw() {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    }
+
+    function startDraw() {
+      if (!rafId && !document.hidden && !scrolling) {
+        rafId = requestAnimationFrame(draw);
+      }
+    }
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        scrolling = true;
+        stopDraw();
+        window.clearTimeout(scrollIdleTimer);
+        scrollIdleTimer = window.setTimeout(() => {
+          scrolling = false;
+          mouse.speed = 0;
+          startDraw();
+        }, 140);
+      },
+      { passive: true }
+    );
 
     function draw() {
+      rafId = 0;
+      if (document.hidden || scrolling) return;
       rafId = requestAnimationFrame(draw);
-      if (document.hidden) return;
-      /* Cap ~30fps when idle to keep scrolling smooth */
+      /* Cap ~30fps when idle to keep the main thread free */
       frameSkip ^= 1;
       if (frameSkip && !mouse.down && mouse.speed < 2) return;
 
@@ -941,13 +997,10 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       const light = root.dataset.mode === "light";
       const mx = mouse.x;
       const my = mouse.y;
-      const connectDist = Math.min(110, w * 0.1);
-      const linkStep = isCoarse || isNarrow() ? 3 : 2;
+      const connectDist = Math.min(90, w * 0.08);
+      const linkStep = isCoarse || isNarrow() ? 4 : 3;
 
-      const sy = window.scrollY;
-      scrollVel = lerp(scrollVel, sy - lastScrollY, 0.25);
-      lastScrollY = sy;
-      warp = lerp(warp, Math.min(Math.abs(scrollVel) / 24, 1), 0.14);
+      warp = lerp(warp, 0, 0.2);
 
       drawAuroraOverlay(light);
 
@@ -1303,12 +1356,11 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       { passive: true }
     );
     resize();
-    draw();
+    startDraw();
 
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
-        cancelAnimationFrame(rafId);
-        rafId = 0;
+        stopDraw();
         document.querySelectorAll("video").forEach((v) => {
           try {
             v.pause();
@@ -1316,10 +1368,10 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
             /* ignore */
           }
         });
-      } else if (!rafId) {
-        draw();
-        document.querySelectorAll("video[autoplay]").forEach((v) => {
-          v.play().catch(() => {});
+      } else {
+        startDraw();
+        document.querySelectorAll("video[data-autoplay-when-visible]").forEach((v) => {
+          if (v.dataset.shouldPlay === "1") v.play().catch(() => {});
         });
       }
     });
@@ -1378,28 +1430,47 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
         });
       }
 
-      el.addEventListener("pointermove", (e) => {
-        chars.forEach((ch) => {
+      let splitRaf = 0;
+      let pendingX = 0;
+      let pendingY = 0;
+      let splitActive = false;
+
+      function paintSplit() {
+        splitRaf = 0;
+        if (!splitActive) return;
+        const max = 110;
+        for (let i = 0; i < chars.length; i += 1) {
+          const ch = chars[i];
           const rect = ch.getBoundingClientRect();
-          const cx = rect.left + rect.width / 2;
-          const cy = rect.top + rect.height / 2;
-          const dx = e.clientX - cx;
-          const dy = e.clientY - cy;
+          const dx = pendingX - (rect.left + rect.width / 2);
+          const dy = pendingY - (rect.top + rect.height / 2);
           const dist = Math.hypot(dx, dy) || 1;
-          const max = 130;
           if (dist < max) {
-            const force = (1 - dist / max) * 18;
-            const tx = (dx / dist) * -force;
-            const ty = (dy / dist) * -force;
-            ch.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${(1 + (1 - dist / max) * 0.28).toFixed(3)})`;
-            ch.style.textShadow = `0 0 ${(16 * (1 - dist / max)).toFixed(1)}px rgba(140, 180, 255, 0.9)`;
-          } else {
+            const force = (1 - dist / max) * 12;
+            ch.style.transform = `translate3d(${((-dx / dist) * force).toFixed(1)}px, ${((-dy / dist) * force).toFixed(1)}px, 0)`;
+          } else if (ch.style.transform) {
             ch.style.transform = "";
-            ch.style.textShadow = "";
           }
-        });
-      });
+          if (ch.style.textShadow) ch.style.textShadow = "";
+        }
+      }
+
+      el.addEventListener(
+        "pointermove",
+        (e) => {
+          splitActive = true;
+          pendingX = e.clientX;
+          pendingY = e.clientY;
+          if (!splitRaf) splitRaf = requestAnimationFrame(paintSplit);
+        },
+        { passive: true }
+      );
       el.addEventListener("pointerleave", () => {
+        splitActive = false;
+        if (splitRaf) {
+          cancelAnimationFrame(splitRaf);
+          splitRaf = 0;
+        }
         chars.forEach((ch) => {
           ch.style.transform = "";
           ch.style.textShadow = "";
@@ -1472,27 +1543,96 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   const vid = document.querySelector(".back-vid");
   const globe = document.querySelector(".card-video-wrap video");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const mobile = window.matchMedia("(max-width: 800px)").matches;
-  if (vid && (reduce || mobile)) {
-    vid.removeAttribute("autoplay");
-    vid.pause();
-    vid.removeAttribute("src");
-    vid.load();
-    vid.style.display = "none";
+  const mobile = window.matchMedia("(max-width: 900px)").matches;
+  let scrollPaused = false;
+  let scrollTimer = 0;
+
+  function pauseDecorMedia() {
+    scrollPaused = true;
+    if (vid && !vid.paused) vid.pause();
+    if (globe && !globe.paused) globe.pause();
   }
-  if (globe) {
-    const playWhenVisible = () => {
-      if (reduce || mobile) {
-        globe.pause();
-        return;
+
+  function resumeDecorMedia() {
+    scrollPaused = false;
+    if (vid?.dataset.shouldPlay === "1") vid.play().catch(() => {});
+    if (globe?.dataset.shouldPlay === "1") globe.play().catch(() => {});
+  }
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      pauseDecorMedia();
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(resumeDecorMedia, 160);
+    },
+    { passive: true }
+  );
+
+  if (vid) {
+    vid.dataset.autoplayWhenVisible = "1";
+    vid.preload = "none";
+    vid.removeAttribute("autoplay");
+    if (reduce || mobile) {
+      vid.pause();
+      vid.removeAttribute("src");
+      try {
+        vid.load();
+      } catch (_) {
+        /* ignore */
       }
-      const io = new IntersectionObserver(([e]) => {
-        if (e.isIntersecting) globe.play().catch(() => {});
-        else globe.pause();
-      }, { threshold: 0.15 });
-      io.observe(globe);
-    };
-    if ("IntersectionObserver" in window) playWhenVisible();
+      vid.style.display = "none";
+      vid.dataset.shouldPlay = "0";
+    } else if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        ([e]) => {
+          const on = !!e?.isIntersecting;
+          vid.dataset.shouldPlay = on ? "1" : "0";
+          if (on && !scrollPaused) vid.play().catch(() => {});
+          else vid.pause();
+        },
+        { threshold: 0.05, rootMargin: "0px" }
+      );
+      io.observe(vid);
+    }
+  }
+
+  if (globe) {
+    globe.dataset.autoplayWhenVisible = "1";
+    globe.preload = "none";
+    globe.removeAttribute("autoplay");
+    const src = globe.getAttribute("src") || globe.dataset.src || "";
+    if (src) {
+      globe.dataset.src = src;
+      globe.removeAttribute("src");
+      try {
+        globe.load();
+      } catch (_) {
+        /* ignore */
+      }
+    }
+
+    if (reduce || mobile) {
+      globe.pause();
+      globe.dataset.shouldPlay = "0";
+      return;
+    }
+
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        ([e]) => {
+          const on = !!e?.isIntersecting;
+          if (on && globe.dataset.src && !globe.getAttribute("src")) {
+            globe.src = globe.dataset.src;
+          }
+          globe.dataset.shouldPlay = on ? "1" : "0";
+          if (on && !scrollPaused) globe.play().catch(() => {});
+          else globe.pause();
+        },
+        { threshold: 0.2, rootMargin: "80px" }
+      );
+      io.observe(globe.closest(".card-video-wrap") || globe);
+    }
   }
 })();
 
