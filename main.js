@@ -1529,6 +1529,38 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     return Number.isFinite(n) && n > 0 ? n : 1;
   }
 
+  function readCssLengthPx(value) {
+    const raw = String(value || "").trim();
+    if (!raw || raw === "0") return 0;
+    if (raw.endsWith("px")) {
+      const n = Number.parseFloat(raw);
+      return Number.isFinite(n) ? n : 0;
+    }
+    const probe = document.createElement("div");
+    probe.style.cssText =
+      "position:absolute;visibility:hidden;pointer-events:none;width:" + raw;
+    root.appendChild(probe);
+    const px = probe.getBoundingClientRect().width;
+    probe.remove();
+    return Number.isFinite(px) ? px : 0;
+  }
+
+  function syncSlideWidth() {
+    perView = readPerView();
+    const styles = getComputedStyle(track);
+    const gap = Number.parseFloat(styles.columnGap || styles.gap) || 0;
+    const peek = readCssLengthPx(
+      getComputedStyle(root).getPropertyValue("--projects-peek")
+    );
+    const viewW = viewport.clientWidth;
+    if (!(viewW > 0)) return;
+    const slideW = Math.max(
+      160,
+      (viewW - peek - Math.max(0, perView - 1) * gap) / perView
+    );
+    root.style.setProperty("--projects-slide-w", `${slideW.toFixed(2)}px`);
+  }
+
   function measureCardStep() {
     const card = cards[0];
     if (!card) return 0;
@@ -1638,6 +1670,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   }
 
   function layout() {
+    syncSlideWidth();
     perView = readPerView();
     pageCount = Math.max(1, Math.ceil(cards.length / perView));
     page = Math.min(page, pageCount - 1);

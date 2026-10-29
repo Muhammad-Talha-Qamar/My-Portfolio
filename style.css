@@ -1090,7 +1090,8 @@ html[data-mode="light"] .passion-key{
     --projects-gap: 1.15rem;
     --projects-per-view: 3;
     --projects-peek: 0px;
-    --projects-slide-w: calc((100cqi - var(--projects-peek) - (var(--projects-per-view) - 1) * var(--projects-gap)) / var(--projects-per-view));
+    /* Safe pre-JS fallback — main.js writes an exact viewport-based px width */
+    --projects-slide-w: min(22rem, 78vw);
     position: relative;
     width: 100%;
     display: flex;
