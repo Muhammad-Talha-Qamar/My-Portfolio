@@ -1,15 +1,15 @@
 {
-  "builtAt": "2026-10-29T06:51:43.968Z",
+  "builtAt": "2026-10-30T11:39:27.351Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 90772,
-    "after": 66491
+    "before": 90797,
+    "after": 66509
   },
   "js": {
     "main": {
       "file": "dist/main.min.js",
-      "before": 64885,
-      "after": 35755
+      "before": 65362,
+      "after": 35964
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
