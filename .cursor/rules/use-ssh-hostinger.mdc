@@ -1,13 +1,13 @@
 ---
-description: Use local Hostinger SSH for talbyte.com deploys, verification, and cache fixes
+description: Use Hostinger SSH for talbyte.com only when server/live-site work is needed
 alwaysApply: true
 ---
 
-# Use SSH credentials whenever needed
+# Hostinger SSH — only when needed
 
-For anything involving the live site at **talbyte.com** (verify deploy, sync theme files, inspect server files, purge LiteSpeed/WordPress cache, fix “nothing changed on live”), use the local SSH credentials **proactively** — do not wait to be asked.
+Use local SSH credentials **only when needed** — e.g. live site not reflecting changes, cache purge, inspecting/syncing server files, or fixing a failed deploy. Do **not** SSH on every edit, commit, or routine GitHub Actions deploy.
 
-## Connection
+## Connection (when needed)
 ```bash
 ssh hostinger-talbyte
 # or
@@ -16,7 +16,7 @@ ssh -i ~/.ssh/hostinger_talbyte -p 65002 u537777131@us-phx-web765.main-hosting.e
 
 - Docroot: `/home/u537777131/domains/talbyte.com/public_html`
 - Theme: `.../public_html/wp-content/themes/talbyte-portfolio`
-- Live site is **WordPress** (`talbyte-portfolio` theme), not the root `index.html` alone
-- After theme deploy, purge LiteSpeed / WP cache if the page still looks stale (`x-litespeed-cache: hit`)
+- Live site is **WordPress** (`talbyte-portfolio` theme)
+- If the page still looks stale after deploy, purge LiteSpeed / WP cache (`x-litespeed-cache: hit`)
 
-Full credentials/context also live in the personal agent store (`talbyte-portfolio-essentials.md`, `use-ssh-credentials.md`).
+Details also in personal agent store: `talbyte-portfolio-essentials.md`, `use-ssh-credentials.md`.
