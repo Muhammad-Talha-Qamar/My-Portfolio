@@ -83,6 +83,14 @@ if ( empty( $projects ) ) {
                 <p class="project-tag"><?php echo esc_html( $project['tag'] ); ?></p>
                 <h2 class="project-title"><?php echo talbyte_title_html( $project['title'], $project['highlight'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h2>
                 <p><?php echo esc_html( $project['description'] ); ?></p>
+                <?php
+				$is_game = false !== stripos( $project['tag'], 'game' );
+				$btn_label = $is_game ? 'Play' : 'Open';
+				$btn_icon  = $is_game ? 'bx-play' : 'bx-link-external';
+				?>
+                <a class="project-btn" href="<?php echo esc_url( $project['url'] ); ?>" target="_blank" rel="noreferrer noopener" data-magnetic>
+                  <i class="bx <?php echo esc_attr( $btn_icon ); ?>"></i> <?php echo esc_html( $btn_label ); ?>
+                </a>
               </div>
             </article>
             <?php endforeach; ?>
