@@ -1938,6 +1938,11 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     "click",
     (e) => {
       if (!suppressClick) return;
+      // Never block Open/Play (or other controls) — only swallow link opens after a real swipe.
+      if (e.target.closest(".project-btn, .projects-nav, .projects-dots button, button")) {
+        suppressClick = false;
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
       suppressClick = false;
@@ -1947,6 +1952,10 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
 
   viewport.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
+    // Let project Open/Play links (and controls) work; drag only from the card surface.
+    if (e.target.closest(".project-btn, .projects-nav, .projects-dots button, button, input, textarea, select, label")) {
+      return;
+    }
     dragging = true;
     suppressClick = false;
     pointerId = e.pointerId;

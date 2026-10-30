@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '1.0.5' );
+define( 'TALBYTE_THEME_VERSION', '1.0.6' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
