@@ -1,20 +1,20 @@
 {
-  "builtAt": "2026-11-17T11:48:39.233Z",
+  "builtAt": "2026-11-17T11:57:17.526Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 90218,
-    "after": 66133
+    "before": 91379,
+    "after": 67117
   },
   "js": {
     "main": {
       "file": "dist/main.min.js",
-      "before": 65362,
-      "after": 35964
+      "before": 62978,
+      "after": 35000
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
-      "before": 1076,
-      "after": 693
+      "before": 1604,
+      "after": 1113
     }
   },
   "webp": [

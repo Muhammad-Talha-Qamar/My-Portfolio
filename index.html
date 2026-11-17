@@ -9,17 +9,30 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%BE%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="preload" href="images/main.webp" as="image" type="image/webp" fetchpriority="high" />
+  <link rel="preload" href="images/digital-brain.webp" as="image" type="image/webp" />
+  <link rel="preload" href="images/glob-poster.webp" as="image" type="image/webp" />
+  <link rel="preload" href="images/grid2.webp" as="image" type="image/webp" />
   <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
-  <link rel="stylesheet" href="style.css?v=20261117a" />
+  <link rel="stylesheet" href="style.css?v=20261117p" />
   <script>
     try {
       var savedMode = localStorage.getItem("talha-mode");
       if (savedMode === "light" || savedMode === "dark") {
         document.documentElement.dataset.mode = savedMode;
       }
+      var mq = window.matchMedia;
+      var lite =
+        mq("(prefers-reduced-motion: reduce)").matches ||
+        mq("(max-width: 1100px), (update: slow)").matches ||
+        !mq("(pointer: fine)").matches ||
+        !!(navigator.connection && (navigator.connection.saveData || /2g|slow-2g/i.test(navigator.connection.effectiveType || ""))) ||
+        (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
+        (navigator.deviceMemory && navigator.deviceMemory < 4);
+      if (lite) document.documentElement.classList.add("is-lite");
     } catch (err) {
       document.documentElement.dataset.mode = "dark";
+      document.documentElement.classList.add("is-lite");
     }
   </script>
 </head>
@@ -143,7 +156,7 @@
             interactive web experiences built with HTML, CSS, and JavaScript.
           </p>
           <a class="card-btn" data-magnetic href="#contact"><i class="bx bx-send"></i> Contact Me</a>
-          <img src="images/main.webp" alt="Muhammad Talha Qamar" width="480" height="320" loading="lazy" decoding="async" />
+          <img src="images/main.webp" alt="Muhammad Talha Qamar" width="480" height="320" decoding="async" fetchpriority="low" />
         </div>
 
         <div class="card" data-tilt data-spotlight data-aos="fade-left" data-aos-duration="400" data-aos-delay="40">
@@ -152,7 +165,7 @@
             I work with semantic HTML5, modern CSS (Flexbox, Grid, animations),
             JavaScript ES6+, and Git &amp; GitHub for version control.
           </p>
-          <img src="images/grid2.webp" alt="Tech stack visual" width="640" height="400" loading="lazy" decoding="async" />
+          <img src="images/grid2.webp" alt="Tech stack visual" width="640" height="400" decoding="async" fetchpriority="low" />
         </div>
 
         <div class="card" data-tilt data-spotlight data-aos="zoom-in" data-aos-duration="400" data-aos-delay="80">
@@ -162,7 +175,8 @@
             creative web projects.
           </p>
           <div class="card-video-wrap" data-globe aria-hidden="true">
-            <video data-src="videos/glob.mp4" loop muted playsinline preload="none"></video>
+            <img class="globe-poster" src="images/glob-poster.webp" alt="" width="640" height="640" decoding="async" fetchpriority="low" />
+            <video data-src="videos/glob.mp4" poster="images/glob-poster.webp" loop muted playsinline preload="none"></video>
             <span class="globe-specular"></span>
           </div>
         </div>
@@ -396,7 +410,7 @@
 
       <div class="skills-box">
         <div class="skills-stage">
-          <img class="skills-image" src="images/digital-brain.webp?v=20261117b" alt="" aria-hidden="true" width="820" height="299" loading="lazy" decoding="async" data-aos="zoom-in" data-aos-duration="420" />
+          <img class="skills-image" src="images/digital-brain.webp?v=20261117b" alt="" aria-hidden="true" width="820" height="299" decoding="async" fetchpriority="low" data-aos="zoom-in" data-aos-duration="420" />
 
           <article class="skill-panel Designer" data-tilt data-spotlight data-aos="fade-up" data-aos-duration="400" data-aos-delay="40">
             <div class="skill-panel-icon" aria-hidden="true"><i class="bx bx-laptop"></i></div>
@@ -532,35 +546,45 @@
     </footer>
   </div>
 
-  <script src="main.js?v=20261030b" defer></script>
+  <script src="main.js?v=20261117p" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       if (typeof AOS === "undefined") return;
-      var lite = window.matchMedia("(max-width: 1100px), (prefers-reduced-motion: reduce), (update: slow)").matches
-        || !!(navigator.connection && navigator.connection.saveData);
-      document.querySelectorAll(".hero [data-aos]").forEach(function (el) {
-        el.classList.add("aos-animate");
-      });
+      var lite =
+        document.documentElement.classList.contains("is-lite") ||
+        window.matchMedia("(max-width: 1100px), (prefers-reduced-motion: reduce), (update: slow), (pointer: coarse)").matches ||
+        !window.matchMedia("(pointer: fine)").matches ||
+        !!(navigator.connection && (navigator.connection.saveData || /2g|slow-2g/i.test(navigator.connection.effectiveType || ""))) ||
+        (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
+        (navigator.deviceMemory && navigator.deviceMemory < 4);
+      function forceVisible(root) {
+        (root || document).querySelectorAll("[data-aos]").forEach(function (el) {
+          el.classList.add("aos-animate");
+        });
+      }
+      forceVisible(document.querySelector(".hero"));
+      if (lite) {
+        forceVisible(document);
+        document.documentElement.classList.add("is-lite");
+      }
       AOS.init({
         once: true,
-        offset: 24,
-        duration: lite ? 0 : 380,
+        offset: 16,
+        duration: lite ? 0 : 280,
         delay: 0,
         easing: "ease-out-cubic",
         mirror: false,
         disable: lite,
-        throttleDelay: 32,
-        debounceDelay: 24
+        throttleDelay: 48,
+        debounceDelay: 32
       });
-      if (!lite) {
-        window.setTimeout(function () {
-          document.querySelectorAll("[data-aos]:not(.aos-animate)").forEach(function (el) {
-            var rect = el.getBoundingClientRect();
-            if (rect.top < window.innerHeight * 0.92) el.classList.add("aos-animate");
-          });
-        }, 900);
-      }
+      window.setTimeout(function () {
+        document.querySelectorAll("[data-aos]:not(.aos-animate)").forEach(function (el) {
+          var rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight * 1.05) el.classList.add("aos-animate");
+        });
+      }, lite ? 0 : 400);
     });
   </script>
 </body>

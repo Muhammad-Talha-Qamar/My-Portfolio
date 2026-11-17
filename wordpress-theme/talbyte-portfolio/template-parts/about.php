@@ -32,9 +32,9 @@ $delays = array( 0, 40, 80, 120 );
           <p><?php echo esc_html( $body ); ?></p>
           <?php if ( $type === 'image_cta' ) : ?>
           <a class="card-btn" data-magnetic href="<?php echo esc_url( isset( $card['href'] ) ? $card['href'] : '#contact' ); ?>"><i class="bx bx-send"></i> <?php echo esc_html( isset( $card['cta'] ) ? $card['cta'] : 'Contact Me' ); ?></a>
-          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/main.jpg' ) ); ?>" alt="<?php echo esc_attr( talbyte_option( 'display_name', $d['display_name'] ) ); ?>" loading="lazy" decoding="async" />
+          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/main.jpg' ) ); ?>" alt="<?php echo esc_attr( talbyte_option( 'display_name', $d['display_name'] ) ); ?>" decoding="async" fetchpriority="low" />
           <?php elseif ( $type === 'image' ) : ?>
-          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/grid2.png' ) ); ?>" alt="<?php echo esc_attr( $c_title ); ?>" loading="lazy" decoding="async" />
+          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/grid2.png' ) ); ?>" alt="<?php echo esc_attr( $c_title ); ?>" decoding="async" fetchpriority="low" />
           <?php elseif ( $type === 'video' ) :
 				$raw_video = isset( $card['video'] ) ? $card['video'] : '';
 				if ( is_array( $raw_video ) && ! empty( $raw_video['url'] ) ) {
@@ -48,7 +48,8 @@ $delays = array( 0, 40, 80, 120 );
 				}
 				?>
           <div class="card-video-wrap" data-globe aria-hidden="true">
-            <video data-src="<?php echo esc_url( $video ); ?>" loop muted playsinline preload="none"></video>
+            <img class="globe-poster" src="<?php echo esc_url( talbyte_asset( 'images/glob-poster.webp' ) ); ?>" alt="" width="640" height="640" decoding="async" fetchpriority="low" />
+            <video data-src="<?php echo esc_url( $video ); ?>" poster="<?php echo esc_url( talbyte_asset( 'images/glob-poster.webp' ) ); ?>" loop muted playsinline preload="none"></video>
             <span class="globe-specular"></span>
           </div>
           <?php else : ?>

@@ -90,7 +90,7 @@ modeToggle?.addEventListener("click", () => {
   setMode(document.documentElement.dataset.mode === "light" ? "dark" : "light");
 });
 
-const CONTACT_EMAIL = (typeof talbytePortfolio !== "undefined" && talbytePortfolio.contactEmail) ? talbytePortfolio.contactEmail : "m.talha.qamar.1st@gmail.com";
+const CONTACT_EMAIL = "m.talha.qamar.1st@gmail.com";
 const contactStatus = document.getElementById("contact-status");
 const contactSubmit = document.getElementById("contact-submit");
 
@@ -255,11 +255,20 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
 (() => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(pointer: fine)").matches;
+  const conn = navigator.connection;
+  const slowNet =
+    !!(conn && (conn.saveData || /2g|slow-2g/i.test(conn.effectiveType || "")));
+  const lowPower =
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
+    (navigator.deviceMemory && navigator.deviceMemory < 4);
+  /* Prefer smooth over spectacle — heavy FX only on capable desktops */
   const isLite =
     reduceMotion ||
     window.matchMedia("(max-width: 1100px), (update: slow)").matches ||
-    !!(navigator.connection && navigator.connection.saveData) ||
-    !finePointer;
+    !finePointer ||
+    slowNet ||
+    lowPower ||
+    document.documentElement.classList.contains("is-lite");
   const root = document.documentElement;
   const header = document.querySelector("header");
   const orb = document.querySelector(".cursor-orb");
@@ -662,122 +671,11 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     });
   }
 
-  /* Skills digital brain — ambient drift + cursor steer */
+  /* Skills brain — CSS float only (no perpetual RAF) */
   {
     const brain = document.querySelector(".skills-image");
     if (brain) {
-      const stage = brain.closest(".skills-stage");
-      brain.classList.add("img-motion", "skills-brain-live");
-      if (stage) stage.classList.add("img-motion-host");
-
-      const state = {
-        x: 0,
-        y: 0,
-        r: 0,
-        s: 1,
-        cx: 0,
-        cy: 0,
-        tcx: 0,
-        tcy: 0,
-        hovering: false,
-      };
-      const idleAmpX = 14;
-      const idleAmpY = 10;
-      const cursorAmpX = 28;
-      const cursorAmpY = 22;
-      const t0 = performance.now();
-      let visible = false;
-      let brainRaf = 0;
-
-      function frame(now) {
-        brainRaf = 0;
-        if (!visible || document.hidden) return;
-
-        const t = (now - t0) / 1000;
-        const idleX = Math.sin(t * 0.75) * idleAmpX + Math.sin(t * 1.35) * 5;
-        const idleY = Math.cos(t * 0.6) * idleAmpY + Math.sin(t * 0.95) * 4;
-        const idleR = Math.sin(t * 0.45) * 3.5 + Math.cos(t * 0.8) * 1.5;
-        const idleS = 1 + Math.sin(t * 0.7) * 0.025;
-
-        state.cx = lerp(state.cx, state.tcx, 0.18);
-        state.cy = lerp(state.cy, state.tcy, 0.18);
-
-        const targetX = idleX + state.cx;
-        const targetY = idleY + state.cy;
-        const targetR = idleR + (state.hovering ? state.cx * 0.08 : 0);
-        const targetS = state.hovering ? 1.06 : idleS;
-
-        state.x = lerp(state.x, targetX, 0.12);
-        state.y = lerp(state.y, targetY, 0.12);
-        state.r = lerp(state.r, targetR, 0.1);
-        state.s = lerp(state.s, targetS, 0.12);
-
-        brain.style.transform =
-          `translate3d(${state.x.toFixed(2)}px, ${state.y.toFixed(2)}px, 0)` +
-          ` rotate(${state.r.toFixed(2)}deg)` +
-          ` scale(${state.s.toFixed(3)})`;
-
-        brainRaf = requestAnimationFrame(frame);
-      }
-
-      function startBrain() {
-        if (!brainRaf && visible && !document.hidden) {
-          brainRaf = requestAnimationFrame(frame);
-        }
-      }
-
-      function stopBrain() {
-        if (brainRaf) {
-          cancelAnimationFrame(brainRaf);
-          brainRaf = 0;
-        }
-      }
-
-      if ("IntersectionObserver" in window) {
-        const io = new IntersectionObserver(
-          ([entry]) => {
-            visible = !!entry?.isIntersecting;
-            if (visible) startBrain();
-            else stopBrain();
-          },
-          { rootMargin: "40px", threshold: 0.05 }
-        );
-        io.observe(brain);
-      } else {
-        visible = true;
-        startBrain();
-      }
-
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) stopBrain();
-        else startBrain();
-      });
-
-      if (finePointer) {
-        brain.addEventListener("pointerenter", () => {
-          state.hovering = true;
-        });
-        brain.addEventListener("pointerleave", () => {
-          state.hovering = false;
-          state.tcx = 0;
-          state.tcy = 0;
-        });
-        brain.addEventListener("pointermove", (e) => {
-          /* Use layout box (ignores transform) so steering stays stable */
-          const cx = brain.offsetLeft + brain.offsetWidth / 2;
-          const cy = brain.offsetTop + brain.offsetHeight / 2;
-          const origin = stage || brain.offsetParent;
-          const originRect = origin
-            ? origin.getBoundingClientRect()
-            : brain.getBoundingClientRect();
-          const px =
-            (e.clientX - originRect.left - cx) / Math.max(brain.offsetWidth / 2, 1);
-          const py =
-            (e.clientY - originRect.top - cy) / Math.max(brain.offsetHeight / 2, 1);
-          state.tcx = Math.max(-1, Math.min(1, px)) * cursorAmpX;
-          state.tcy = Math.max(-1, Math.min(1, py)) * cursorAmpY;
-        });
-      }
+      brain.classList.add("skills-brain-live");
     }
   }
 
@@ -907,9 +805,9 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     const isNarrow = () => w < 900;
 
     function particleCount() {
-      const dens = isCoarse || isNarrow() ? 220000 : 160000;
-      const max = isCoarse || isNarrow() ? 8 : 14;
-      return Math.min(max, Math.max(6, Math.floor((w * h) / dens)));
+      const dens = isCoarse || isNarrow() ? 320000 : 240000;
+      const max = isCoarse || isNarrow() ? 5 : 8;
+      return Math.min(max, Math.max(4, Math.floor((w * h) / dens)));
     }
 
     function makeParticle() {
@@ -1449,10 +1347,11 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     });
     }; /* end bootCosmos */
 
+    /* Defer cosmos until the page is idle so first paint / scroll stay free */
     const scheduleCosmos =
       typeof requestIdleCallback === "function"
-        ? (fn) => requestIdleCallback(fn, { timeout: 1800 })
-        : (fn) => window.setTimeout(fn, 700);
+        ? (fn) => requestIdleCallback(fn, { timeout: 4000 })
+        : (fn) => window.setTimeout(fn, 1600);
     scheduleCosmos(bootCosmos);
   }
 
@@ -1620,12 +1519,19 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
 
 (() => {
   const vid = document.querySelector(".back-vid");
-  const globe = document.querySelector(".card-video-wrap video");
+  const globeWrap = document.querySelector(".card-video-wrap[data-globe]");
+  const globe = globeWrap?.querySelector("video");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
+  const conn = navigator.connection;
   const lite =
     reduce ||
+    document.documentElement.classList.contains("is-lite") ||
     window.matchMedia("(max-width: 1100px), (update: slow)").matches ||
-    !!(navigator.connection && navigator.connection.saveData);
+    !finePointer ||
+    !!(conn && (conn.saveData || /2g|slow-2g/i.test(conn.effectiveType || ""))) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
+    (navigator.deviceMemory && navigator.deviceMemory < 4);
   let scrollPaused = false;
   let scrollTimer = 0;
 
@@ -1646,7 +1552,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     () => {
       pauseDecorMedia();
       window.clearTimeout(scrollTimer);
-      scrollTimer = window.setTimeout(resumeDecorMedia, 220);
+      scrollTimer = window.setTimeout(resumeDecorMedia, 280);
     },
     { passive: true }
   );
@@ -1688,8 +1594,8 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       };
       const schedule =
         typeof requestIdleCallback === "function"
-          ? (fn) => requestIdleCallback(fn, { timeout: 2500 })
-          : (fn) => window.setTimeout(fn, 1200);
+          ? (fn) => requestIdleCallback(fn, { timeout: 5000 })
+          : (fn) => window.setTimeout(fn, 2000);
       schedule(armBg);
     }
   }
@@ -1709,11 +1615,18 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       }
     }
 
+    /* Poster stays visible forever on lite — never leave a blank globe */
     if (lite) {
       globe.pause();
       globe.dataset.shouldPlay = "0";
+      globe.removeAttribute("src");
+      globeWrap?.classList.remove("is-video-ready");
       return;
     }
+
+    const markReady = () => globeWrap?.classList.add("is-video-ready");
+    globe.addEventListener("loadeddata", markReady, { once: true });
+    globe.addEventListener("playing", markReady);
 
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
@@ -1724,11 +1637,14 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
           }
           globe.dataset.shouldPlay = on ? "1" : "0";
           if (on && !scrollPaused) globe.play().catch(() => {});
-          else globe.pause();
+          else {
+            globe.pause();
+            if (!globe.getAttribute("src")) globeWrap?.classList.remove("is-video-ready");
+          }
         },
-        { threshold: 0.25, rootMargin: "40px" }
+        { threshold: 0.15, rootMargin: "120px" }
       );
-      io.observe(globe.closest(".card-video-wrap") || globe);
+      io.observe(globeWrap || globe);
     }
   }
 })();

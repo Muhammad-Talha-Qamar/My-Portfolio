@@ -877,15 +877,46 @@ html[data-mode="light"] .hero-photo-wrap{
     --gly: 40%;
 }
 
+.globe-poster{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    z-index: 0;
+    filter: contrast(1.35) brightness(1.06) saturate(1.15);
+}
+
 .card-video-wrap[data-globe] video{
+    position: relative;
+    z-index: 1;
     transform:
         translate3d(var(--gtx), var(--gty), 0)
         rotateX(var(--gx))
         rotateY(var(--gy))
         scale(var(--gs));
     transform-origin: 50% 45%;
-    transition: transform 0.12s linear;
-    will-change: transform;
+    transition: transform 0.12s linear, opacity 0.35s ease;
+    opacity: 0;
+}
+
+.card-video-wrap[data-globe].is-video-ready video{
+    opacity: 1;
+}
+
+.card-video-wrap[data-globe].is-video-ready .globe-poster{
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+html.is-lite .card-video-wrap[data-globe] video{
+    display: none !important;
+}
+
+html.is-lite .card-video-wrap[data-globe] .globe-poster{
+    opacity: 1 !important;
 }
 
 .card-video-wrap[data-globe].is-tracking video{
@@ -1551,22 +1582,22 @@ html[data-mode="light"] .passion-key{
     z-index: 0;
 }
 
+@keyframes skills-brain-float{
+    0%, 100%{ transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+    40%{ transform: translate3d(6px, -5px, 0) rotate(1.2deg) scale(1.02); }
+    70%{ transform: translate3d(-4px, 3px, 0) rotate(-0.8deg) scale(1.01); }
+}
+
 .skills-image.skills-brain-live{
-    pointer-events: auto;
-    cursor: grab;
+    pointer-events: none;
     transform-origin: center center;
-    will-change: transform;
-    transition: filter 0.4s ease, opacity 0.4s ease;
     filter: drop-shadow(0 0 22px rgba(90, 150, 255, 0.35));
+    animation: skills-brain-float 9s ease-in-out infinite;
 }
 
-.skills-image.skills-brain-live:hover{
-    opacity: 1;
-    filter: drop-shadow(0 0 34px rgba(120, 180, 255, 0.55));
-}
-
-.skills-image.skills-brain-live:active{
-    cursor: grabbing;
+html.is-lite .skills-image.skills-brain-live,
+html.reduce-motion .skills-image.skills-brain-live{
+    animation: none !important;
 }
 
 .skills-stage .skill-panel.Designer{
@@ -4252,9 +4283,25 @@ html.is-lite .bg-canvas,
 html.is-lite .cursor-orb,
 html.is-lite .cursor-ring,
 html.is-lite .charge-ring,
-html.is-lite .hero-orbit{
+html.is-lite .hero-orbit,
+html.is-lite .globe-specular{
     display: none !important;
     animation: none !important;
+}
+
+html.is-lite [data-aos],
+html.is-lite [data-aos].aos-animate{
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+html.is-lite .card,
+html.is-lite .skill-panel,
+html.is-lite .project-card,
+html.is-lite .skills-image,
+html.is-lite .globe-poster{
+    content-visibility: visible;
 }
 
 html.is-lite .bg-layer{

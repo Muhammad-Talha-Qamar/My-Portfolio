@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '1.0.8' );
+define( 'TALBYTE_THEME_VERSION', '1.0.9' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -101,6 +101,12 @@ function talbyte_resource_hints() {
 		$type = str_ends_with( strtolower( wp_parse_url( $hero, PHP_URL_PATH ) ?: '' ), '.webp' ) ? 'image/webp' : 'image/jpeg';
 		echo '<link rel="preload" href="' . esc_url( $hero ) . '" as="image" type="' . esc_attr( $type ) . '" fetchpriority="high" />' . "\n";
 	}
+	$brain  = talbyte_asset( 'images/digital-brain.webp' );
+	$globe  = talbyte_asset( 'images/glob-poster.webp' );
+	$grid2  = talbyte_asset( 'images/grid2.webp' );
+	echo '<link rel="preload" href="' . esc_url( $brain ) . '" as="image" type="image/webp" />' . "\n";
+	echo '<link rel="preload" href="' . esc_url( $globe ) . '" as="image" type="image/webp" />' . "\n";
+	echo '<link rel="preload" href="' . esc_url( $grid2 ) . '" as="image" type="image/webp" />' . "\n";
 }
 
 /**

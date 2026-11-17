@@ -29,8 +29,18 @@ if ( ! $bg_video ) {
       if (savedMode === "light" || savedMode === "dark") {
         document.documentElement.dataset.mode = savedMode;
       }
+      var mq = window.matchMedia;
+      var lite =
+        mq("(prefers-reduced-motion: reduce)").matches ||
+        mq("(max-width: 1100px), (update: slow)").matches ||
+        !mq("(pointer: fine)").matches ||
+        !!(navigator.connection && (navigator.connection.saveData || /2g|slow-2g/i.test(navigator.connection.effectiveType || ""))) ||
+        (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
+        (navigator.deviceMemory && navigator.deviceMemory < 4);
+      if (lite) document.documentElement.classList.add("is-lite");
     } catch (err) {
       document.documentElement.dataset.mode = "dark";
+      document.documentElement.classList.add("is-lite");
     }
   </script>
   <?php wp_head(); ?>
