@@ -1541,7 +1541,7 @@ html[data-mode="light"] .passion-key{
     grid-row: 1;
     width: 100%;
     max-width: 320px;
-    aspect-ratio: 820 / 340;
+    aspect-ratio: 820 / 299;
     height: auto;
     object-fit: contain;
     justify-self: center;

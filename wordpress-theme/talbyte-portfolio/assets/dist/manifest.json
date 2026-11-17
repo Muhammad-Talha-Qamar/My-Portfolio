@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-17T11:42:04.303Z",
+  "builtAt": "2026-11-17T11:48:39.233Z",
   "css": {
     "file": "dist/style.min.css",
     "before": 90218,
@@ -21,8 +21,8 @@
     {
       "srcRel": "images/digital-brain.png",
       "destRel": "images/digital-brain.webp",
-      "before": 232121,
-      "after": 37252
+      "before": 215430,
+      "after": 34428
     },
     {
       "srcRel": "images/grid2.png",
