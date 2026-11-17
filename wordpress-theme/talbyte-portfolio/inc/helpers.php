@@ -50,14 +50,22 @@ function talbyte_field( $key, $post_id = null, $default = '' ) {
  */
 function talbyte_asset( $path ) {
 	$path = ltrim( $path, '/' );
+	$base = get_template_directory() . '/assets/';
+	$uri  = get_template_directory_uri() . '/assets/';
 	$webp = preg_replace( '/\.(png|jpe?g)$/i', '.webp', $path );
+	$file = $base . $path;
 	if ( $webp && $webp !== $path ) {
-		$webp_file = get_template_directory() . '/assets/' . $webp;
+		$webp_file = $base . $webp;
 		if ( file_exists( $webp_file ) ) {
-			return get_template_directory_uri() . '/assets/' . $webp;
+			$path = $webp;
+			$file = $webp_file;
 		}
 	}
-	return get_template_directory_uri() . '/assets/' . $path;
+	$url = $uri . $path;
+	if ( file_exists( $file ) ) {
+		$url = add_query_arg( 'v', (string) filemtime( $file ), $url );
+	}
+	return $url;
 }
 
 /**
