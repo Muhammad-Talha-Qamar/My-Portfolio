@@ -1531,7 +1531,7 @@ html[data-mode="light"] .passion-key{
     position: relative;
     width: 100%;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(150px, 18vw, 240px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) clamp(200px, 26vw, 320px) minmax(0, 1fr);
     gap: clamp(1rem, 2.5vw, 2rem);
     align-items: center;
 }
@@ -1540,22 +1540,13 @@ html[data-mode="light"] .passion-key{
     grid-column: 2;
     grid-row: 1;
     width: 100%;
-    max-width: 240px;
+    max-width: 320px;
+    aspect-ratio: 820 / 340;
+    height: auto;
+    object-fit: contain;
     justify-self: center;
     mix-blend-mode: screen;
-    opacity: 0.9;
-    -webkit-mask-image: radial-gradient(
-        ellipse 72% 68% at 50% 50%,
-        #000 35%,
-        rgba(0, 0, 0, 0.65) 58%,
-        transparent 82%
-    );
-    mask-image: radial-gradient(
-        ellipse 72% 68% at 50% 50%,
-        #000 35%,
-        rgba(0, 0, 0, 0.65) 58%,
-        transparent 82%
-    );
+    opacity: 0.95;
     pointer-events: none;
     z-index: 0;
 }
@@ -1566,12 +1557,12 @@ html[data-mode="light"] .passion-key{
     transform-origin: center center;
     will-change: transform;
     transition: filter 0.4s ease, opacity 0.4s ease;
-    filter: drop-shadow(0 0 18px rgba(100, 160, 255, 0.25));
+    filter: drop-shadow(0 0 22px rgba(90, 150, 255, 0.35));
 }
 
 .skills-image.skills-brain-live:hover{
     opacity: 1;
-    filter: drop-shadow(0 0 28px rgba(120, 180, 255, 0.45));
+    filter: drop-shadow(0 0 34px rgba(120, 180, 255, 0.55));
 }
 
 .skills-image.skills-brain-live:active{
@@ -2228,23 +2219,9 @@ html[data-mode="light"] .skills-stage{
 }
 
 html[data-mode="light"] .skills-image{
-    mix-blend-mode: screen;
-    opacity: 0.75;
-    filter: brightness(1.35) contrast(1.35) saturate(1.6);
-    -webkit-mask-image: radial-gradient(
-        ellipse 68% 64% at 50% 50%,
-        #000 0%,
-        #000 32%,
-        rgba(0, 0, 0, 0.45) 55%,
-        transparent 78%
-    );
-    mask-image: radial-gradient(
-        ellipse 68% 64% at 50% 50%,
-        #000 0%,
-        #000 32%,
-        rgba(0, 0, 0, 0.45) 55%,
-        transparent 78%
-    );
+    mix-blend-mode: multiply;
+    opacity: 0.9;
+    filter: brightness(0.95) contrast(1.15) saturate(1.35);
 }
 
 html[data-mode="light"] .skill-panel{
@@ -2727,9 +2704,9 @@ body.nav-open{
     .skills-image{
         grid-column: 1;
         grid-row: 1;
-        width: min(220px, 48vw);
-        max-width: 220px;
-        opacity: 0.9;
+        width: min(280px, 72vw);
+        max-width: 280px;
+        opacity: 0.95;
         margin-bottom: 0.35rem;
     }
 
@@ -3030,9 +3007,9 @@ body.nav-open{
     }
 
     .skills-image{
-        width: min(190px, 50vw);
-        max-width: 190px;
-        opacity: 0.88;
+        width: min(260px, 70vw);
+        max-width: 260px;
+        opacity: 0.95;
     }
 
     .skill-panel{
