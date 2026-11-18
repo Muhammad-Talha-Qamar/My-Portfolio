@@ -720,37 +720,19 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   );
   onScroll();
 
-  /* Reveal-on-view for section titles — re-triggers every time they enter/leave */
-  const revealExits = [
-    "reveal-up",
-    "reveal-down",
-    "reveal-left",
-    "reveal-right",
-    "reveal-zoom",
-    "reveal-blur",
-  ];
+  /* Reveal-on-view for section titles — early rootMargin so motion starts on time */
   const revealEls = document.querySelectorAll("[data-reveal]");
   if (revealEls.length && "IntersectionObserver" in window) {
-    revealEls.forEach((el, i) => {
-      if (!el.hasAttribute("data-reveal-out")) {
-        el.setAttribute("data-reveal-out", revealExits[i % revealExits.length]);
-      }
-    });
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const el = entry.target;
           if (entry.isIntersecting) {
-            el.classList.remove("is-exiting");
-            el.classList.add("is-revealed");
-          } else if (el.classList.contains("is-revealed")) {
-            el.classList.remove("is-revealed");
-            el.classList.add("is-exiting");
-            window.setTimeout(() => el.classList.remove("is-exiting"), 520);
+            entry.target.classList.add("is-revealed");
+            io.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.08, rootMargin: "0px 0px 12% 0px" }
     );
     revealEls.forEach((el) => io.observe(el));
   } else {
@@ -1477,15 +1459,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     document.querySelector(".hero-title")?.classList.add("is-split-ready");
   }
 
-  /* Scroll-triggered motion for skill chips + data-animate — forever on enter/leave */
-  const motionExits = [
-    "slide-left",
-    "slide-right",
-    "zoom",
-    "fade-up",
-    "rise",
-    "fade-down",
-  ];
+  /* Scroll-triggered motion for skill chips + data-animate */
   const motionEls = [
     ...document.querySelectorAll("[data-animate]"),
     ...document.querySelectorAll(".skill-panel"),
@@ -1494,24 +1468,15 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     const motionIo = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const el = entry.target;
-          if (entry.isIntersecting) {
-            el.classList.remove("is-exiting");
-            el.classList.add("is-inview");
-          } else if (el.classList.contains("is-inview")) {
-            el.classList.remove("is-inview");
-            el.classList.add("is-exiting");
-            window.setTimeout(() => el.classList.remove("is-exiting"), 520);
-          }
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-inview");
+          motionIo.unobserve(entry.target);
         });
       },
-      { threshold: 0.08, rootMargin: "0px 0px -6% 0px" }
+      { threshold: 0.05, rootMargin: "0px 0px 15% 0px" }
     );
     motionEls.forEach((el, i) => {
       el.style.setProperty("--stagger", String(i % 4));
-      if (el.hasAttribute("data-animate") && !el.hasAttribute("data-animate-out")) {
-        el.setAttribute("data-animate-out", motionExits[i % motionExits.length]);
-      }
       motionIo.observe(el);
     });
   } else {

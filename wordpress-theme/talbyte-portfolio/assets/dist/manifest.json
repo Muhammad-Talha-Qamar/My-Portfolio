@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-18T12:37:58.220Z",
+  "builtAt": "2026-11-18T12:38:17.179Z",
   "css": {
     "file": "dist/style.min.css",
     "before": 93692,
@@ -13,8 +13,8 @@
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
-      "before": 3456,
-      "after": 2202
+      "before": 1604,
+      "after": 1113
     }
   },
   "webp": [
