@@ -18,11 +18,6 @@ $photo       = talbyte_image_url( talbyte_option( 'hero_photo', null ), $d['hero
 $display     = talbyte_option( 'display_name', $d['display_name'] );
 ?>
     <section class="hero" id="home">
-      <div class="hero-backdrop" aria-hidden="true">
-        <img class="hero-backdrop-img" src="<?php echo esc_url( $photo ); ?>" alt="" width="900" height="600" decoding="async" fetchpriority="high" />
-        <div class="hero-backdrop-scrim"></div>
-      </div>
-
       <div class="hero-info">
         <div class="hero-info-title">
           <i class="bx bxl-sketch"></i>
@@ -38,6 +33,10 @@ $display     = talbyte_option( 'display_name', $d['display_name'] );
         </p>
 
         <a class="hero-btn" href="<?php echo esc_url( $cta_href ); ?>" data-magnetic><i class="bx bx-send"></i> <?php echo esc_html( $cta_label ); ?></a>
+      </div>
+
+      <div class="hero-portrait">
+        <img class="hero-portrait-img" src="<?php echo esc_url( $photo ); ?>" alt="<?php echo esc_attr( $display ); ?>" width="900" height="600" decoding="async" fetchpriority="high" />
       </div>
 
       <a class="scroll-down" href="#about" aria-label="Scroll to about"></a>

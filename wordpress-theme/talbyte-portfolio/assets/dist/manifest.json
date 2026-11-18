@@ -1,9 +1,9 @@
 {
-  "builtAt": "2026-11-18T12:26:33.334Z",
+  "builtAt": "2026-11-18T12:30:37.370Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 90832,
-    "after": 66297
+    "before": 90206,
+    "after": 66281
   },
   "js": {
     "main": {
