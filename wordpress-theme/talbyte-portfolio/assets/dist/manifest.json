@@ -1,9 +1,9 @@
 {
-  "builtAt": "2026-11-18T12:32:40.848Z",
+  "builtAt": "2026-11-18T12:37:58.220Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 91379,
-    "after": 67117
+    "before": 93692,
+    "after": 69013
   },
   "js": {
     "main": {
@@ -13,8 +13,8 @@
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
-      "before": 1604,
-      "after": 1113
+      "before": 3456,
+      "after": 2202
     }
   },
   "webp": [
@@ -39,8 +39,8 @@
     {
       "srcRel": "images/main.jpg",
       "destRel": "images/main.webp",
-      "before": 60121,
-      "after": 37338
+      "before": 49739,
+      "after": 11934
     },
     {
       "srcRel": "images/thumbs/byd.jpg",
