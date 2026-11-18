@@ -36,12 +36,9 @@ $display     = talbyte_option( 'display_name', $d['display_name'] );
       </div>
 
       <div class="skills-video-box" data-parallax="0.1">
-        <div class="hero-photo-wrap hero-photo-float" data-tilt data-tilt-max="14">
-          <div class="hero-orbit" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <div class="hero-photo-frame" data-spotlight>
-            <img class="hero-photo" src="<?php echo esc_url( $photo ); ?>" alt="<?php echo esc_attr( $display ); ?>" width="900" height="600" decoding="async" fetchpriority="high" />
+        <div class="hero-photo-wrap hero-photo-float">
+          <div class="hero-photo-frame">
+            <img class="hero-photo" src="<?php echo esc_url( $photo ); ?>" alt="<?php echo esc_attr( $display ); ?>" width="1024" height="1024" decoding="async" fetchpriority="high" />
           </div>
         </div>
       </div>
