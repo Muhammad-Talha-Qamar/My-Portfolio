@@ -90,7 +90,7 @@ modeToggle?.addEventListener("click", () => {
   setMode(document.documentElement.dataset.mode === "light" ? "dark" : "light");
 });
 
-const CONTACT_EMAIL = "m.talha.qamar.1st@gmail.com";
+const CONTACT_EMAIL = "qamitalha42@gmail.com";
 const contactStatus = document.getElementById("contact-status");
 const contactSubmit = document.getElementById("contact-submit");
 

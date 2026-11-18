@@ -132,7 +132,7 @@ function talbyte_defaults() {
 		'brand_first'     => 'Talha',
 		'brand_last'      => 'Qamar',
 		'display_name'    => 'Muhammad Talha Qamar',
-		'email'           => 'm.talha.qamar.1st@gmail.com',
+		'email'           => 'qamitalha42@gmail.com',
 		'github_url'      => 'https://github.com/Muhammad-Talha-Qamar',
 		'github_label'    => 'Muhammad-Talha-Qamar',
 		'linkedin_url'    => 'https://www.linkedin.com/in/m-talha-qamar-96765b435/',

@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-17T11:57:17.526Z",
+  "builtAt": "2026-11-18T11:50:25.253Z",
   "css": {
     "file": "dist/style.min.css",
     "before": 91379,
@@ -8,8 +8,8 @@
   "js": {
     "main": {
       "file": "dist/main.min.js",
-      "before": 62978,
-      "after": 35000
+      "before": 62972,
+      "after": 34994
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
