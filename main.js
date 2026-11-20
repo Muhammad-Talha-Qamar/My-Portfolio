@@ -483,18 +483,41 @@
     window.addEventListener("resize", layout);
   }
 
+  let cardsOpened = false;
+
+  function openCards() {
+    if (cardsOpened) return;
+    cardsOpened = true;
+    if (prefersReducedMotion) {
+      root.classList.remove("is-cards-closed", "is-cards-opening");
+      root.classList.add("is-cards-open");
+      return;
+    }
+    root.classList.remove("is-cards-closed");
+    root.classList.add("is-cards-opening");
+    window.setTimeout(() => {
+      root.classList.remove("is-cards-opening");
+      root.classList.add("is-cards-open");
+    }, 1200);
+  }
+
+  root.classList.add("is-cards-closed");
+
   requestAnimationFrame(() => {
     layout();
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
         ([entry]) => {
-          if (entry?.isIntersecting) startAutoplay();
-          else stopAutoplay();
+          if (entry?.isIntersecting) {
+            openCards();
+            startAutoplay();
+          } else stopAutoplay();
         },
-        { threshold: 0.2 }
+        { threshold: 0.22 }
       );
       io.observe(root);
     } else {
+      openCards();
       startAutoplay();
     }
   });

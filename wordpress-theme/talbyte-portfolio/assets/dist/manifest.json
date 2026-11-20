@@ -1,15 +1,15 @@
 {
-  "builtAt": "2026-11-20T13:06:33.975Z",
+  "builtAt": "2026-11-20T15:46:42.064Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 62590,
-    "after": 49094
+    "before": 62636,
+    "after": 49041
   },
   "js": {
     "main": {
       "file": "dist/main.min.js",
-      "before": 15347,
-      "after": 8827
+      "before": 15950,
+      "after": 9189
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
@@ -30,19 +30,14 @@
       "file": "dist/interactive-grid.min.js",
       "before": 5971,
       "after": 3074
-    },
-    "projectsLottie": {
-      "file": "dist/projects-lottie.min.js",
-      "before": 2874,
-      "after": 1847
     }
   },
   "webp": [
     {
       "srcRel": "images/main.jpg",
       "destRel": "images/main.webp",
-      "before": 109178,
-      "after": 51894
+      "before": 121032,
+      "after": 52934
     },
     {
       "srcRel": "images/thumbs/byd.jpg",
