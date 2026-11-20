@@ -4,11 +4,15 @@
 
   const navbar = document.getElementById("site-navbar");
   const burger = document.getElementById("menu-icon");
+  const navPanel = document.getElementById("nav-links-panel");
+  const burgerIcon = burger?.querySelector(".navbar__burger");
   const links = document.querySelectorAll(".navbar__link");
 
   function setNavOpen(open) {
     if (!navbar || !burger) return;
     navbar.classList.toggle("navbar--open", open);
+    navPanel?.classList.toggle("is-open", open);
+    burgerIcon?.classList.toggle("is-open", open);
     burger.setAttribute("aria-expanded", open ? "true" : "false");
     document.body.classList.toggle("nav-open", open);
   }
@@ -25,8 +29,14 @@
     if (e.key === "Escape") setNavOpen(false);
   });
 
+  document.addEventListener("click", (e) => {
+    if (!navbar?.classList.contains("navbar--open")) return;
+    if (navbar.contains(e.target)) return;
+    setNavOpen(false);
+  });
+
   window.addEventListener("resize", () => {
-    if (window.innerWidth > 767) setNavOpen(false);
+    if (window.innerWidth > 768) setNavOpen(false);
   });
 
   window.addEventListener(
@@ -36,6 +46,33 @@
     },
     { passive: true }
   );
+
+  // Subtle hero parallax (desktop feel; skipped in lite / reduced motion)
+  const hero = document.getElementById("home");
+  if (
+    hero &&
+    !document.documentElement.classList.contains("is-lite") &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    let heroRaf = 0;
+    const updateHeroParallax = () => {
+      heroRaf = 0;
+      const y = window.scrollY;
+      if (y < window.innerHeight * 1.6) {
+        hero.style.setProperty("--parallax-hero-photo", `${(y * 0.14).toFixed(1)}px`);
+        hero.style.setProperty("--parallax-hero-backlayer", `${(y * 0.06).toFixed(1)}px`);
+        hero.style.setProperty("--parallax-hero-text", `${(y * 0.04).toFixed(1)}px`);
+      }
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (heroRaf) return;
+        heroRaf = requestAnimationFrame(updateHeroParallax);
+      },
+      { passive: true }
+    );
+  }
 
   const sections = [...document.querySelectorAll("section[id]")];
   if (sections.length && "IntersectionObserver" in window) {

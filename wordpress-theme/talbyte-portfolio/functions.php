@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '2.2.2' );
+define( 'TALBYTE_THEME_VERSION', '2.3.0' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -61,6 +61,7 @@ function talbyte_enqueue_assets() {
 	$js_main  = talbyte_asset_file( 'main.js', 'dist/main.min.js' );
 	$js_intro = talbyte_asset_file( 'intro-loader.js', 'dist/intro-loader.min.js' );
 	$js_leaves = talbyte_asset_file( 'falling-leaves.js', 'dist/falling-leaves.min.js' );
+	$js_grid   = talbyte_asset_file( 'interactive-grid.js', 'dist/interactive-grid.min.js' );
 
 	// Subset to weights actually used by the theme CSS (no italic / unused 500s).
 	wp_enqueue_style(
@@ -72,6 +73,7 @@ function talbyte_enqueue_assets() {
 	wp_enqueue_style( 'talbyte-portfolio', $uri . '/' . $css, array( 'talbyte-fonts' ), $ver );
 
 	wp_enqueue_script( 'talbyte-intro', $uri . '/' . $js_intro, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-grid', $uri . '/' . $js_grid, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-leaves', $uri . '/' . $js_leaves, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 

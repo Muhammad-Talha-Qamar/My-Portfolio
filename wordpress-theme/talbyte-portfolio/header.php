@@ -69,24 +69,29 @@ $linkedin_url = talbyte_option( 'linkedin_url', $d['linkedin_url'] );
     <div class="site-intro__bar" aria-hidden="true"><b id="site-intro-bar"></b></div>
   </div>
 
+  <canvas class="interactive-grid-canvas" id="interactive-grid" aria-hidden="true"></canvas>
   <div class="interactive-grid" aria-hidden="true"></div>
 
   <header class="navbar" id="site-navbar">
-    <nav class="navbar__container" aria-label="Primary">
-      <a class="navbar__logo" href="#home" aria-label="<?php echo esc_attr( $brand_first . ' ' . $brand_last . ' Home' ); ?>">
-        <img src="<?php echo esc_url( $logo ); ?>" alt="" width="36" height="36" decoding="async" fetchpriority="high" />
+    <div class="navbar__container">
+      <a class="navbar__logo" href="#home" aria-label="<?php echo esc_attr( $brand_first . ' ' . $brand_last . ' Home' ); ?>" title="Home">
+        <img src="<?php echo esc_url( $logo ); ?>" alt="" width="28" height="28" decoding="async" fetchpriority="high" />
+        <span class="navbar__name"><?php echo esc_html( $brand_first . ' ' . $brand_last ); ?></span>
       </a>
-      <ul class="navbar__links">
-        <li><a class="navbar__link" href="#about">ABOUT</a></li>
-        <li><a class="navbar__link" href="#skills">SKILLS</a></li>
-        <li><a class="navbar__link" href="#projects">PROJECTS</a></li>
-        <li><a class="navbar__link" href="#services">SERVICES</a></li>
-        <li><a class="navbar__link" href="#contact">CONTACT</a></li>
-      </ul>
-      <button class="navbar__burger" id="menu-icon" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links-panel">
-        <span></span><span></span><span></span>
+      <span class="navbar__divider" aria-hidden="true"></span>
+      <nav class="navbar__nav" id="nav-links-panel" aria-label="Primary">
+        <ul class="navbar__links">
+          <li class="navbar__item"><a class="navbar__link" href="#about">ABOUT</a></li>
+          <li class="navbar__item"><a class="navbar__link" href="#skills">SKILLS</a></li>
+          <li class="navbar__item"><a class="navbar__link" href="#projects">PROJECTS</a></li>
+          <li class="navbar__item"><a class="navbar__link" href="#services">SERVICES</a></li>
+          <li class="navbar__item"><a class="navbar__link" href="#contact">CONTACT</a></li>
+        </ul>
+      </nav>
+      <button class="navbar__mobile-toggle" id="menu-icon" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links-panel">
+        <span class="navbar__burger" aria-hidden="true"></span>
       </button>
-    </nav>
+    </div>
   </header>
 
   <div class="site-shell">
