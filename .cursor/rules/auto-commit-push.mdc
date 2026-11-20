@@ -1,16 +1,19 @@
 ---
-description: Always commit and push after making changes
+description: Always commit, push, and upload/deploy after completing full changes
 alwaysApply: true
 ---
 
-# Auto commit and push
+# Auto commit, push, and upload
 
-After completing any code or content changes in this project:
+After completing any full code or content change at the end of a prompt (not mid-iteration half-steps):
 
 1. Commit the relevant changes with a concise message (why, not what)
 2. Push to `origin` on the current branch immediately
 3. Do not ask for confirmation before commit or push
-4. Watch the triggered GitHub Actions run (e.g. Deploy to Hostinger) until it finishes
+4. Treat **upload/deploy as mandatory** — push must trigger Hostinger deploy (GitHub Actions “Deploy to Hostinger”); wait until that run finishes
 5. When it succeeds (or fails), report the status to the user briefly, including the run URL if useful
+6. If Actions is unavailable/failing and the live site still needs the change, fall back to SSH/rsync upload of the theme (see Hostinger SSH rule)
+
+Never leave a completed prompt with uncommitted or undeployed site changes. “Done” means: committed + pushed + uploaded/deployed (or a clear failure report).
 
 Follow the existing git safety protocol (no force push to main/master, no amending pushed commits, no secrets in commits). This project rule overrides the default "only commit when asked" preference for this repository.
