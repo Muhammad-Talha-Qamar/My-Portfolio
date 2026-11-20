@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '2.0.1' );
+define( 'TALBYTE_THEME_VERSION', '2.1.0' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -64,7 +64,7 @@ function talbyte_enqueue_assets() {
 	// Subset to weights actually used by the theme CSS (no italic / unused 500s).
 	wp_enqueue_style(
 		'talbyte-fonts',
-		'https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Caveat:wght@600&family=Inter:wght@400;600&family=Space+Mono:wght@400;700&display=swap',
+		'https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Caveat:wght@600&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap',
 		array(),
 		null
 	);
