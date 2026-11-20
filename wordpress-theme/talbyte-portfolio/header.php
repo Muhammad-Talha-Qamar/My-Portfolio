@@ -19,9 +19,13 @@ $linkedin_url = talbyte_option( 'linkedin_url', $d['linkedin_url'] );
   <meta charset="<?php bloginfo( 'charset' ); ?>" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#000000" id="theme-color" />
-  <link rel="icon" href="<?php echo esc_url( talbyte_asset( 'images/favicon-32.png' ) ); ?>?v=<?php echo esc_attr( TALBYTE_THEME_VERSION ); ?>" type="image/png" sizes="32x32" />
-  <link rel="icon" href="<?php echo esc_url( talbyte_asset( 'images/favicon.png' ) ); ?>?v=<?php echo esc_attr( TALBYTE_THEME_VERSION ); ?>" type="image/png" sizes="512x512" />
-  <link rel="apple-touch-icon" href="<?php echo esc_url( talbyte_asset( 'images/apple-touch-icon.png' ) ); ?>?v=<?php echo esc_attr( TALBYTE_THEME_VERSION ); ?>" sizes="180x180" />
+  <?php
+  $favicon_ver  = rawurlencode( TALBYTE_THEME_VERSION );
+  $favicon_base = trailingslashit( get_template_directory_uri() ) . 'assets/images/';
+  ?>
+  <link rel="icon" href="<?php echo esc_url( $favicon_base . 'favicon-32.png?v=' . $favicon_ver ); ?>" type="image/png" sizes="32x32" />
+  <link rel="icon" href="<?php echo esc_url( $favicon_base . 'favicon.png?v=' . $favicon_ver ); ?>" type="image/png" sizes="512x512" />
+  <link rel="apple-touch-icon" href="<?php echo esc_url( $favicon_base . 'apple-touch-icon.png?v=' . $favicon_ver ); ?>" sizes="180x180" />
   <script>
     try {
       var mq = window.matchMedia;
