@@ -172,6 +172,7 @@ h3 {
   z-index: 0;
   width: 100vw;
   height: 100vh;
+  visibility: visible;
   pointer-events: none;
   background: transparent;
 }
@@ -1149,8 +1150,10 @@ canvas[data-falling-leaves] {
   .hero-title,
   .hero__word-mk,
   .hero__name-accent {
+    max-width: 100%;
     font-size: clamp(3rem, 14vw, 5.6rem);
     line-height: 0.85;
+    overflow-wrap: anywhere;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.9);
   }
 
