@@ -58,10 +58,4 @@ if ( ! is_array( $stats ) || empty( $stats ) ) {
         </div>
       </div>
 
-      <span class="hero__leaf" style="top:12%;left:8%" aria-hidden="true"></span>
-      <span class="hero__leaf" style="top:28%;right:14%" aria-hidden="true"></span>
-      <span class="hero__leaf" style="top:55%;left:18%" aria-hidden="true"></span>
-      <span class="hero__leaf" style="bottom:22%;right:8%" aria-hidden="true"></span>
-      <span class="hero__leaf" style="bottom:12%;left:42%" aria-hidden="true"></span>
-      <span class="hero__leaf" style="top:18%;left:48%" aria-hidden="true"></span>
     </section>

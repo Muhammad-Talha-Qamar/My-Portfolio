@@ -715,30 +715,18 @@ h3 {
   white-space: nowrap;
 }
 
-.hero__leaf {
-  position: absolute;
-  z-index: 3;
-  width: 14px;
-  height: 28px;
-  border-radius: 90% 0 90% 0;
-  background: var(--accent);
-  opacity: 0.5;
+canvas[data-falling-leaves] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 4 !important;
+  pointer-events: none !important;
+  contain: strict;
 }
 
-@media (pointer: fine) and (min-width: 1101px) and (prefers-reduced-motion: no-preference) {
-  html:not(.is-lite) .hero__leaf {
-    animation: leaf-drift 9s ease-in-out infinite alternate;
+@media (prefers-reduced-motion: reduce) {
+  canvas[data-falling-leaves] {
+    display: none !important;
   }
-
-  html:not(.is-lite) .hero__leaf:nth-of-type(2n) {
-    animation-delay: -3s;
-    animation-duration: 12s;
-  }
-}
-
-@keyframes leaf-drift {
-  0% { transform: translate3d(0, 0, 0) rotate(0); }
-  100% { transform: translate3d(45px, -70px, 0) rotate(190deg); }
 }
 
 .scroll-down {

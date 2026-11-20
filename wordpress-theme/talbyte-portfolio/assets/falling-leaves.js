@@ -1,0 +1,379 @@
+(() => {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) return;
+
+  const SPRITE = 256;
+  const MAX_DT = 3;
+  const COLORS = [
+    "#f36b21",
+    "#e8590c",
+    "#d9480f",
+    "#f08c00",
+    "#c2410c",
+    "#b45309",
+    "#e67700",
+    "#a61e4d",
+  ];
+
+  // Half-leaf outline (mirrored for a crisp maple silhouette)
+  const MAPLE = [
+    [0, -1],
+    [0.15, -0.6],
+    [0.35, -0.75],
+    [0.3, -0.35],
+    [0.75, -0.55],
+    [0.62, -0.25],
+    [0.95, -0.1],
+    [0.55, 0.1],
+    [0.62, 0.3],
+    [0.25, 0.25],
+    [0.08, 0.45],
+  ];
+
+  const defaults = {
+    count: 32,
+    size: [16, 34],
+    speed: [0.55, 1.45],
+    wind: [-0.25, 0.85],
+    sway: [0.45, 1.5],
+    rotationSpeed: [-1.6, 1.6],
+    opacity: 0.92,
+  };
+
+  function lerpRange(range, t) {
+    if (typeof range === "number") return range;
+    return range[0] + (range[1] - range[0]) * t;
+  }
+
+  function maxRange(range) {
+    return typeof range === "number" ? range : Math.max(range[0], range[1]);
+  }
+
+  function traceMaple(ctx) {
+    ctx.beginPath();
+    MAPLE.forEach(([x, y], i) => {
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    for (let i = MAPLE.length - 1; i >= 0; i -= 1) {
+      const [x, y] = MAPLE[i];
+      ctx.lineTo(-x, y);
+    }
+    ctx.closePath();
+  }
+
+  function drawVeins(ctx) {
+    ctx.beginPath();
+    ctx.moveTo(0, 0.95);
+    ctx.lineTo(0, 0.4);
+    ctx.lineTo(0, -0.85);
+    for (const side of [1, -1]) {
+      ctx.moveTo(0, 0.4);
+      ctx.lineTo(0.82 * side, -0.1);
+      ctx.moveTo(0, 0.4);
+      ctx.lineTo(0.62 * side, -0.48);
+      ctx.moveTo(0, 0.15);
+      ctx.lineTo(0.42 * side, 0.22);
+    }
+    ctx.stroke();
+  }
+
+  function makeSprite(color) {
+    const canvas = document.createElement("canvas");
+    canvas.width = SPRITE;
+    canvas.height = SPRITE;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return canvas;
+
+    ctx.translate(SPRITE / 2, SPRITE / 2);
+    ctx.scale(SPRITE * 0.46, SPRITE * 0.46);
+
+    // Soft ground shadow for depth
+    ctx.save();
+    ctx.translate(0.06, 0.08);
+    traceMaple(ctx);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.22)";
+    ctx.fill();
+    ctx.restore();
+
+    traceMaple(ctx);
+    const body = ctx.createLinearGradient(-1, -1, 1, 1.1);
+    body.addColorStop(0, "#fff3e0");
+    body.addColorStop(0.22, color);
+    body.addColorStop(0.72, color);
+    body.addColorStop(1, "#3b1204");
+    ctx.fillStyle = body;
+    ctx.fill();
+
+    ctx.globalCompositeOperation = "source-atop";
+    const gloss = ctx.createRadialGradient(-0.35, -0.45, 0.05, 0, 0, 1.2);
+    gloss.addColorStop(0, "rgba(255, 255, 255, 0.38)");
+    gloss.addColorStop(0.45, "rgba(255, 255, 255, 0.08)");
+    gloss.addColorStop(1, "rgba(0, 0, 0, 0.18)");
+    ctx.fillStyle = gloss;
+    ctx.fillRect(-1.2, -1.2, 2.4, 2.4);
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.strokeStyle = "rgba(60, 22, 0, 0.38)";
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.save();
+    traceMaple(ctx);
+    ctx.clip();
+    ctx.lineWidth = 0.04;
+    drawVeins(ctx);
+    ctx.restore();
+
+    ctx.lineWidth = 0.055;
+    ctx.beginPath();
+    ctx.moveTo(0, 0.45);
+    ctx.lineTo(0, 1);
+    ctx.stroke();
+
+    // Crisp outer edge
+    ctx.lineWidth = 0.03;
+    ctx.strokeStyle = "rgba(255, 200, 140, 0.22)";
+    traceMaple(ctx);
+    ctx.stroke();
+
+    return canvas;
+  }
+
+  function spawnLeaf(motion, width, height, variantCount, rand, scattered) {
+    const rSize = rand();
+    const size = lerpRange(motion.size, rSize);
+    return {
+      x: rand() * width,
+      y: scattered ? rand() * height : -size - rand() * height * 0.25,
+      rotation: rand() * 360,
+      swayPhase: rand() * Math.PI * 2,
+      flipPhase: rand() * Math.PI * 2,
+      variant: Math.floor(rand() * Math.max(1, variantCount)),
+      depth: 0.65 + rand() * 0.45,
+      rSize,
+      rSpeed: rand(),
+      rWind: rand(),
+      rSway: rand(),
+      rRotation: rand(),
+      rSwayFreq: rand(),
+      rFlipFreq: rand(),
+    };
+  }
+
+  function stepLeaf(leaf, dt, motion, width, height, variantCount, rand) {
+    const size = lerpRange(motion.size, leaf.rSize) * leaf.depth;
+    leaf.swayPhase += (0.01 + leaf.rSwayFreq * 0.02) * dt;
+    leaf.flipPhase += (0.018 + leaf.rFlipFreq * 0.035) * dt;
+
+    const sway =
+      Math.sin(leaf.swayPhase) * lerpRange(motion.sway, leaf.rSway);
+    leaf.x += (lerpRange(motion.wind, leaf.rWind) + sway) * dt;
+
+    const fallBoost = 0.58 + 0.42 * Math.abs(Math.cos(leaf.swayPhase));
+    leaf.y += lerpRange(motion.speed, leaf.rSpeed) * fallBoost * leaf.depth * dt;
+    leaf.rotation += lerpRange(motion.rotationSpeed, leaf.rRotation) * dt;
+
+    if (leaf.y - size > height) {
+      Object.assign(
+        leaf,
+        spawnLeaf(motion, width, height, variantCount, rand, false)
+      );
+      return;
+    }
+
+    const pad = size;
+    if (leaf.x > width + pad) leaf.x = -pad;
+    else if (leaf.x < -pad) leaf.x = width + pad;
+  }
+
+  class FallingLeaves {
+    constructor(options = {}) {
+      this.options = { ...defaults, ...options };
+      this.leaves = [];
+      this.sprites = COLORS.map(makeSprite);
+      this.width = 0;
+      this.height = 0;
+      this.frame = 0;
+      this.lastTime = 0;
+      this.running = false;
+
+      this.canvas = document.createElement("canvas");
+      this.canvas.setAttribute("aria-hidden", "true");
+      this.canvas.dataset.fallingLeaves = "";
+      Object.assign(this.canvas.style, {
+        position: "fixed",
+        inset: "0",
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: "4",
+      });
+      this.ctx = this.canvas.getContext("2d", { alpha: true });
+      document.body.appendChild(this.canvas);
+
+      this.onResize = () => this.resize();
+      this.onVisibility = () => {
+        if (document.hidden) this.stop();
+        else if (!this.prefersStill()) this.start();
+      };
+      this.onMotionChange = () => {
+        if (this.prefersStill()) {
+          this.stop();
+          this.ctx?.clearRect(0, 0, this.width, this.height);
+        } else {
+          this.start();
+        }
+      };
+
+      this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      this.reducedMotion.addEventListener?.("change", this.onMotionChange);
+      window.addEventListener("resize", this.onResize, { passive: true });
+      document.addEventListener("visibilitychange", this.onVisibility);
+
+      this.resize();
+      this.syncCount(true);
+      if (this.options.autoStart !== false) this.start();
+    }
+
+    get motion() {
+      const o = this.options;
+      return {
+        size: o.size ?? defaults.size,
+        speed: o.speed ?? defaults.speed,
+        wind: o.wind ?? defaults.wind,
+        sway: o.sway ?? defaults.sway,
+        rotationSpeed: o.rotationSpeed ?? defaults.rotationSpeed,
+      };
+    }
+
+    prefersStill() {
+      return this.reducedMotion.matches;
+    }
+
+    resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      this.width = window.innerWidth;
+      this.height = window.innerHeight;
+      this.canvas.width = Math.round(this.width * dpr);
+      this.canvas.height = Math.round(this.height * dpr);
+      this.ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+      this.syncCount(false);
+    }
+
+    syncCount(scatter) {
+      const lite = document.documentElement.classList.contains("is-lite");
+      const narrow = window.innerWidth < 768;
+      const target = Math.max(
+        0,
+        Math.floor(
+          lite || narrow
+            ? Math.min(this.options.count, 16)
+            : this.options.count
+        )
+      );
+      const variants = this.sprites.length;
+      while (this.leaves.length < target) {
+        this.leaves.push(
+          spawnLeaf(this.motion, this.width, this.height, variants, Math.random, scatter)
+        );
+      }
+      this.leaves.length = target;
+    }
+
+    start() {
+      if (this.running || this.prefersStill()) return;
+      this.running = true;
+      this.lastTime = 0;
+      this.frame = requestAnimationFrame((t) => this.tick(t));
+    }
+
+    stop() {
+      this.running = false;
+      cancelAnimationFrame(this.frame);
+    }
+
+    tick(now) {
+      if (!this.running) return;
+      const dt = this.lastTime
+        ? Math.min((now - this.lastTime) / (1000 / 60), MAX_DT)
+        : 1;
+      this.lastTime = now;
+
+      const motion = this.motion;
+      const variants = this.sprites.length;
+      for (const leaf of this.leaves) {
+        stepLeaf(leaf, dt, motion, this.width, this.height, variants, Math.random);
+      }
+      this.draw();
+      this.frame = requestAnimationFrame((t) => this.tick(t));
+    }
+
+    draw() {
+      const ctx = this.ctx;
+      if (!ctx) return;
+      ctx.clearRect(0, 0, this.width, this.height);
+      ctx.globalAlpha = this.options.opacity ?? defaults.opacity;
+
+      const maxSize = maxRange(this.motion.size);
+      for (const leaf of this.leaves) {
+        const sprite = this.sprites[leaf.variant];
+        if (!sprite) continue;
+        const size = lerpRange(this.motion.size, leaf.rSize) * leaf.depth;
+        if (leaf.y < -maxSize || leaf.y > this.height + maxSize) continue;
+
+        const rock = 10 * Math.cos(leaf.swayPhase);
+        ctx.save();
+        ctx.translate(leaf.x, leaf.y);
+        ctx.rotate(((leaf.rotation + rock) * Math.PI) / 180);
+        ctx.scale(Math.cos(leaf.flipPhase), 1);
+        ctx.globalAlpha =
+          (this.options.opacity ?? defaults.opacity) *
+          (0.72 + leaf.depth * 0.28);
+        ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    destroy() {
+      this.stop();
+      window.removeEventListener("resize", this.onResize);
+      document.removeEventListener("visibilitychange", this.onVisibility);
+      this.reducedMotion.removeEventListener?.("change", this.onMotionChange);
+      this.canvas.remove();
+      this.leaves = [];
+    }
+  }
+
+  function boot() {
+    if (window.__talbyteLeaves) return;
+    window.__talbyteLeaves = new FallingLeaves({
+      count: 34,
+      size: [15, 36],
+      speed: [0.5, 1.35],
+      wind: [-0.2, 0.75],
+      sway: [0.5, 1.55],
+      opacity: 0.94,
+    });
+  }
+
+  function whenIntroDone(cb) {
+    if (document.documentElement.dataset.intro !== "pending") {
+      cb();
+      return;
+    }
+    const obs = new MutationObserver(() => {
+      if (document.documentElement.dataset.intro !== "pending") {
+        obs.disconnect();
+        // Let the intro slide away before leaves appear
+        window.setTimeout(cb, 280);
+      }
+    });
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-intro"],
+    });
+  }
+
+  whenIntroDone(boot);
+})();
