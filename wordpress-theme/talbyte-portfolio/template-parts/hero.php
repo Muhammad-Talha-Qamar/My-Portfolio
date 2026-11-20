@@ -54,7 +54,7 @@ $stat_count       = count( $stats );
           <div class="hero__photo-wrapper">
             <div class="hero__card-backlayer" aria-hidden="true"></div>
             <div class="hero__photo-card">
-              <img class="hero__photo-img" src="<?php echo esc_url( $photo ); ?>" alt="<?php echo esc_attr( $display ); ?>" width="1024" height="1280" decoding="async" fetchpriority="high" />
+              <img class="hero__photo-img" src="<?php echo esc_url( $photo ); ?>" alt="<?php echo esc_attr( $display ); ?>" width="687" height="1024" decoding="async" fetchpriority="high" />
               <div class="hero__photo-grain" aria-hidden="true"></div>
             </div>
           </div>
