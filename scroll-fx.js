@@ -70,7 +70,7 @@
   /* Keep enter/exit from fighting each other mid-transition */
   const ENTER_LOCK_MS = 420;
   const EXIT_LOCK_MS = 480;
-  /* Alive stage = middle two quarters (25%–75%). Exit once content enters top/bottom quarter. */
+  /* Alive stage = 15%–85%. Exit once content enters the outer 15% bands. */
   const ENTER_RATIO = 0.18;
   const EXIT_RATIO = 0.08;
   const ENTER_VIEWPORT = 0.22;
@@ -170,18 +170,17 @@
   let userScrolled = false;
 
   /**
-   * Viewport quarters (top → bottom):
-   *   Q1 0–25%  → exit zone (scroll down)
-   *   Q2–Q3 25–75% → alive stage
-   *   Q4 75–100% → exit zone (scroll up)
-   * Exits start as soon as content enters the edge quarter, so the motion
-   * plays across that whole band instead of vanishing at the screen edge.
+   * Viewport bands (top → bottom):
+   *   0–15%   → exit zone (scroll down)
+   *   15–85%  → alive stage
+   *   85–100% → exit zone (scroll up)
+   * Exits start as content enters the outer 15% so motion stays visible.
    */
   function measure(el) {
     const vh = window.innerHeight || 1;
     const rect = el.getBoundingClientRect();
-    const stageTop = vh * 0.25;
-    const stageBottom = vh * 0.75;
+    const stageTop = vh * 0.15;
+    const stageBottom = vh * 0.85;
     const stageHeight = Math.max(stageBottom - stageTop, 1);
 
     const overlapTop = Math.max(rect.top, stageTop);
@@ -195,12 +194,11 @@
     const viewportRatio = viewportVisible / Math.min(Math.max(rect.height, 1), vh);
 
     /*
-     * Early exit: element's leading edge is inside the edge quarter.
-     * Cap with bottom/top so tall blocks don't exit on first paint,
-     * but still start while a full quarter of screen remains.
+     * Early exit: leading edge is inside the outer 15% band.
+     * Cap with bottom/top so tall blocks don't exit on first paint.
      */
-    const inTopQuarter = rect.top < stageTop && rect.bottom < vh * 0.68;
-    const inBottomQuarter = rect.bottom > stageBottom && rect.top > vh * 0.32;
+    const inTopQuarter = rect.top < stageTop && rect.bottom < vh * 0.72;
+    const inBottomQuarter = rect.bottom > stageBottom && rect.top > vh * 0.28;
     const fullyPastTop = rect.bottom <= stageTop * 0.5;
     const fullyPastBottom = rect.top >= stageBottom + (vh - stageBottom) * 0.5;
 
