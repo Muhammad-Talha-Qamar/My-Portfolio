@@ -13,7 +13,7 @@ $services = talbyte_option( 'services', null );
 if ( ! is_array( $services ) || empty( $services ) ) {
 	$services = $d['services'];
 }
-$icons = array( 'bx-code-alt', 'bx-layout', 'bx-joystick', 'bx-palette' );
+$icons = array( 'code', 'layout', 'joystick', 'palette' );
 ?>
     <section class="services site-section" id="services" aria-label="Services section">
       <div class="services__header">
@@ -26,7 +26,7 @@ $icons = array( 'bx-code-alt', 'bx-layout', 'bx-joystick', 'bx-palette' );
         <article class="service-card">
           <div class="service-card__top">
             <span class="service-card__num"><?php echo esc_html( isset( $service['num'] ) ? $service['num'] : str_pad( (string) ( $i + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
-            <span class="service-card__icon" aria-hidden="true"><i class="bx <?php echo esc_attr( $icons[ $i % count( $icons ) ] ); ?>"></i></span>
+            <span class="service-card__icon" aria-hidden="true"><?php echo talbyte_icon( $icons[ $i % count( $icons ) ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
           </div>
           <h3 class="service-card__title"><?php echo esc_html( isset( $service['title'] ) ? $service['title'] : '' ); ?></h3>
           <p class="service-card__note"><?php echo esc_html( isset( $service['note'] ) ? $service['note'] : '' ); ?></p>

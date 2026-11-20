@@ -1,15 +1,15 @@
 {
-  "builtAt": "2026-11-20T11:48:00.141Z",
+  "builtAt": "2026-11-20T12:03:54.229Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 40256,
-    "after": 32311
+    "before": 41199,
+    "after": 33023
   },
   "js": {
     "main": {
       "file": "dist/main.min.js",
-      "before": 13816,
-      "after": 7942
+      "before": 14037,
+      "after": 7986
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
@@ -23,24 +23,6 @@
     }
   },
   "webp": [
-    {
-      "srcRel": "images/digital-brain.png",
-      "destRel": "images/digital-brain.webp",
-      "before": 215430,
-      "after": 34428
-    },
-    {
-      "srcRel": "images/grid2.png",
-      "destRel": "images/grid2.webp",
-      "before": 312382,
-      "after": 86100
-    },
-    {
-      "srcRel": "images/grid4.png",
-      "destRel": "images/grid4.webp",
-      "before": 62927,
-      "after": 30812
-    },
     {
       "srcRel": "images/main.jpg",
       "destRel": "images/main.webp",

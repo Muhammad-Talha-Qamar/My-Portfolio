@@ -20,10 +20,10 @@ $linkedin_url = talbyte_option( 'linkedin_url', $d['linkedin_url'] );
         <p class="footer__copy">© <span id="year"><?php echo esc_html( gmdate( 'Y' ) ); ?></span> <?php echo esc_html( $display ); ?>. All rights reserved.</p>
         <div class="footer__socials">
           <a href="<?php echo esc_url( $github_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
-            <i class="bx bxl-github"></i>
+            <?php echo talbyte_icon( 'github' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
           </a>
           <a href="<?php echo esc_url( $linkedin_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
-            <i class="bx bxl-linkedin"></i>
+            <?php echo talbyte_icon( 'linkedin' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
           </a>
         </div>
       </div>

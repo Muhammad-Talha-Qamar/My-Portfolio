@@ -31,13 +31,13 @@ $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
           <div class="contact__icons-dock contact__icons-dock--desktop">
             <div class="contact__icons-dock-inner">
               <a class="contact__icon-btn" href="mailto:<?php echo esc_attr( $email ); ?>" aria-label="Email Muhammad Talha Qamar">
-                <i class="bx bxs-envelope"></i>
+                <?php echo talbyte_icon( 'envelope' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
               </a>
               <a class="contact__icon-btn" href="<?php echo esc_url( $github_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="GitHub profile">
-                <i class="bx bxl-github"></i>
+                <?php echo talbyte_icon( 'github' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
               </a>
               <a class="contact__icon-btn" href="<?php echo esc_url( $linkedin_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn profile">
-                <i class="bx bxl-linkedin"></i>
+                <?php echo talbyte_icon( 'linkedin' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
               </a>
             </div>
           </div>
@@ -47,7 +47,7 @@ $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
           <div class="contact__card-header">
             <span class="contact__card-num">01</span>
             <div class="contact__card-title-group">
-              <span class="contact__card-icon" aria-hidden="true"><i class="bx bx-mail-send"></i></span>
+              <span class="contact__card-icon" aria-hidden="true"><?php echo talbyte_icon( 'mail-send' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
               <h3 class="contact__card-title"><?php echo esc_html( $aside ); ?></h3>
             </div>
             <span class="contact__card-accent-bar" aria-hidden="true"></span>
@@ -79,13 +79,13 @@ $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
           <div class="contact__icons-dock contact__icons-dock--mobile">
             <div class="contact__icons-dock-inner">
               <a class="contact__icon-btn" href="mailto:<?php echo esc_attr( $email ); ?>" aria-label="Email Muhammad Talha Qamar">
-                <i class="bx bxs-envelope"></i>
+                <?php echo talbyte_icon( 'envelope' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
               </a>
               <a class="contact__icon-btn" href="<?php echo esc_url( $github_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="GitHub profile">
-                <i class="bx bxl-github"></i>
+                <?php echo talbyte_icon( 'github' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
               </a>
               <a class="contact__icon-btn" href="<?php echo esc_url( $linkedin_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn profile">
-                <i class="bx bxl-linkedin"></i>
+                <?php echo talbyte_icon( 'linkedin' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
               </a>
             </div>
           </div>

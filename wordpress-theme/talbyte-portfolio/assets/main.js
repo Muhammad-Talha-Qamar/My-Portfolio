@@ -57,16 +57,23 @@
     sections.forEach((section) => io.observe(section));
   }
 
-  // Subtle grid parallax
+  // Subtle grid parallax (rAF-throttled; skipped in lite mode)
   const root = document.documentElement;
+  let gridRaf = 0;
+  let pendingX = 0;
+  let pendingY = 0;
   window.addEventListener(
     "pointermove",
     (e) => {
       if (root.classList.contains("is-lite")) return;
-      const x = ((e.clientX / window.innerWidth) - 0.5) * 24;
-      const y = ((e.clientY / window.innerHeight) - 0.5) * 24;
-      root.style.setProperty("--grid-x", `${x.toFixed(1)}px`);
-      root.style.setProperty("--grid-y", `${y.toFixed(1)}px`);
+      pendingX = ((e.clientX / window.innerWidth) - 0.5) * 24;
+      pendingY = ((e.clientY / window.innerHeight) - 0.5) * 24;
+      if (gridRaf) return;
+      gridRaf = requestAnimationFrame(() => {
+        gridRaf = 0;
+        root.style.setProperty("--grid-x", `${pendingX.toFixed(1)}px`);
+        root.style.setProperty("--grid-y", `${pendingY.toFixed(1)}px`);
+      });
     },
     { passive: true }
   );

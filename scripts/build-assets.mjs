@@ -84,13 +84,8 @@ const intro = await minifyJs(
 );
 
 const images = [];
-for (const img of [
-  'images/digital-brain.png',
-  'images/grid2.png',
-  'images/grid4.png',
-  'images/main.jpg',
-]) {
-  const r = await toWebp(img, img.endsWith('.jpg') ? 80 : 76);
+for (const img of ['images/main.jpg']) {
+  const r = await toWebp(img, 80);
   if (r) images.push(r);
 }
 

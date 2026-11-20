@@ -6,6 +6,4 @@ talbyte-portfolio-theme.zip
 node_modules/
 .npm-cache/
 package-lock.json
-
-node_modules/
-package-lock.json
+.DS_Store
