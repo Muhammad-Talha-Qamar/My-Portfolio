@@ -912,8 +912,17 @@ canvas[data-falling-leaves] {
 }
 
 .skills__col {
-  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  padding: 1.75rem 1.25rem;
   border-bottom: 1px solid var(--border);
+}
+
+.skills__col-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
 .skills__num,
@@ -925,7 +934,7 @@ canvas[data-falling-leaves] {
 
 .skills__col h3,
 .skills__col-title {
-  margin: 0.75rem 0 1.15rem;
+  margin: 0;
   font: 700 clamp(1rem, 1.35vw, 1.25rem) / 1 var(--font-display);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -937,7 +946,7 @@ canvas[data-falling-leaves] {
 .skill-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
+  gap: 0.65rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -2015,8 +2024,12 @@ canvas[data-falling-leaves] {
 
   .skills__col {
     min-height: 280px;
-    padding: 1.5rem 1.25rem 1.5rem 0;
+    padding: 1.85rem 1.6rem;
     border-right: 1px solid var(--border);
+  }
+
+  .skills__col:last-child {
+    border-right: 0;
   }
 
   .skills-stage {

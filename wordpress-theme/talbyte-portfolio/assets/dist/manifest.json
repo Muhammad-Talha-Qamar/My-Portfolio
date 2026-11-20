@@ -1,9 +1,9 @@
 {
-  "builtAt": "2026-11-20T12:03:54.229Z",
+  "builtAt": "2026-11-20T12:33:48.108Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 41199,
-    "after": 33023
+    "before": 48121,
+    "after": 38149
   },
   "js": {
     "main": {
@@ -26,8 +26,8 @@
     {
       "srcRel": "images/main.jpg",
       "destRel": "images/main.webp",
-      "before": 146470,
-      "after": 34576
+      "before": 109178,
+      "after": 51894
     },
     {
       "srcRel": "images/thumbs/byd.jpg",
