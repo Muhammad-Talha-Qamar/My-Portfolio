@@ -92,19 +92,21 @@ function talbyte_image_url( $image, $fallback ) {
 }
 
 /**
- * Wrap highlight words in a title with <span class="gradient">.
+ * Wrap highlight words in a title with <span class="gradient"> or <span class="hl">.
  *
  * @param string $title     Plain title.
  * @param string $highlight Comma-separated words/phrases to highlight.
+ * @param string $class     CSS class for highlights.
  * @return string Safe HTML.
  */
-function talbyte_title_html( $title, $highlight = '' ) {
+function talbyte_title_html( $title, $highlight = '', $class = 'gradient' ) {
 	$title = (string) $title;
 	if ( $highlight === '' ) {
 		return esc_html( $title );
 	}
-	$parts = array_filter( array_map( 'trim', explode( ',', $highlight ) ) );
+	$parts  = array_filter( array_map( 'trim', explode( ',', $highlight ) ) );
 	$result = esc_html( $title );
+	$class  = sanitize_html_class( $class );
 	foreach ( $parts as $part ) {
 		$safe = esc_html( $part );
 		if ( $safe === '' ) {
@@ -112,7 +114,7 @@ function talbyte_title_html( $title, $highlight = '' ) {
 		}
 		$result = preg_replace(
 			'/' . preg_quote( $safe, '/' ) . '/u',
-			'<span class="gradient">' . $safe . '</span>',
+			'<span class="' . $class . '">' . $safe . '</span>',
 			$result,
 			1
 		);
@@ -121,16 +123,27 @@ function talbyte_title_html( $title, $highlight = '' ) {
 }
 
 /**
- * Default portfolio content (matches the pre-WordPress static site).
+ * Highlight comma-separated phrases inside a paragraph.
+ *
+ * @param string $text      Plain text.
+ * @param string $highlight Comma-separated phrases.
+ * @return string Safe HTML.
+ */
+function talbyte_highlight_html( $text, $highlight = '' ) {
+	return talbyte_title_html( $text, $highlight, 'hl' );
+}
+
+/**
+ * Default portfolio content — ashithmk.dev structure, Talha data.
  *
  * @return array<string,mixed>
  */
 function talbyte_defaults() {
 	return array(
-		'seo_title'       => 'Muhammad Talha Qamar | Portfolio',
-		'seo_description' => 'Muhammad Talha Qamar — frontend developer portfolio.',
-		'brand_first'     => 'Talha',
-		'brand_last'      => 'Qamar',
+		'seo_title'       => 'Muhammad Talha Qamar — Developer',
+		'seo_description' => 'Muhammad Talha Qamar — frontend developer building polished websites, product landings, clones, and interactive web apps.',
+		'brand_first'     => 'TALHA',
+		'brand_last'      => 'Q.',
 		'display_name'    => 'Muhammad Talha Qamar',
 		'email'           => 'qamitalha42@gmail.com',
 		'github_url'      => 'https://github.com/Muhammad-Talha-Qamar',
@@ -138,78 +151,95 @@ function talbyte_defaults() {
 		'linkedin_url'    => 'https://www.linkedin.com/in/m-talha-qamar-96765b435/',
 		'linkedin_label'  => 'Talha Qamar',
 		'logo_fallback'   => 'images/main.jpg',
-		'bg_video'        => 'videos/galaxy.mp4',
+		'bg_video'        => '',
 
 		'intro_text'      => 'TALHA Q.',
-		'hero_badge'      => 'Front-end Developer Portfolio',
-		'hero_title'      => 'Providing the best Project Experience',
-		'hero_highlight'  => 'the best,Experience',
+		'hero_role'       => 'DEVELOPER',
+		'hero_name_line1' => 'TALHA',
+		'hero_name_line2' => 'Q.',
+		'hero_subtitle'   => 'FRONTEND DEVELOPER',
 		'hero_bio'        => "I'm Muhammad Talha Qamar — a frontend developer passionate about building modern, interactive, and responsive websites with HTML, CSS, and JavaScript.",
-		'hero_cta_label'  => 'Contact Me',
-		'hero_cta_href'   => '#contact',
+		'hero_cta_label'  => 'EXPLORE MY WORK',
+		'hero_cta_href'   => '#projects',
+		'hero_talk_label' => "LET'S TALK",
+		'hero_talk_href'  => '#contact',
 		'hero_photo'      => 'images/main.jpg',
-
-		'about_title'     => 'Hello, There',
-		'about_cards'     => array(
-			array(
-				'title' => "Hi there, I'm Talha",
-				'body'  => 'Frontend developer focused on clean layouts, responsive design, and interactive web experiences built with HTML, CSS, and JavaScript.',
-				'cta'   => 'Contact Me',
-				'href'  => '#contact',
-				'image' => 'images/main.jpg',
-				'type'  => 'image_cta',
-			),
-			array(
-				'title' => 'Tech Stack',
-				'body'  => 'I work with semantic HTML5, modern CSS (Flexbox, Grid, animations), JavaScript ES6+, and Git & GitHub for version control.',
-				'image' => 'images/grid2.png',
-				'type'  => 'image',
-			),
-			array(
-				'title' => 'Open to learning, building & shipping',
-				'body'  => 'Always exploring new frontend techniques and ready to collaborate on creative web projects.',
-				'video' => 'videos/glob.mp4',
-				'type'  => 'video',
-			),
-			array(
-				'title' => 'My Passion for Coding',
-				'body'  => "I love solving problems and building things through code. Programming isn't just a skill — it's how I turn ideas into polished, interactive websites people enjoy using.",
-				'image' => 'images/grid4.png',
-				'type'  => 'passion',
-			),
+		'hero_stats'      => array(
+			array( 'num' => '10+', 'label' => 'PROJECTS BUILT' ),
+			array( 'num' => '13', 'label' => 'GITHUB REPOS' ),
+			array( 'num' => '10+', 'label' => 'LIVE SITES' ),
+			array( 'num' => '∞', 'label' => 'IDEAS' ),
 		),
 
-		'projects_title'  => 'My Projects',
-		'projects_lead'   => 'Live builds on talbyte.com subdomains — clones, product sites, and apps.',
+		'about_tag'       => 'ABOUT',
+		'about_headline'  => 'I turn ideas into',
+		'about_slot_words'=> 'products,websites,interfaces,experiences,games',
+		'about_para_1'    => "Hi, I'm Muhammad Talha Qamar, a frontend developer shipping polished web products. I turn ideas into working websites and interactive apps using HTML, CSS, JavaScript, and TypeScript.",
+		'about_para_1_hl' => 'frontend developer,websites and interactive apps,HTML, CSS, JavaScript, and TypeScript',
+		'about_para_2'    => 'From EV product landings and brand clones to recipe sites, ordering flows, and a split-screen driving game, I focus on clean layouts, fast performance, and interfaces that feel simple to use. Have a project in mind? Let’s talk and build it.',
+		'about_para_2_hl' => 'clean layouts,fast performance,talk and build it',
+		'about_facts'     => array(
+			array( 'label' => 'Role', 'value' => 'Developer' ),
+			array( 'label' => 'Focus', 'value' => 'Web & Interfaces' ),
+			array( 'label' => 'Main stack', 'value' => 'HTML · CSS · JS · WP' ),
+			array( 'label' => 'Profiles', 'value' => 'GitHub · LinkedIn' ),
+		),
+
+		'projects_title'  => 'THE BUILD LOG',
+		'projects_lead'   => 'Open a project to explore the live build — clones, product sites, apps, and games on talbyte.com.',
 		'projects_lead_highlight' => 'talbyte.com',
 
-		'skills_title'    => 'My Skills',
-		'skills_brain'    => 'images/digital-brain.png',
-		'designer_title'  => 'Designer',
-		'designer_body'   => 'Expertise in HTML, CSS layouts, visual hierarchy, and responsive interfaces that feel polished on every screen size.',
-		'designer_skills' => "HTML & CSS\nResponsive UI\nVisual hierarchy",
-		'coder_title'     => 'Coder',
-		'coder_body'      => 'Skilled in JavaScript (ES6+), DOM work, Git & GitHub, and building interactive experiences that ship cleanly.',
-		'coder_skills'    => "JavaScript ES6+\nDOM & interactivity\nGit & GitHub",
-		'skill_icons'     => array(
-			'images/1.png',
-			'images/2.png',
-			'images/3.webp',
-			'images/4.webp',
-			'images/5.png',
-			'images/6.png',
-			'images/7.png',
-			'images/8.png',
-			'images/9.png',
+		'skills_title'    => 'TECH ARSENAL',
+		'skills_groups'   => array(
+			array(
+				'num'   => '01',
+				'title' => 'LANGUAGES',
+				'items' => array( 'HTML5', 'CSS', 'JavaScript', 'TypeScript' ),
+			),
+			array(
+				'num'   => '02',
+				'title' => 'PLATFORM',
+				'items' => array( 'WordPress', 'Responsive UI', 'DOM APIs', 'REST basics' ),
+			),
+			array(
+				'num'   => '03',
+				'title' => 'TOOLS',
+				'items' => array( 'Git', 'GitHub', 'VS Code', 'Hostinger' ),
+			),
+		),
+		'skills_tagline'  => 'IDEA → BUILD → SHIP.',
+
+		'services_title'  => 'WHAT I BUILD',
+		'services'        => array(
+			array(
+				'num'   => '01',
+				'title' => 'FRONTEND DEVELOPMENT',
+				'note'  => 'Modern, responsive and scalable web apps.',
+			),
+			array(
+				'num'   => '02',
+				'title' => 'LANDING PAGES & CLONES',
+				'note'  => 'High-fidelity marketing sites and brand recreations that convert.',
+			),
+			array(
+				'num'   => '03',
+				'title' => 'INTERACTIVE WEB APPS',
+				'note'  => 'Games, dashboards, and product UIs with real interaction.',
+			),
+			array(
+				'num'   => '04',
+				'title' => 'INTERFACE DESIGN',
+				'note'  => 'Simple, user-friendly layouts that look sharp on every screen.',
+			),
 		),
 
-		'contact_title'   => "Let's talk",
-		'contact_lead'    => "Whether you're looking to build a new website, improve an existing platform, or bring a unique project to life — I'm here to help.",
-		'contact_aside'   => 'Reach me directly',
-		'form_name_label' => 'Full Name',
-		'form_email_label'=> 'Email Address',
+		'contact_title'   => "LET'S BUILD SOMETHING",
+		'contact_lead'    => 'Have a project in mind, a question, or just want to connect? Feel free to drop a message!',
+		'contact_aside'   => 'SEND MESSAGE',
+		'form_name_label' => 'Your Name',
+		'form_email_label'=> 'Your Email',
 		'form_message_label' => 'Your Message',
-		'form_submit'     => 'Send Message',
+		'form_submit'     => 'SEND MESSAGE',
 	);
 }
 
@@ -221,94 +251,114 @@ function talbyte_defaults() {
 function talbyte_default_projects() {
 	return array(
 		array(
-			'title'       => 'Dual Cop',
-			'highlight'   => 'Dual Cop',
+			'title'       => 'DUAL COP',
+			'highlight'   => '',
 			'tag'         => 'Web Game',
-			'description' => 'Getaway driving game with nitro, heat, and split-screen play.',
+			'description' => 'Getaway driving game with nitro, heat meters, and split-screen play — built as a full browser experience.',
 			'url'         => 'https://dual-cop.talbyte.com/',
 			'thumb'       => 'images/thumbs/dual-cop.jpg',
 			'alt'         => 'Dual Cop Game homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
+			'cta'         => 'LIVE DEMO',
 		),
 		array(
-			'title'       => 'SMIT Portal',
-			'highlight'   => 'Portal',
+			'title'       => 'SMIT PORTAL',
+			'highlight'   => '',
 			'tag'         => 'Education',
-			'description' => 'Saylani Mass IT Training site with courses and enrollment flow.',
+			'description' => 'Saylani Mass IT Training site with courses, enrollment flow, and a clean institutional layout.',
 			'url'         => 'https://smit.talbyte.com/',
 			'thumb'       => 'images/thumbs/smit.jpg',
 			'alt'         => 'SMIT homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
+			'cta'         => 'LIVE SITE',
 		),
 		array(
-			'title'       => 'BYD Dolphin Surf',
-			'highlight'   => 'BYD',
+			'title'       => 'BYD DOLPHIN SURF',
+			'highlight'   => '',
 			'tag'         => 'Product',
-			'description' => 'Ocean Series EV landing with hero storytelling and model pages.',
+			'description' => 'Ocean Series EV landing with hero storytelling, model pages, and product-focused motion.',
 			'url'         => 'https://byd.talbyte.com/',
 			'thumb'       => 'images/thumbs/byd.jpg',
 			'alt'         => 'BYD Dolphin Surf homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
+			'cta'         => 'LIVE SITE',
 		),
 		array(
-			'title'       => 'foodpanda',
-			'highlight'   => 'foodpanda',
+			'title'       => 'FOODPANDA',
+			'highlight'   => '',
 			'tag'         => 'Clone',
-			'description' => 'Food delivery UI — address search, categories, and partner flows.',
+			'description' => 'Food delivery UI with address search, categories, and partner flows rebuilt from scratch.',
 			'url'         => 'https://foodpanda.talbyte.com/',
 			'thumb'       => 'images/thumbs/foodpanda.jpg',
 			'alt'         => 'foodpanda homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
+			'cta'         => 'LIVE DEMO',
 		),
 		array(
-			'title'       => 'Saffron Kitchen',
-			'highlight'   => 'Kitchen',
+			'title'       => 'SAFFRON KITCHEN',
+			'highlight'   => '',
 			'tag'         => 'Recipes',
-			'description' => 'Recipe site for appetizers, mains, drinks, and desserts.',
+			'description' => 'Recipe website for appetizers, mains, drinks, and desserts with a warm, food-first UI.',
 			'url'         => 'https://saffron-kitchen.talbyte.com/',
 			'thumb'       => 'images/thumbs/saffron-kitchen.jpg',
 			'alt'         => 'Saffron Kitchen homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
+			'cta'         => 'LIVE SITE',
 		),
 		array(
-			'title'       => 'KFC Ordering',
-			'highlight'   => 'KFC',
+			'title'       => 'KFC ORDERING',
+			'highlight'   => '',
 			'tag'         => 'Web App',
-			'description' => 'Menu browsing, buckets, merch, and reorder-style checkout UI.',
+			'description' => 'Menu browsing, buckets, merch, and reorder-style checkout UI for a fast-food experience.',
 			'url'         => 'https://kfc.talbyte.com/',
 			'thumb'       => 'images/thumbs/kfc.jpg',
 			'alt'         => 'KFC web app homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
+			'cta'         => 'LIVE DEMO',
 		),
 		array(
-			'title'       => 'Mirage Works',
-			'highlight'   => 'Works',
+			'title'       => 'MIRAGE WORKS',
+			'highlight'   => '',
 			'tag'         => 'Business',
-			'description' => 'Accounting & outsourcing brand site with solutions and insight.',
+			'description' => 'Accounting and outsourcing brand site with solutions, insight pages, and corporate polish.',
 			'url'         => 'https://mirage-works.talbyte.com/',
 			'thumb'       => 'images/thumbs/mirage-works.jpg',
 			'alt'         => 'Mirage Works homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
+			'cta'         => 'LIVE SITE',
 		),
 		array(
-			'title'       => 'OLX Clone',
-			'highlight'   => 'OLX',
+			'title'       => 'OLX CLONE',
+			'highlight'   => '',
 			'tag'         => 'Marketplace',
-			'description' => 'Buy & sell classifieds — categories, search, and listing flows.',
+			'description' => 'Buy and sell classifieds — categories, search, and listing flows for a marketplace UI.',
 			'url'         => 'https://olx.talbyte.com/',
 			'thumb'       => 'images/thumbs/olx.jpg',
 			'alt'         => 'OLX homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
+			'cta'         => 'LIVE DEMO',
 		),
 		array(
-			'title'       => 'Systems Limited',
-			'highlight'   => 'Systems',
+			'title'       => 'SYSTEMS LIMITED',
+			'highlight'   => '',
 			'tag'         => 'Corporate',
-			'description' => 'IT consulting & AI transformation corporate landing experience.',
+			'description' => 'IT consulting and AI transformation corporate landing experience with enterprise tone.',
 			'url'         => 'https://systems-website.talbyte.com/',
 			'thumb'       => 'images/thumbs/systems-website.jpg',
 			'alt'         => 'Systems Limited homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
+			'cta'         => 'LIVE SITE',
 		),
 		array(
-			'title'       => 'LifePilot',
-			'highlight'   => 'LifePilot',
+			'title'       => 'LIFEPILOT',
+			'highlight'   => '',
 			'tag'         => 'App',
-			'description' => 'Private tasks & checklists app with account-based sign-in.',
+			'description' => 'Private tasks and checklists app with account-based sign-in — a personal productivity companion.',
 			'url'         => 'https://lifepilot.talbyte.com/',
 			'thumb'       => 'images/thumbs/lifepilot.jpg',
 			'alt'         => 'LifePilot homepage',
+			'tech'        => 'TypeScript,HTML,CSS',
+			'cta'         => 'LIVE DEMO',
 		),
 	);
 }

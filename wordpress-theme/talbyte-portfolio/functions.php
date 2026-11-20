@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '1.1.7' );
+define( 'TALBYTE_THEME_VERSION', '2.0.0' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -62,16 +62,15 @@ function talbyte_enqueue_assets() {
 	$js_aos   = talbyte_asset_file( 'aos-init.js', 'dist/aos-init.min.js' );
 	$js_intro = talbyte_asset_file( 'intro-loader.js', 'dist/intro-loader.min.js' );
 
-	// jsDelivr is usually faster/cached than unpkg for first paint.
 	wp_enqueue_style(
-		'talbyte-anton',
-		'https://fonts.googleapis.com/css2?family=Anton&display=swap',
+		'talbyte-fonts',
+		'https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap',
 		array(),
 		null
 	);
 	wp_enqueue_style( 'boxicons', 'https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css', array(), '2.1.4' );
 	wp_enqueue_style( 'aos', 'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css', array(), '2.3.4' );
-	wp_enqueue_style( 'talbyte-portfolio', $uri . '/' . $css, array( 'boxicons', 'aos', 'talbyte-anton' ), $ver );
+	wp_enqueue_style( 'talbyte-portfolio', $uri . '/' . $css, array( 'boxicons', 'aos', 'talbyte-fonts' ), $ver );
 
 	wp_enqueue_script( 'talbyte-intro', $uri . '/' . $js_intro, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
@@ -120,12 +119,6 @@ function talbyte_resource_hints() {
 		$type = str_ends_with( strtolower( wp_parse_url( $hero, PHP_URL_PATH ) ?: '' ), '.webp' ) ? 'image/webp' : 'image/jpeg';
 		echo '<link rel="preload" href="' . esc_url( $hero ) . '" as="image" type="' . esc_attr( $type ) . '" fetchpriority="high" />' . "\n";
 	}
-	$brain  = talbyte_asset( 'images/digital-brain.webp' );
-	$globe  = talbyte_asset( 'images/glob-poster.webp' );
-	$grid2  = talbyte_asset( 'images/grid2.webp' );
-	echo '<link rel="preload" href="' . esc_url( $brain ) . '" as="image" type="image/webp" />' . "\n";
-	echo '<link rel="preload" href="' . esc_url( $globe ) . '" as="image" type="image/webp" />' . "\n";
-	echo '<link rel="preload" href="' . esc_url( $grid2 ) . '" as="image" type="image/webp" />' . "\n";
 }
 
 /**

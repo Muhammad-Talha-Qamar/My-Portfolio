@@ -115,6 +115,77 @@ function talbyte_seed_content() {
 }
 
 /**
+ * One-time refresh of copy for the ashithmk-inspired redesign.
+ */
+add_action( 'init', 'talbyte_upgrade_design_v2', 20 );
+
+/**
+ * Push new default strings into ACF options (and clear obsolete card blobs).
+ */
+function talbyte_upgrade_design_v2() {
+	if ( get_option( 'talbyte_design_v2' ) ) {
+		return;
+	}
+
+	$d    = talbyte_defaults();
+	$keys = array(
+		'seo_title',
+		'seo_description',
+		'brand_first',
+		'brand_last',
+		'intro_text',
+		'hero_role',
+		'hero_name_line1',
+		'hero_name_line2',
+		'hero_subtitle',
+		'hero_cta_label',
+		'hero_cta_href',
+		'hero_talk_label',
+		'hero_talk_href',
+		'about_tag',
+		'about_headline',
+		'about_slot_words',
+		'about_para_1',
+		'about_para_1_hl',
+		'about_para_2',
+		'about_para_2_hl',
+		'projects_title',
+		'projects_lead',
+		'projects_lead_highlight',
+		'skills_title',
+		'skills_tagline',
+		'services_title',
+		'contact_title',
+		'contact_lead',
+		'contact_aside',
+		'form_name_label',
+		'form_email_label',
+		'form_message_label',
+		'form_submit',
+	);
+
+	foreach ( $keys as $key ) {
+		if ( ! isset( $d[ $key ] ) ) {
+			continue;
+		}
+		if ( function_exists( 'update_field' ) ) {
+			update_field( $key, $d[ $key ], 'option' );
+		} else {
+			update_option( 'options_' . $key, $d[ $key ] );
+		}
+	}
+
+	if ( function_exists( 'update_field' ) ) {
+		update_field( 'hero_stats', $d['hero_stats'], 'option' );
+		update_field( 'about_facts', $d['about_facts'], 'option' );
+		update_field( 'skills_groups', $d['skills_groups'], 'option' );
+		update_field( 'services', $d['services'], 'option' );
+	}
+
+	update_option( 'talbyte_design_v2', 1 );
+}
+
+/**
  * Admin notice pointing to Portfolio Settings.
  */
 add_action( 'admin_notices', 'talbyte_admin_edit_guide' );

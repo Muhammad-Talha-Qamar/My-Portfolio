@@ -1,15 +1,15 @@
 {
-  "builtAt": "2026-11-20T11:23:34.291Z",
+  "builtAt": "2026-11-20T11:48:00.141Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 101259,
-    "after": 74979
+    "before": 40256,
+    "after": 32311
   },
   "js": {
     "main": {
       "file": "dist/main.min.js",
-      "before": 64140,
-      "after": 35744
+      "before": 13816,
+      "after": 7942
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
@@ -44,8 +44,8 @@
     {
       "srcRel": "images/main.jpg",
       "destRel": "images/main.webp",
-      "before": 49739,
-      "after": 11934
+      "before": 146470,
+      "after": 34576
     },
     {
       "srcRel": "images/thumbs/byd.jpg",

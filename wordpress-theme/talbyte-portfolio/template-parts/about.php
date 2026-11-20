@@ -7,84 +7,54 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$d     = talbyte_defaults();
-$title = talbyte_option( 'about_title', $d['about_title'] );
-$cards = talbyte_option( 'about_cards', null );
-if ( ! is_array( $cards ) || empty( $cards ) ) {
-	$cards = $d['about_cards'];
+$d          = talbyte_defaults();
+$tag        = talbyte_option( 'about_tag', $d['about_tag'] );
+$headline   = talbyte_option( 'about_headline', $d['about_headline'] );
+$slot_raw   = talbyte_option( 'about_slot_words', $d['about_slot_words'] );
+$slot_words = array_values( array_filter( array_map( 'trim', explode( ',', (string) $slot_raw ) ) ) );
+if ( empty( $slot_words ) ) {
+	$slot_words = array( 'products', 'websites', 'interfaces', 'experiences' );
 }
-
-$aos = array( 'fade-right', 'fade-left', 'zoom-in', 'fade-up' );
-$delays = array( 0, 40, 80, 120 );
+$para_1    = talbyte_option( 'about_para_1', $d['about_para_1'] );
+$para_1_hl = talbyte_option( 'about_para_1_hl', $d['about_para_1_hl'] );
+$para_2    = talbyte_option( 'about_para_2', $d['about_para_2'] );
+$para_2_hl = talbyte_option( 'about_para_2_hl', $d['about_para_2_hl'] );
+$facts     = talbyte_option( 'about_facts', null );
+if ( ! is_array( $facts ) || empty( $facts ) ) {
+	$facts = $d['about_facts'];
+}
 ?>
-    <section class="info-section" id="about">
-        <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
-      <div class="info-cards">
-        <?php foreach ( $cards as $i => $card ) :
-			$type  = isset( $card['type'] ) ? $card['type'] : 'image';
-			$c_title = isset( $card['title'] ) ? $card['title'] : '';
-			$body  = isset( $card['body'] ) ? $card['body'] : '';
-			$anim  = $aos[ $i % count( $aos ) ];
-			$delay = $delays[ $i % count( $delays ) ];
-			?>
-        <div class="card" data-tilt data-spotlight data-aos="<?php echo esc_attr( $anim ); ?>" data-aos-duration="400" data-aos-delay="<?php echo (int) $delay; ?>">
-          <h1 data-split><?php echo esc_html( $c_title ); ?></h1>
-          <p><?php echo esc_html( $body ); ?></p>
-          <?php if ( $type === 'image_cta' ) : ?>
-          <a class="card-btn" data-magnetic href="<?php echo esc_url( isset( $card['href'] ) ? $card['href'] : '#contact' ); ?>"><i class="bx bx-send"></i> <?php echo esc_html( isset( $card['cta'] ) ? $card['cta'] : 'Contact Me' ); ?></a>
-          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/main.jpg' ) ); ?>" alt="<?php echo esc_attr( talbyte_option( 'display_name', $d['display_name'] ) ); ?>" decoding="async" fetchpriority="low" />
-          <?php elseif ( $type === 'image' ) : ?>
-          <img src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/grid2.png' ) ); ?>" alt="<?php echo esc_attr( $c_title ); ?>" decoding="async" fetchpriority="low" />
-          <?php elseif ( $type === 'video' ) :
-				$raw_video = isset( $card['video'] ) ? $card['video'] : '';
-				if ( is_array( $raw_video ) && ! empty( $raw_video['url'] ) ) {
-					$video = $raw_video['url'];
-				} elseif ( is_string( $raw_video ) && $raw_video !== '' && ( str_starts_with( $raw_video, 'http' ) || str_starts_with( $raw_video, '/' ) ) ) {
-					$video = $raw_video;
-				} elseif ( is_string( $raw_video ) && $raw_video !== '' ) {
-					$video = talbyte_asset( $raw_video );
-				} else {
-					$video = talbyte_asset( isset( $d['about_cards'][ $i ]['video'] ) ? $d['about_cards'][ $i ]['video'] : 'videos/glob.mp4' );
-				}
-				?>
-          <div class="card-video-wrap" data-globe aria-hidden="true">
-            <img class="globe-poster" src="<?php echo esc_url( talbyte_asset( 'images/glob-poster.webp' ) ); ?>" alt="" width="640" height="640" decoding="async" fetchpriority="low" />
-            <video data-src="<?php echo esc_url( $video ); ?>" poster="<?php echo esc_url( talbyte_asset( 'images/glob-poster.webp' ) ); ?>" loop muted playsinline preload="none"></video>
-            <span class="globe-specular"></span>
+    <section class="about site-section" id="about" aria-label="About Muhammad Talha Qamar">
+      <div class="about__container">
+        <div class="about__grid">
+          <div class="about__col about__col-left">
+            <div class="about__tag">
+              <span class="about__tag-label"><?php echo esc_html( $tag ); ?></span>
+              <span class="about__tag-slash" aria-hidden="true">/</span>
+            </div>
+            <h2 class="about__headline">
+              <?php echo esc_html( $headline ); ?>
+              <span class="about__line about__line--slot">
+                <span class="about__slot" data-about-slot data-words="<?php echo esc_attr( implode( ',', $slot_words ) ); ?>"><?php echo esc_html( $slot_words[0] ); ?></span>.
+              </span>
+            </h2>
           </div>
-          <?php else : ?>
-          <div class="passion-keyboard" data-passion-keys>
-            <img class="passion-img" src="<?php echo esc_url( talbyte_image_url( isset( $card['image'] ) ? $card['image'] : null, isset( $d['about_cards'][ $i ]['image'] ) ? $d['about_cards'][ $i ]['image'] : 'images/grid4.png' ) ); ?>" alt="Coding passion visual" loading="lazy" decoding="async" />
-            <svg class="passion-keys-svg" viewBox="0 0 1000 403" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <defs>
-                <filter id="passion-key-glow" x="-120%" y="-120%" width="340%" height="340%">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="tight" />
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="bloom" />
-                  <feMerge>
-                    <feMergeNode in="bloom" />
-                    <feMergeNode in="bloom" />
-                    <feMergeNode in="tight" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <rect class="passion-key" data-key x="272" y="109" width="56" height="68" rx="14" />
-              <rect class="passion-key" data-key x="353" y="109" width="56" height="68" rx="14" />
-              <rect class="passion-key" data-key x="432" y="109" width="57" height="68" rx="14" />
-              <rect class="passion-key" data-key x="511" y="109" width="57" height="68" rx="14" />
-              <rect class="passion-key" data-key x="591" y="109" width="56" height="68" rx="14" />
-              <rect class="passion-key" data-key x="272" y="189" width="137" height="68" rx="14" />
-              <rect class="passion-key" data-key x="432" y="189" width="57" height="68" rx="14" />
-              <rect class="passion-key" data-key x="511" y="189" width="57" height="68" rx="14" />
-              <rect class="passion-key" data-key x="591" y="189" width="56" height="68" rx="14" />
-              <rect class="passion-key" data-key x="671" y="189" width="56" height="68" rx="14" />
-              <rect class="passion-key" data-key x="276" y="266" width="50" height="72" rx="14" />
-              <rect class="passion-key" data-key x="355" y="266" width="290" height="72" rx="16" />
-              <rect class="passion-key" data-key x="674" y="266" width="50" height="72" rx="14" />
-            </svg>
+
+          <div class="about__col about__col-right">
+            <div class="about__story">
+              <p class="about__para"><?php echo talbyte_highlight_html( $para_1, $para_1_hl ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+              <p class="about__para"><?php echo talbyte_highlight_html( $para_2, $para_2_hl ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+            </div>
+
+            <div class="about__facts">
+              <?php foreach ( $facts as $fact ) : ?>
+              <div class="about__fact-item">
+                <small><?php echo esc_html( isset( $fact['label'] ) ? $fact['label'] : '' ); ?></small>
+                <strong><?php echo esc_html( isset( $fact['value'] ) ? $fact['value'] : '' ); ?></strong>
+              </div>
+              <?php endforeach; ?>
+            </div>
           </div>
-          <?php endif; ?>
         </div>
-        <?php endforeach; ?>
       </div>
     </section>

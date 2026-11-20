@@ -13,69 +13,82 @@ $lead           = talbyte_option( 'contact_lead', $d['contact_lead'] );
 $aside          = talbyte_option( 'contact_aside', $d['contact_aside'] );
 $email          = talbyte_option( 'email', $d['email'] );
 $github_url     = talbyte_option( 'github_url', $d['github_url'] );
-$github_label   = talbyte_option( 'github_label', $d['github_label'] );
 $linkedin_url   = talbyte_option( 'linkedin_url', $d['linkedin_url'] );
-$linkedin_label = talbyte_option( 'linkedin_label', $d['linkedin_label'] );
 $name_label     = talbyte_option( 'form_name_label', $d['form_name_label'] );
 $email_label    = talbyte_option( 'form_email_label', $d['form_email_label'] );
 $message_label  = talbyte_option( 'form_message_label', $d['form_message_label'] );
 $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
 ?>
-    <section class="contact-section" id="contact">
-      <h1 class="section-title" data-aos="fade-down" data-aos-duration="400" data-reveal data-split><?php echo esc_html( $title ); ?></h1>
-      <p class="contact-lead" data-aos="fade-up" data-aos-duration="380">
-        <?php echo esc_html( $lead ); ?>
-      </p>
-
-      <div class="contact-layout">
-        <aside class="social-box" data-aos="fade-right" data-aos-duration="400">
-          <h2 class="contact-aside-title" data-split><?php echo esc_html( $aside ); ?></h2>
-          <a href="mailto:<?php echo esc_attr( $email ); ?>" data-aos="fade-up" data-aos-delay="40">
-            <i class="bx bxs-envelope"></i>
-            <span>
-              <strong>Email</strong>
-              <small><?php echo esc_html( $email ); ?></small>
-            </span>
-          </a>
-          <a href="<?php echo esc_url( $github_url ); ?>" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="80">
-            <i class="bx bxl-github"></i>
-            <span>
-              <strong>GitHub</strong>
-              <small><?php echo esc_html( $github_label ); ?></small>
-            </span>
-          </a>
-          <a href="<?php echo esc_url( $linkedin_url ); ?>" target="_blank" rel="noreferrer noopener" data-aos="fade-up" data-aos-delay="120">
-            <i class="bx bxl-linkedin-square"></i>
-            <span>
-              <strong>LinkedIn</strong>
-              <small><?php echo esc_html( $linkedin_label ); ?></small>
-            </span>
-          </a>
-        </aside>
-
-        <form class="contact-box" id="contact-form" data-aos="fade-left" data-aos-duration="400" data-aos-delay="60" novalidate>
-          <div class="contact-field">
-            <label for="name"><?php echo esc_html( $name_label ); ?></label>
-            <input id="name" name="name" placeholder="Your full name" type="text" autocomplete="name" required />
+    <section class="contact site-section" id="contact" aria-label="Contact">
+      <div class="contact__grid">
+        <div class="contact__left">
+          <div class="contact__head">
+            <span class="contact__section-num">05</span>
+            <h2 class="contact__title"><?php echo esc_html( $title ); ?></h2>
+            <p class="contact__desc"><?php echo esc_html( $lead ); ?></p>
           </div>
 
-          <div class="contact-field">
-            <label for="email"><?php echo esc_html( $email_label ); ?></label>
-            <input id="email" name="email" placeholder="Your email" type="email" autocomplete="email" required />
+          <div class="contact__icons-dock contact__icons-dock--desktop">
+            <div class="contact__icons-dock-inner">
+              <a class="contact__icon-btn" href="mailto:<?php echo esc_attr( $email ); ?>" aria-label="Email Muhammad Talha Qamar">
+                <i class="bx bxs-envelope"></i>
+              </a>
+              <a class="contact__icon-btn" href="<?php echo esc_url( $github_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="GitHub profile">
+                <i class="bx bxl-github"></i>
+              </a>
+              <a class="contact__icon-btn" href="<?php echo esc_url( $linkedin_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn profile">
+                <i class="bx bxl-linkedin"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact__right">
+          <div class="contact__card-header">
+            <span class="contact__card-num">01</span>
+            <div class="contact__card-title-group">
+              <span class="contact__card-icon" aria-hidden="true"><i class="bx bx-mail-send"></i></span>
+              <h3 class="contact__card-title"><?php echo esc_html( $aside ); ?></h3>
+            </div>
+            <span class="contact__card-accent-bar" aria-hidden="true"></span>
           </div>
 
-          <div class="contact-field contact-field--full">
-            <label for="message"><?php echo esc_html( $message_label ); ?></label>
-            <textarea id="message" name="message" class="input-message" placeholder="Share your thoughts..." required></textarea>
+          <form class="contact__form" id="contact-form" novalidate>
+            <div class="contact__input-group">
+              <label class="visually-hidden" for="name"><?php echo esc_html( $name_label ); ?></label>
+              <input class="contact__input" id="name" name="name" placeholder="<?php echo esc_attr( $name_label ); ?>" type="text" autocomplete="name" required />
+            </div>
+            <div class="contact__input-group">
+              <label class="visually-hidden" for="email"><?php echo esc_html( $email_label ); ?></label>
+              <input class="contact__input" id="email" name="email" placeholder="<?php echo esc_attr( $email_label ); ?>" type="email" autocomplete="email" required />
+            </div>
+            <div class="contact__input-group">
+              <label class="visually-hidden" for="message"><?php echo esc_html( $message_label ); ?></label>
+              <textarea class="contact__input" id="message" name="message" placeholder="<?php echo esc_attr( $message_label ); ?>" rows="5" required></textarea>
+            </div>
+
+            <input class="contact-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <p class="contact-status" id="contact-status" role="status" aria-live="polite" hidden></p>
+
+            <button class="contact__submit" type="submit" id="contact-submit">
+              <?php echo esc_html( $submit ); ?>
+              <span class="contact__submit-arrow" aria-hidden="true">→</span>
+            </button>
+          </form>
+
+          <div class="contact__icons-dock contact__icons-dock--mobile">
+            <div class="contact__icons-dock-inner">
+              <a class="contact__icon-btn" href="mailto:<?php echo esc_attr( $email ); ?>" aria-label="Email Muhammad Talha Qamar">
+                <i class="bx bxs-envelope"></i>
+              </a>
+              <a class="contact__icon-btn" href="<?php echo esc_url( $github_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="GitHub profile">
+                <i class="bx bxl-github"></i>
+              </a>
+              <a class="contact__icon-btn" href="<?php echo esc_url( $linkedin_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn profile">
+                <i class="bx bxl-linkedin"></i>
+              </a>
+            </div>
           </div>
-
-          <input class="contact-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
-
-          <p class="contact-status" id="contact-status" role="status" aria-live="polite" hidden></p>
-
-          <button type="submit" id="contact-submit" data-magnetic data-aos="fade-up" data-aos-delay="80">
-            <?php echo esc_html( $submit ); ?> <i class="bx bx-mail-send"></i>
-          </button>
-        </form>
+        </div>
       </div>
     </section>

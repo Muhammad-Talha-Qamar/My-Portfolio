@@ -1,108 +1,120 @@
-const sideBar = document.querySelector(".sidebar");
-const menu = document.querySelector(".menu-icon");
-const closeIcon = document.querySelector(".close-icon");
-const navOverlay = document.getElementById("nav-overlay");
-const modeToggle = document.getElementById("mode-toggle");
-const year = document.getElementById("year");
-const contactForm = document.getElementById("contact-form");
+(() => {
+  const year = document.getElementById("year");
+  if (year) year.textContent = String(new Date().getFullYear());
 
-if (year) year.textContent = String(new Date().getFullYear());
+  const navbar = document.getElementById("site-navbar");
+  const burger = document.getElementById("menu-icon");
+  const links = document.querySelectorAll(".navbar__link");
 
-document.querySelectorAll(".sidebar ul li").forEach((li, i) => {
-  li.style.setProperty("--i", String(i));
-});
-document.querySelectorAll(".social-sidebar a").forEach((a, i) => {
-  a.style.setProperty("--i", String(i));
-});
-
-function setMenuOpen(open, { focus = true } = {}) {
-  if (!sideBar || !menu) return;
-  sideBar.classList.toggle("open-sidebar", open);
-  sideBar.classList.toggle("close-sidebar", !open);
-  sideBar.setAttribute("aria-hidden", open ? "false" : "true");
-  menu.setAttribute("aria-expanded", open ? "true" : "false");
-  menu.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-  document.body.classList.toggle("nav-open", open);
-  if (navOverlay) {
-    navOverlay.hidden = !open;
-    navOverlay.classList.toggle("is-visible", open);
+  function setNavOpen(open) {
+    if (!navbar || !burger) return;
+    navbar.classList.toggle("navbar--open", open);
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+    document.body.classList.toggle("nav-open", open);
   }
-  if (!focus) return;
-  if (open) {
-    closeIcon?.focus();
-  } else {
-    menu.focus();
+
+  burger?.addEventListener("click", () => {
+    setNavOpen(!navbar?.classList.contains("navbar--open"));
+  });
+
+  links.forEach((link) => {
+    link.addEventListener("click", () => setNavOpen(false));
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setNavOpen(false);
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 767) setNavOpen(false);
+  });
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      navbar?.classList.toggle("navbar--scrolled", window.scrollY > 24);
+    },
+    { passive: true }
+  );
+
+  const sections = [...document.querySelectorAll("section[id]")];
+  if (sections.length && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const id = entry.target.id;
+          links.forEach((link) => {
+            link.classList.toggle(
+              "is-active",
+              link.getAttribute("href") === `#${id}`
+            );
+          });
+        });
+      },
+      { rootMargin: "-40% 0px -50% 0px", threshold: 0.01 }
+    );
+    sections.forEach((section) => io.observe(section));
   }
-}
 
-function closeSidebar(options) {
-  setMenuOpen(false, options);
-}
+  // Subtle grid parallax
+  const root = document.documentElement;
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      if (root.classList.contains("is-lite")) return;
+      const x = ((e.clientX / window.innerWidth) - 0.5) * 24;
+      const y = ((e.clientY / window.innerHeight) - 0.5) * 24;
+      root.style.setProperty("--grid-x", `${x.toFixed(1)}px`);
+      root.style.setProperty("--grid-y", `${y.toFixed(1)}px`);
+    },
+    { passive: true }
+  );
+})();
 
-function openSidebar() {
-  setMenuOpen(true);
-}
+(() => {
+  const slot = document.querySelector("[data-about-slot]");
+  if (!slot) return;
+  const words = String(slot.getAttribute("data-words") || "")
+    .split(",")
+    .map((w) => w.trim())
+    .filter(Boolean);
+  if (words.length < 2) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-menu?.addEventListener("click", () => {
-  const isOpen = sideBar?.classList.contains("open-sidebar");
-  setMenuOpen(!isOpen);
-});
+  let i = 0;
+  window.setInterval(() => {
+    i = (i + 1) % words.length;
+    slot.style.opacity = "0";
+    slot.style.transform = "translateY(8px)";
+    window.setTimeout(() => {
+      slot.textContent = words[i];
+      slot.style.opacity = "1";
+      slot.style.transform = "translateY(0)";
+    }, 180);
+  }, 2200);
 
-closeIcon?.addEventListener("click", () => closeSidebar());
-navOverlay?.addEventListener("click", () => closeSidebar());
+  slot.style.transition = "opacity 0.25s ease, transform 0.25s ease";
+})();
 
-document.querySelectorAll(".sidebar a").forEach((link) => {
-  link.addEventListener("click", () => closeSidebar({ focus: false }));
-});
+(() => {
+  const contactForm = document.getElementById("contact-form");
+  if (!contactForm) return;
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && sideBar?.classList.contains("open-sidebar")) {
-    closeSidebar();
+  const CONTACT_EMAIL =
+    (window.talbytePortfolio && window.talbytePortfolio.contactEmail) ||
+    "qamitalha42@gmail.com";
+  const contactStatus = document.getElementById("contact-status");
+  const contactSubmit = document.getElementById("contact-submit");
+
+  function setContactStatus(message, type) {
+    if (!contactStatus) return;
+    contactStatus.hidden = !message;
+    contactStatus.textContent = message || "";
+    contactStatus.classList.remove("is-success", "is-error", "is-pending");
+    if (type) contactStatus.classList.add(`is-${type}`);
   }
-});
 
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 900 && sideBar?.classList.contains("open-sidebar")) {
-    closeSidebar({ focus: false });
-  }
-});
-
-function setMode(mode) {
-  const next = mode === "light" ? "light" : "dark";
-  document.documentElement.dataset.mode = next;
-  try {
-    localStorage.setItem("talha-mode", next);
-  } catch (err) {
-    /* private mode */
-  }
-  const toLight = next === "dark";
-  if (modeToggle) {
-    modeToggle.setAttribute("aria-label", toLight ? "Switch to light mode" : "Switch to dark mode");
-    modeToggle.title = toLight ? "Switch to light mode" : "Switch to dark mode";
-  }
-  const meta = document.getElementById("theme-color");
-  if (meta) meta.setAttribute("content", next === "light" ? "#eef2ff" : "#050816");
-}
-
-setMode(document.documentElement.dataset.mode || "dark");
-
-modeToggle?.addEventListener("click", () => {
-  setMode(document.documentElement.dataset.mode === "light" ? "dark" : "light");
-});
-
-const CONTACT_EMAIL = "qamitalha42@gmail.com";
-const contactStatus = document.getElementById("contact-status");
-const contactSubmit = document.getElementById("contact-submit");
-
-function setContactStatus(message, type) {
-  if (!contactStatus) return;
-  contactStatus.hidden = !message;
-  contactStatus.textContent = message || "";
-  contactStatus.classList.remove("is-success", "is-error", "is-pending");
-  if (type) contactStatus.classList.add(`is-${type}`);
-}
-
-if (contactForm) {
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -116,7 +128,6 @@ if (contactForm) {
     const email = String(formData.get("email") || "").trim();
     const message = String(formData.get("message") || "").trim();
     const honey = String(formData.get("_honey") || "").trim();
-
     if (honey) return;
 
     if (contactSubmit) contactSubmit.disabled = true;
@@ -140,16 +151,20 @@ if (contactForm) {
       });
 
       const result = await response.json().catch(() => ({}));
-
       if (!response.ok || result.success === "false" || result.success === false) {
         throw new Error(result.message || "Unable to send message.");
       }
 
       contactForm.reset();
-      setContactStatus(`Thanks, ${name}! Your message was sent. I'll get back to you soon.`, "success");
+      setContactStatus(
+        `Thanks, ${name}! Your message was sent. I'll get back to you soon.`,
+        "success"
+      );
     } catch (err) {
       const subject = encodeURIComponent(`Portfolio message from ${name}`);
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+      const body = encodeURIComponent(
+        `Name: ${name}\nEmail: ${email}\n\n${message}`
+      );
       window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
       setContactStatus(
         "Couldn't send from the page — your email app should open with the message ready.",
@@ -159,1529 +174,6 @@ if (contactForm) {
       if (contactSubmit) contactSubmit.disabled = false;
     }
   });
-}
-
-document.querySelectorAll(".project-vidbox img").forEach((img) => {
-  const parent = img.parentElement;
-  if (!parent) return;
-  const sign = parent.querySelector(".hover-sign");
-  if (!sign) return;
-  parent.addEventListener("mouseenter", () => sign.classList.add("active"));
-  parent.addEventListener("mouseleave", () => sign.classList.remove("active"));
-});
-
-/* Interactive passion keyboard — key borders glow toward the cursor */
-(() => {
-  const root = document.querySelector("[data-passion-keys]");
-  if (!root) return;
-
-  const keys = [...root.querySelectorAll("[data-key]")];
-  if (!keys.length) return;
-
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
-  const glowRadius = 150;
-  const state = keys.map(() => 0);
-  const target = keys.map(() => 0);
-  let raf = 0;
-  let active = false;
-
-  function distanceToRect(px, py, rect) {
-    const dx = Math.max(rect.left - px, 0, px - rect.right);
-    const dy = Math.max(rect.top - py, 0, py - rect.bottom);
-    return Math.hypot(dx, dy);
-  }
-
-  function paint() {
-    let moving = false;
-    for (let i = 0; i < keys.length; i += 1) {
-      state[i] += (target[i] - state[i]) * (reduceMotion ? 1 : 0.28);
-      if (Math.abs(state[i] - target[i]) > 0.004) moving = true;
-      keys[i].style.setProperty("--glow", state[i].toFixed(3));
-    }
-    root.classList.toggle("is-lit", state.some((v) => v > 0.03));
-    if (moving || active) raf = requestAnimationFrame(paint);
-    else raf = 0;
-  }
-
-  function ensurePaint() {
-    if (!raf) raf = requestAnimationFrame(paint);
-  }
-
-  function updateFromPoint(clientX, clientY) {
-    for (let i = 0; i < keys.length; i += 1) {
-      const dist = distanceToRect(clientX, clientY, keys[i].getBoundingClientRect());
-      const t = Math.max(0, 1 - dist / glowRadius);
-      // Strong center glow with soft falloff across neighboring keys
-      target[i] = Math.min(1, t * t * (0.55 + 0.9 * t));
-    }
-    ensurePaint();
-  }
-
-  function clearGlow() {
-    active = false;
-    for (let i = 0; i < target.length; i += 1) target[i] = 0;
-    ensurePaint();
-  }
-
-  if (finePointer) {
-    root.addEventListener(
-      "pointermove",
-      (e) => {
-        active = true;
-        updateFromPoint(e.clientX, e.clientY);
-      },
-      { passive: true }
-    );
-    root.addEventListener("pointerenter", (e) => {
-      active = true;
-      updateFromPoint(e.clientX, e.clientY);
-    });
-    root.addEventListener("pointerleave", clearGlow);
-  } else {
-    root.addEventListener(
-      "pointerdown",
-      (e) => {
-        active = true;
-        updateFromPoint(e.clientX, e.clientY);
-        window.setTimeout(clearGlow, 700);
-      },
-      { passive: true }
-    );
-  }
-})();
-
-/* ——— Extreme reactivity ——— */
-(() => {
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
-  const conn = navigator.connection;
-  const slowNet =
-    !!(conn && (conn.saveData || /2g|slow-2g/i.test(conn.effectiveType || "")));
-  const lowPower =
-    (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
-    (navigator.deviceMemory && navigator.deviceMemory < 4);
-  /* Prefer smooth over spectacle — heavy FX only on capable desktops */
-  const isLite =
-    reduceMotion ||
-    window.matchMedia("(max-width: 1100px), (update: slow)").matches ||
-    !finePointer ||
-    slowNet ||
-    lowPower ||
-    document.documentElement.classList.contains("is-lite");
-  const root = document.documentElement;
-  const header = document.querySelector("header");
-  const orb = document.querySelector(".cursor-orb");
-  const ring = document.querySelector(".cursor-ring");
-  const progress = document.getElementById("scroll-progress");
-  const navLinks = [
-    ...document.querySelectorAll("header ul a, .nav-links a, .sidebar ul a"),
-  ];
-  const sections = ["home", "about", "projects", "skills", "contact"]
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
-
-  root.classList.add("is-reactive");
-  if (isLite) root.classList.add("is-lite");
-  if (reduceMotion) root.classList.add("reduce-motion");
-
-  function bindAnchorNav() {
-    document.querySelectorAll('a[href^="#"]').forEach((link) => {
-      link.addEventListener("click", (e) => {
-        const id = link.getAttribute("href");
-        if (!id || id === "#") return;
-        const target = document.querySelector(id);
-        if (!target) return;
-        e.preventDefault();
-        target.scrollIntoView({
-          behavior: reduceMotion ? "auto" : "smooth",
-          block: "start",
-        });
-        history.pushState(null, "", id);
-      });
-    });
-  }
-
-  function bindSkillChipIndexes() {
-    document.querySelectorAll(".skill-list").forEach((list) => {
-      [...list.children].forEach((item, i) => {
-        item.style.setProperty("--i", String(i));
-      });
-    });
-  }
-
-  function revealMotionImmediate() {
-    document.querySelectorAll("[data-reveal]").forEach((el) => {
-      el.classList.add("is-revealed");
-    });
-    document.querySelectorAll("[data-animate], .skill-panel").forEach((el) => {
-      el.classList.add("is-inview");
-    });
-  }
-
-  /* Lite / reduced motion: keep nav + progress — skip cursor/canvas/tilt jank */
-  if (isLite) {
-    const canvas = document.getElementById("bg-canvas");
-    if (canvas) canvas.remove();
-    document.querySelector(".cursor-orb")?.remove();
-    document.querySelector(".cursor-ring")?.remove();
-    revealMotionImmediate();
-    bindSkillChipIndexes();
-    bindAnchorNav();
-
-    let liteTick = false;
-    let lastActive = "";
-    const onLiteScroll = () => {
-      const y = window.scrollY || 0;
-      if (header) header.classList.toggle("is-scrolled", y > 24);
-      if (progress) {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        const ratio = max > 0 ? y / max : 0;
-        progress.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
-      }
-      let current = sections[0]?.id || "home";
-      const marker = y + window.innerHeight * 0.35;
-      for (const section of sections) {
-        if (section.offsetTop <= marker) current = section.id;
-      }
-      if (current !== lastActive) {
-        lastActive = current;
-        navLinks.forEach((link) => {
-          const href = link.getAttribute("href") || "";
-          link.classList.toggle("is-active", href === `#${current}`);
-        });
-      }
-    };
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (liteTick) return;
-        liteTick = true;
-        requestAnimationFrame(() => {
-          onLiteScroll();
-          liteTick = false;
-        });
-      },
-      { passive: true }
-    );
-    onLiteScroll();
-    return;
-  }
-
-  const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, tx: 0, ty: 0 };
-  const ringPos = { x: pointer.x, y: pointer.y };
-  let pointerTick = false;
-  let scrollTick = false;
-
-  const lerp = (a, b, n) => a + (b - a) * n;
-
-  function setPointerVars() {
-    const nx = (pointer.x / window.innerWidth) * 2 - 1;
-    const ny = (pointer.y / window.innerHeight) * 2 - 1;
-    root.style.setProperty("--mx", `${pointer.x}px`);
-    root.style.setProperty("--my", `${pointer.y}px`);
-    root.style.setProperty("--mxn", nx.toFixed(4));
-    root.style.setProperty("--myn", ny.toFixed(4));
-  }
-
-  function updateParallax() {
-    document.querySelectorAll("[data-parallax]").forEach((el) => {
-      const depth = Number(el.dataset.parallax) || 0.1;
-      const x = pointer.tx * depth * 40;
-      const y = pointer.ty * depth * 40;
-      el.style.setProperty("--px", `${x.toFixed(2)}px`);
-      el.style.setProperty("--py", `${y.toFixed(2)}px`);
-    });
-  }
-
-  let cursorRaf = 0;
-
-  function updateCursor() {
-    if (!finePointer || !orb || !ring) return;
-    orb.style.transform = `translate3d(${pointer.x}px, ${pointer.y}px, 0)`;
-    ringPos.x = lerp(ringPos.x, pointer.x, 0.22);
-    ringPos.y = lerp(ringPos.y, pointer.y, 0.22);
-    ring.style.transform = `translate3d(${ringPos.x}px, ${ringPos.y}px, 0)`;
-    const settling =
-      Math.abs(ringPos.x - pointer.x) > 0.4 || Math.abs(ringPos.y - pointer.y) > 0.4;
-    if (settling) cursorRaf = requestAnimationFrame(updateCursor);
-    else cursorRaf = 0;
-  }
-
-  function onPointerMove(e) {
-    pointer.x = e.clientX;
-    pointer.y = e.clientY;
-    pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
-    pointer.ty = (e.clientY / window.innerHeight) * 2 - 1;
-    if (!pointerTick) {
-      pointerTick = true;
-      requestAnimationFrame(() => {
-        setPointerVars();
-        updateParallax();
-        pointerTick = false;
-      });
-    }
-    if (!cursorRaf) cursorRaf = requestAnimationFrame(updateCursor);
-  }
-
-  if (finePointer) {
-    root.classList.add("has-cursor");
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    document.addEventListener("mouseenter", () => root.classList.add("cursor-on"));
-    document.addEventListener("mouseleave", () => root.classList.remove("cursor-on"));
-
-    document.querySelectorAll("a, button, .card, .skill-panel, .project-vidbox, input, textarea").forEach((el) => {
-      el.addEventListener("pointerenter", () => root.classList.add("cursor-hover"));
-      el.addEventListener("pointerleave", () => root.classList.remove("cursor-hover"));
-    });
-  }
-
-  /* Smooth 3D tilt + spotlight */
-  document.querySelectorAll("[data-tilt]").forEach((el) => {
-    const max = Number(el.dataset.tiltMax) || 10;
-    const state = { rx: 0, ry: 0, sx: 50, sy: 50, trx: 0, tryY: 0, tsx: 50, tsy: 50, active: false };
-    let raf = 0;
-
-    function tick() {
-      state.rx = lerp(state.rx, state.trx, 0.16);
-      state.ry = lerp(state.ry, state.tryY, 0.16);
-      state.sx = lerp(state.sx, state.tsx, 0.18);
-      state.sy = lerp(state.sy, state.tsy, 0.18);
-      el.style.setProperty("--rx", `${state.rx.toFixed(2)}deg`);
-      el.style.setProperty("--ry", `${state.ry.toFixed(2)}deg`);
-      el.style.setProperty("--sx", `${state.sx.toFixed(1)}%`);
-      el.style.setProperty("--sy", `${state.sy.toFixed(1)}%`);
-      const moving =
-        Math.abs(state.rx - state.trx) > 0.02 ||
-        Math.abs(state.ry - state.tryY) > 0.02 ||
-        state.active;
-      if (moving) raf = requestAnimationFrame(tick);
-      else raf = 0;
-    }
-
-    function ensureTick() {
-      if (!raf) raf = requestAnimationFrame(tick);
-    }
-
-    el.addEventListener("pointermove", (e) => {
-      const rect = el.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width;
-      const py = (e.clientY - rect.top) / rect.height;
-      state.trx = (0.5 - py) * max;
-      state.tryY = (px - 0.5) * max;
-      state.tsx = px * 100;
-      state.tsy = py * 100;
-      state.active = true;
-      el.classList.add("is-tilting");
-      ensureTick();
-    });
-
-    el.addEventListener("pointerleave", () => {
-      state.trx = 0;
-      state.tryY = 0;
-      state.tsx = 50;
-      state.tsy = 50;
-      state.active = false;
-      el.classList.remove("is-tilting");
-      ensureTick();
-    });
-  });
-
-  /* Interactive globe — cursor-driven tilt, parallax & specular */
-  if (finePointer) {
-    document.querySelectorAll("[data-globe]").forEach((globe) => {
-      const card = globe.closest(".card") || globe;
-      const state = {
-        gx: 0,
-        gy: 0,
-        gtx: 0,
-        gty: 0,
-        gs: 1,
-        glx: 50,
-        gly: 40,
-        tgx: 0,
-        tgy: 0,
-        tgtx: 0,
-        tgty: 0,
-        tgs: 1,
-        tglx: 50,
-        tgly: 40,
-        active: false,
-      };
-      let raf = 0;
-
-      function apply() {
-        globe.style.setProperty("--gx", `${state.gx.toFixed(2)}deg`);
-        globe.style.setProperty("--gy", `${state.gy.toFixed(2)}deg`);
-        globe.style.setProperty("--gtx", `${state.gtx.toFixed(2)}px`);
-        globe.style.setProperty("--gty", `${state.gty.toFixed(2)}px`);
-        globe.style.setProperty("--gs", state.gs.toFixed(3));
-        globe.style.setProperty("--glx", `${state.glx.toFixed(1)}%`);
-        globe.style.setProperty("--gly", `${state.gly.toFixed(1)}%`);
-      }
-
-      function tick() {
-        state.gx = lerp(state.gx, state.tgx, 0.14);
-        state.gy = lerp(state.gy, state.tgy, 0.14);
-        state.gtx = lerp(state.gtx, state.tgtx, 0.16);
-        state.gty = lerp(state.gty, state.tgty, 0.16);
-        state.gs = lerp(state.gs, state.tgs, 0.12);
-        state.glx = lerp(state.glx, state.tglx, 0.2);
-        state.gly = lerp(state.gly, state.tgly, 0.2);
-        apply();
-        const moving =
-          Math.abs(state.gx - state.tgx) > 0.03 ||
-          Math.abs(state.gy - state.tgy) > 0.03 ||
-          Math.abs(state.gtx - state.tgtx) > 0.08 ||
-          state.active;
-        if (moving) raf = requestAnimationFrame(tick);
-        else raf = 0;
-      }
-
-      function ensureTick() {
-        if (!raf) raf = requestAnimationFrame(tick);
-      }
-
-      card.addEventListener("pointermove", (e) => {
-        const rect = card.getBoundingClientRect();
-        const px = (e.clientX - rect.left) / rect.width;
-        const py = (e.clientY - rect.top) / rect.height;
-        const nx = px * 2 - 1;
-        const ny = py * 2 - 1;
-        state.tgx = -ny * 18;
-        state.tgy = nx * 22;
-        state.tgtx = nx * 14;
-        state.tgty = ny * 10;
-        state.tgs = 1.08;
-        state.tglx = px * 100;
-        state.tgly = py * 100;
-        state.active = true;
-        globe.classList.add("is-tracking");
-        ensureTick();
-      });
-
-      card.addEventListener("pointerleave", () => {
-        state.tgx = 0;
-        state.tgy = 0;
-        state.tgtx = 0;
-        state.tgty = 0;
-        state.tgs = 1;
-        state.tglx = 50;
-        state.tgly = 40;
-        state.active = false;
-        globe.classList.remove("is-tracking");
-        ensureTick();
-      });
-    });
-  }
-
-  /* Magnetic buttons with spring return */
-  if (finePointer) {
-    document.querySelectorAll("[data-magnetic]").forEach((el) => {
-      const strength = 0.32;
-      const state = { x: 0, y: 0, tx: 0, ty: 0 };
-      let raf = 0;
-
-      function tick() {
-        state.x = lerp(state.x, state.tx, 0.18);
-        state.y = lerp(state.y, state.ty, 0.18);
-        el.style.transform = `translate3d(${state.x.toFixed(2)}px, ${state.y.toFixed(2)}px, 0)`;
-        if (
-          Math.abs(state.x - state.tx) > 0.05 ||
-          Math.abs(state.y - state.ty) > 0.05
-        ) {
-          raf = requestAnimationFrame(tick);
-        } else {
-          raf = 0;
-          if (state.tx === 0 && state.ty === 0) el.style.transform = "";
-        }
-      }
-
-      el.addEventListener("pointermove", (e) => {
-        const rect = el.getBoundingClientRect();
-        state.tx = (e.clientX - (rect.left + rect.width / 2)) * strength;
-        state.ty = (e.clientY - (rect.top + rect.height / 2)) * strength;
-        if (!raf) raf = requestAnimationFrame(tick);
-      });
-      el.addEventListener("pointerleave", () => {
-        state.tx = 0;
-        state.ty = 0;
-        if (!raf) raf = requestAnimationFrame(tick);
-      });
-    });
-  }
-
-  /* Image hover parallax — keep light, skip project carousel thumbs */
-  if (finePointer) {
-    const motionTargets = [
-      { box: ".card", media: "img", x: 8, y: 6, scale: 1.03, follow: 0.18 },
-      { box: ".hero-photo-wrap", media: ".hero-photo, img", x: 10, y: 8, scale: 1.05, follow: 0.18 },
-      { box: ".passion-keyboard", media: ".passion-img, img", x: 10, y: 8, scale: 1.04, follow: 0.18 },
-      { box: ".slider .item", media: "img", x: 8, y: 8, scale: 1.06, follow: 0.18 },
-    ];
-
-    const boundMedia = new WeakSet();
-
-    motionTargets.forEach(({ box, media, x, y, scale, follow }) => {
-      document.querySelectorAll(box).forEach((host) => {
-        const el = host.querySelector(media);
-        if (!el || boundMedia.has(el)) return;
-        boundMedia.add(el);
-        el.classList.add("img-motion");
-        host.classList.add("img-motion-host");
-
-        const state = { x: 0, y: 0, tx: 0, ty: 0, s: 1, ts: 1 };
-        let raf = 0;
-        const ease = follow || 0.18;
-
-        function tick() {
-          state.x = lerp(state.x, state.tx, ease);
-          state.y = lerp(state.y, state.ty, ease);
-          state.s = lerp(state.s, state.ts, ease);
-          el.style.transform = `translate3d(${state.x.toFixed(2)}px, ${state.y.toFixed(2)}px, 0) scale(${state.s.toFixed(3)})`;
-          const moving =
-            Math.abs(state.x - state.tx) > 0.05 ||
-            Math.abs(state.y - state.ty) > 0.05 ||
-            Math.abs(state.s - state.ts) > 0.002;
-          if (moving) raf = requestAnimationFrame(tick);
-          else raf = 0;
-        }
-
-        function ensureTick() {
-          if (!raf) raf = requestAnimationFrame(tick);
-        }
-
-        host.addEventListener("pointermove", (e) => {
-          const rect = host.getBoundingClientRect();
-          const px = (e.clientX - rect.left) / rect.width - 0.5;
-          const py = (e.clientY - rect.top) / rect.height - 0.5;
-          state.tx = px * x;
-          state.ty = py * y;
-          state.ts = scale;
-          ensureTick();
-        });
-
-        host.addEventListener("pointerleave", () => {
-          state.tx = 0;
-          state.ty = 0;
-          state.ts = 1;
-          ensureTick();
-        });
-      });
-    });
-  }
-
-  /* Skills brain — CSS float only (no perpetual RAF) */
-  {
-    const brain = document.querySelector(".skills-image");
-    if (brain) {
-      brain.classList.add("skills-brain-live");
-    }
-  }
-
-  /* Scroll: progress + header + active nav (offsetTop — no layout thrash) */
-  let lastActive = "";
-  function onScroll() {
-    const y = window.scrollY || 0;
-    if (header) header.classList.toggle("is-scrolled", y > 24);
-    root.style.setProperty("--scroll", String(Math.min(y / 800, 1)));
-
-    if (progress) {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const ratio = max > 0 ? y / max : 0;
-      progress.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
-    }
-
-    let current = sections[0]?.id || "home";
-    const marker = y + window.innerHeight * 0.35;
-    for (const section of sections) {
-      if (section.offsetTop <= marker) current = section.id;
-    }
-    if (current === lastActive) return;
-    lastActive = current;
-    navLinks.forEach((link) => {
-      const href = link.getAttribute("href") || "";
-      link.classList.toggle("is-active", href === `#${current}`);
-    });
-  }
-
-  window.addEventListener(
-    "scroll",
-    () => {
-      if (!scrollTick) {
-        requestAnimationFrame(() => {
-          onScroll();
-          scrollTick = false;
-        });
-        scrollTick = true;
-      }
-    },
-    { passive: true }
-  );
-  onScroll();
-
-  /* Reveal-on-view for section titles — re-triggers every time they enter/leave */
-  const revealExits = [
-    "reveal-up",
-    "reveal-down",
-    "reveal-left",
-    "reveal-right",
-    "reveal-zoom",
-    "reveal-blur",
-  ];
-  const revealEls = document.querySelectorAll("[data-reveal]");
-  if (revealEls.length && "IntersectionObserver" in window) {
-    revealEls.forEach((el, i) => {
-      if (!el.hasAttribute("data-reveal-out")) {
-        el.setAttribute("data-reveal-out", revealExits[i % revealExits.length]);
-      }
-    });
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const el = entry.target;
-          if (entry.isIntersecting) {
-            el.classList.remove("is-exiting");
-            el.classList.add("is-revealed");
-          } else if (el.classList.contains("is-revealed")) {
-            el.classList.remove("is-revealed");
-            el.classList.add("is-exiting");
-            window.setTimeout(() => el.classList.remove("is-exiting"), 520);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
-    );
-    revealEls.forEach((el) => io.observe(el));
-  } else {
-    revealEls.forEach((el) => el.classList.add("is-revealed"));
-  }
-
-  bindSkillChipIndexes();
-
-  /* Ripple on primary actions */
-  document.querySelectorAll(".hero-btn, .card-btn, .project-btn, .contact-box button, .theme-toggle").forEach((el) => {
-    el.addEventListener("pointerdown", (e) => {
-      const rect = el.getBoundingClientRect();
-      const ripple = document.createElement("span");
-      ripple.className = "ripple";
-      const size = Math.max(rect.width, rect.height);
-      ripple.style.width = ripple.style.height = `${size}px`;
-      ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
-      ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
-      el.appendChild(ripple);
-      ripple.addEventListener("animationend", () => ripple.remove());
-    });
-  });
-
-  bindAnchorNav();
-
-  /* Interactive cosmos — deferred + lighter so scroll stays smooth */
-  const canvas = document.getElementById("bg-canvas");
-  if (canvas) {
-    const bootCosmos = () => {
-    if (!canvas.isConnected) return;
-    const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-    if (!ctx) return;
-    const mouse = {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-      px: window.innerWidth / 2,
-      py: window.innerHeight / 2,
-      active: false,
-      speed: 0,
-      down: false,
-      charge: 0,
-      chargeX: 0,
-      chargeY: 0,
-    };
-    let particles = [];
-    let orbs = [];
-    let trail = [];
-    let bursts = [];
-    let meteors = [];
-    let pulses = [];
-    let ripples = [];
-    let dust = [];
-    let spirals = [];
-    let w = 0;
-    let h = 0;
-    let dpr = 1;
-    let rafId = 0;
-    let lastScrollY = window.scrollY;
-    let scrollVel = 0;
-    let warp = 0;
-    let tick = 0;
-    let pulseTimer = 0;
-
-    const chargeEl = document.createElement("div");
-    chargeEl.className = "charge-ring";
-    chargeEl.setAttribute("aria-hidden", "true");
-    document.body.appendChild(chargeEl);
-
-    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
-    const isNarrow = () => w < 900;
-
-    function particleCount() {
-      const dens = isCoarse || isNarrow() ? 320000 : 240000;
-      const max = isCoarse || isNarrow() ? 5 : 8;
-      return Math.min(max, Math.max(4, Math.floor((w * h) / dens)));
-    }
-
-    function makeParticle() {
-      const depth = 0.3 + Math.random() * 0.7;
-      return {
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.25 * depth,
-        vy: (Math.random() - 0.5) * 0.25 * depth,
-        r: (0.5 + Math.random() * 1.9) * depth,
-        depth,
-        twinkle: Math.random() * Math.PI * 2,
-        hue: Math.random() > 0.65 ? 210 : Math.random() > 0.45 ? 265 : 185,
-      };
-    }
-
-    function makeOrb() {
-      return {
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        r: 40 + Math.random() * 90,
-        hue: 190 + Math.random() * 90,
-        phase: Math.random() * Math.PI * 2,
-      };
-    }
-
-    function makeDust() {
-      return {
-        x: Math.random() * w,
-        y: Math.random() * h,
-        z: 0.4 + Math.random() * 0.6,
-        r: 0.4 + Math.random() * 1.2,
-        hue: 200 + Math.random() * 60,
-      };
-    }
-
-    function spawnMeteor() {
-      const fromLeft = Math.random() > 0.5;
-      meteors.push({
-        x: fromLeft ? -40 : w + 40,
-        y: Math.random() * h * 0.5,
-        vx: fromLeft ? 7 + Math.random() * 6 : -(7 + Math.random() * 6),
-        vy: 2.8 + Math.random() * 4,
-        life: 1,
-        len: 60 + Math.random() * 90,
-        hue: Math.random() > 0.5 ? 200 : 280,
-      });
-    }
-
-    function spawnBurst(x, y, count = 28, power = 1) {
-      const sparks = [];
-      for (let i = 0; i < count; i++) {
-        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.45;
-        const speed = (1.8 + Math.random() * 5.5) * power;
-        sparks.push({
-          x,
-          y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          life: 1,
-          r: (1.2 + Math.random() * 2.6) * power,
-          hue: 170 + Math.random() * 120,
-        });
-      }
-      bursts.push({ sparks, ring: 0, x, y, life: 1, power });
-      ripples.push({ x, y, r: 8, life: 1, max: 120 * power });
-    }
-
-    function spawnSpiral(x, y) {
-      for (let i = 0; i < 10; i++) {
-        const a = tick * 0.2 + i * 0.55;
-        spirals.push({
-          x: x + Math.cos(a) * 8,
-          y: y + Math.sin(a) * 8,
-          vx: Math.cos(a) * 2.2,
-          vy: Math.sin(a) * 2.2,
-          life: 1,
-          hue: 200 + i * 8,
-        });
-      }
-    }
-
-    function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, isCoarse || isNarrow() ? 1 : 1.25);
-      w = window.innerWidth;
-      h = window.innerHeight;
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = particleCount();
-      if (particles.length !== count) particles = Array.from({ length: count }, makeParticle);
-      const orbTarget = isCoarse || isNarrow() ? 1 : 2;
-      if (orbs.length !== orbTarget) orbs = Array.from({ length: orbTarget }, makeOrb);
-      dust = [];
-      meteors = [];
-      spirals = [];
-    }
-
-    function drawAuroraOverlay(light) {
-      const ay = h * 0.18 + Math.sin(tick * 0.01) * 20;
-      for (let i = 0; i < 3; i++) {
-        const ox = w * (0.2 + i * 0.3) + Math.sin(tick * 0.008 + i) * 40 + pointer.tx * 30;
-        const g = ctx.createRadialGradient(ox, ay + i * 30, 10, ox, ay, 180 + i * 40);
-        g.addColorStop(0, `hsla(${170 + i * 40}, 80%, ${light ? 45 : 65}%, ${light ? 0.06 : 0.1})`);
-        g.addColorStop(1, "transparent");
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, w, h * 0.55);
-      }
-    }
-
-    let frameSkip = 0;
-    let scrolling = false;
-    let scrollIdleTimer = 0;
-
-    function stopDraw() {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = 0;
-      }
-    }
-
-    function startDraw() {
-      if (!rafId && !document.hidden && !scrolling) {
-        rafId = requestAnimationFrame(draw);
-      }
-    }
-
-    window.addEventListener(
-      "scroll",
-      () => {
-        scrolling = true;
-        stopDraw();
-        window.clearTimeout(scrollIdleTimer);
-        scrollIdleTimer = window.setTimeout(() => {
-          scrolling = false;
-          mouse.speed = 0;
-          startDraw();
-        }, 140);
-      },
-      { passive: true }
-    );
-
-    function draw() {
-      rafId = 0;
-      if (document.hidden || scrolling) return;
-      rafId = requestAnimationFrame(draw);
-      /* Cap ~30fps when idle to keep the main thread free */
-      frameSkip ^= 1;
-      if (frameSkip && !mouse.down && mouse.speed < 2) return;
-
-      ctx.clearRect(0, 0, w, h);
-      tick += 1;
-      const light = root.dataset.mode === "light";
-      const mx = mouse.x;
-      const my = mouse.y;
-      const connectDist = Math.min(90, w * 0.08);
-      const linkStep = isCoarse || isNarrow() ? 4 : 3;
-
-      warp = lerp(warp, 0, 0.2);
-
-      drawAuroraOverlay(light);
-
-      /* Nebula orbs */
-      for (const o of orbs) {
-        const dx = mx - o.x;
-        const dy = my - o.y;
-        const dist = Math.hypot(dx, dy) || 1;
-        if (mouse.active && dist < 320) {
-          o.vx -= (dx / dist) * 0.02;
-          o.vy -= (dy / dist) * 0.02;
-        }
-        o.phase += 0.008;
-        o.vx += Math.sin(o.phase) * 0.01;
-        o.vy += Math.cos(o.phase * 0.8) * 0.01;
-        o.vx *= 0.99;
-        o.vy *= 0.99;
-        o.x += o.vx + pointer.tx * 0.15;
-        o.y += o.vy + pointer.ty * 0.15;
-        if (o.x < -o.r) o.x = w + o.r;
-        if (o.x > w + o.r) o.x = -o.r;
-        if (o.y < -o.r) o.y = h + o.r;
-        if (o.y > h + o.r) o.y = -o.r;
-        const pulse = 1 + Math.sin(o.phase) * 0.12;
-        const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r * pulse);
-        g.addColorStop(0, `hsla(${o.hue}, 80%, ${light ? 50 : 60}%, ${light ? 0.08 : 0.14})`);
-        g.addColorStop(0.55, `hsla(${o.hue + 30}, 70%, 50%, ${light ? 0.03 : 0.06})`);
-        g.addColorStop(1, "transparent");
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(o.x, o.y, o.r * pulse, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      /* Charge visual */
-      if (mouse.down) {
-        mouse.charge = Math.min(mouse.charge + 0.02, 1);
-        chargeEl.style.left = `${mouse.chargeX}px`;
-        chargeEl.style.top = `${mouse.chargeY}px`;
-        chargeEl.classList.add("is-charging");
-        /* suck particles in */
-        for (const p of particles) {
-          const dx = mouse.chargeX - p.x;
-          const dy = mouse.chargeY - p.y;
-          const dist = Math.hypot(dx, dy) || 1;
-          if (dist < 280) {
-            const f = mouse.charge * 0.08 * (1 - dist / 280);
-            p.vx += (dx / dist) * f;
-            p.vy += (dy / dist) * f;
-          }
-        }
-      }
-
-      /* Idle pulse rings from cursor */
-      pulseTimer += 1;
-      if (mouse.active && pulseTimer > 55) {
-        pulseTimer = 0;
-        pulses.push({ x: mx, y: my, r: 12, life: 1 });
-      }
-      for (let i = pulses.length - 1; i >= 0; i--) {
-        const p = pulses[i];
-        p.r += 2.8;
-        p.life -= 0.016;
-        if (p.life <= 0) {
-          pulses.splice(i, 1);
-          continue;
-        }
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(150, 190, 255, ${p.life * 0.35})`;
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-      }
-
-      /* Comet trail + spiral on fast move */
-      if (mouse.active && mouse.speed > 0.7) {
-        trail.push({ x: mx, y: my, life: 1, r: 2 + Math.min(mouse.speed * 0.18, 6) });
-        if (trail.length > 34) trail.shift();
-        if (mouse.speed > 18) spawnSpiral(mx, my);
-      }
-      for (let i = trail.length - 1; i >= 0; i--) {
-        const t = trail[i];
-        t.life -= 0.04;
-        if (t.life <= 0) {
-          trail.splice(i, 1);
-          continue;
-        }
-        const grad = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, t.r * 5);
-        grad.addColorStop(0, `rgba(190, 220, 255, ${t.life * 0.6})`);
-        grad.addColorStop(0.35, `rgba(130, 170, 255, ${t.life * 0.25})`);
-        grad.addColorStop(1, "transparent");
-        ctx.beginPath();
-        ctx.arc(t.x, t.y, t.r * 5, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
-      }
-
-      for (let i = spirals.length - 1; i >= 0; i--) {
-        const s = spirals[i];
-        s.x += s.vx;
-        s.y += s.vy;
-        s.vx *= 0.96;
-        s.vy *= 0.96;
-        s.life -= 0.03;
-        if (s.life <= 0) {
-          spirals.splice(i, 1);
-          continue;
-        }
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, 2 * s.life, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${s.hue}, 90%, 70%, ${s.life})`;
-        ctx.fill();
-      }
-
-      /* Stars + constellation links */
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        const dx = mx - p.x;
-        const dy = my - p.y;
-        const dist = Math.hypot(dx, dy) || 1;
-
-        if (mouse.active && !mouse.down && dist < 260) {
-          const force = (1 - dist / 260) * 0.06 * p.depth;
-          p.vx += (dx / dist) * force;
-          p.vy += (dy / dist) * force;
-        }
-
-        p.vx *= 0.983;
-        p.vy *= 0.983;
-        const streak = warp * 22 * p.depth * Math.sign(scrollVel || 1);
-        p.x += p.vx + pointer.tx * 0.45 * p.depth;
-        p.y += p.vy + pointer.ty * 0.45 * p.depth + streak * 0.1;
-        p.twinkle += 0.022 + p.depth * 0.012;
-
-        if (p.x < -20) p.x = w + 20;
-        if (p.x > w + 20) p.x = -20;
-        if (p.y < -20) p.y = h + 20;
-        if (p.y > h + 20) p.y = -20;
-
-        const alpha =
-          (0.35 + Math.sin(p.twinkle) * 0.28 + p.depth * 0.28) * (light ? 0.48 : 1);
-
-        if (warp > 0.07) {
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p.x, p.y - streak);
-          ctx.strokeStyle = `hsla(${p.hue}, 85%, ${light ? 40 : 78}%, ${alpha * warp})`;
-          ctx.lineWidth = p.r;
-          ctx.stroke();
-        }
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 85%, ${light ? 42 : 74}%, ${alpha})`;
-        ctx.fill();
-
-        if (mouse.active && dist < 130) {
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(mx, my);
-          ctx.strokeStyle = `hsla(${p.hue}, 90%, ${light ? 45 : 72}%, ${(1 - dist / 130) * 0.28})`;
-          ctx.lineWidth = 0.7;
-          ctx.stroke();
-        }
-
-        /* Bounded neighbor checks — avoid O(n²) constellation cost */
-        for (let j = i + linkStep; j < Math.min(particles.length, i + 10); j += linkStep) {
-          const q = particles[j];
-          const d = Math.hypot(p.x - q.x, p.y - q.y);
-          if (d < connectDist) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle = light
-              ? `rgba(70, 100, 180, ${(1 - d / connectDist) * 0.12})`
-              : `rgba(140, 175, 255, ${(1 - d / connectDist) * 0.18})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-
-      /* Foreground dust parallax */
-      for (const d of dust) {
-        d.x += pointer.tx * 1.2 * d.z;
-        d.y += pointer.ty * 1.2 * d.z + warp * d.z * 2;
-        if (d.x < 0) d.x = w;
-        if (d.x > w) d.x = 0;
-        if (d.y < 0) d.y = h;
-        if (d.y > h) d.y = 0;
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r * d.z, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${d.hue}, 80%, ${light ? 40 : 80}%, ${0.25 * d.z})`;
-        ctx.fill();
-      }
-
-      /* Meteors — sparse */
-      if (Math.random() < 0.004 + warp * 0.015 && meteors.length < 2) spawnMeteor();
-      for (let i = meteors.length - 1; i >= 0; i--) {
-        const m = meteors[i];
-        m.x += m.vx;
-        m.y += m.vy;
-        m.life -= 0.011;
-        if (m.life <= 0 || m.x < -100 || m.x > w + 100 || m.y > h + 100) {
-          meteors.splice(i, 1);
-          continue;
-        }
-        const ang = Math.atan2(m.vy, m.vx);
-        const tx = m.x - Math.cos(ang) * m.len;
-        const ty = m.y - Math.sin(ang) * m.len;
-        const g = ctx.createLinearGradient(m.x, m.y, tx, ty);
-        g.addColorStop(0, `hsla(${m.hue}, 95%, 85%, ${m.life})`);
-        g.addColorStop(1, "transparent");
-        ctx.beginPath();
-        ctx.moveTo(m.x, m.y);
-        ctx.lineTo(tx, ty);
-        ctx.strokeStyle = g;
-        ctx.lineWidth = 2.4;
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(m.x, m.y, 2.6, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${m.hue}, 95%, 90%, ${m.life})`;
-        ctx.fill();
-      }
-
-      /* Shockwave ripples */
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        const r = ripples[i];
-        r.r += 5;
-        r.life -= 0.02;
-        if (r.life <= 0 || r.r > r.max) {
-          ripples.splice(i, 1);
-          continue;
-        }
-        ctx.beginPath();
-        ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(170, 210, 255, ${r.life * 0.4})`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-
-      /* Bursts */
-      for (let i = bursts.length - 1; i >= 0; i--) {
-        const b = bursts[i];
-        b.life -= 0.016;
-        b.ring += 5 * b.power;
-        if (b.life <= 0) {
-          bursts.splice(i, 1);
-          continue;
-        }
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.ring, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(160, 200, 255, ${b.life * 0.5})`;
-        ctx.lineWidth = 1.8 * b.power;
-        ctx.stroke();
-        for (let s = b.sparks.length - 1; s >= 0; s--) {
-          const sp = b.sparks[s];
-          sp.x += sp.vx;
-          sp.y += sp.vy;
-          sp.vx *= 0.955;
-          sp.vy *= 0.955;
-          sp.life -= 0.018;
-          if (sp.life <= 0) {
-            b.sparks.splice(s, 1);
-            continue;
-          }
-          ctx.beginPath();
-          ctx.arc(sp.x, sp.y, sp.r * sp.life, 0, Math.PI * 2);
-          ctx.fillStyle = `hsla(${sp.hue}, 92%, 70%, ${sp.life})`;
-          ctx.fill();
-        }
-      }
-
-    }
-
-    function isUiTarget(t) {
-      return !!(
-        t &&
-        t.closest &&
-        t.closest(
-          "a, button, input, textarea, label, .sidebar, header, .card, .project-vidbox, .skill-panel, .contact-box, .menu-icon, .close-icon"
-        )
-      );
-    }
-
-    window.addEventListener(
-      "pointermove",
-      (e) => {
-        const dx = e.clientX - mouse.px;
-        const dy = e.clientY - mouse.py;
-        mouse.speed = Math.hypot(dx, dy);
-        mouse.px = mouse.x;
-        mouse.py = mouse.y;
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-        mouse.active = true;
-        if (mouse.down) {
-          mouse.chargeX = e.clientX;
-          mouse.chargeY = e.clientY;
-        }
-      },
-      { passive: true }
-    );
-
-    document.addEventListener("mouseleave", () => {
-      mouse.active = false;
-      mouse.down = false;
-      mouse.charge = 0;
-      trail.length = 0;
-      chargeEl.classList.remove("is-charging");
-    });
-
-    window.addEventListener("pointerdown", (e) => {
-      if (e.button !== 0 || isUiTarget(e.target)) return;
-      mouse.down = true;
-      mouse.charge = 0;
-      mouse.chargeX = e.clientX;
-      mouse.chargeY = e.clientY;
-      chargeEl.style.left = `${e.clientX}px`;
-      chargeEl.style.top = `${e.clientY}px`;
-      chargeEl.classList.remove("is-charging");
-      void chargeEl.offsetWidth;
-      chargeEl.classList.add("is-charging");
-    });
-
-    window.addEventListener("pointerup", (e) => {
-      if (!mouse.down) return;
-      mouse.down = false;
-      chargeEl.classList.remove("is-charging");
-      const power = 0.55 + mouse.charge * 1.4;
-      const count = Math.floor(12 + mouse.charge * 18);
-      spawnBurst(mouse.chargeX || e.clientX, mouse.chargeY || e.clientY, count, power);
-      mouse.charge = 0;
-    });
-
-    window.addEventListener("dblclick", (e) => {
-      if (isUiTarget(e.target)) return;
-      spawnBurst(e.clientX, e.clientY, 18, 1.4);
-    });
-
-    /* Theme toggle flash */
-    modeToggle?.addEventListener("click", () => {
-      spawnBurst(window.innerWidth / 2, window.innerHeight * 0.2, 16, 1);
-    });
-
-    let resizeTimer = 0;
-    window.addEventListener(
-      "resize",
-      () => {
-        window.clearTimeout(resizeTimer);
-        resizeTimer = window.setTimeout(resize, 120);
-      },
-      { passive: true }
-    );
-    resize();
-    startDraw();
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        stopDraw();
-        document.querySelectorAll("video").forEach((v) => {
-          try {
-            v.pause();
-          } catch (_) {
-            /* ignore */
-          }
-        });
-      } else {
-        startDraw();
-        document.querySelectorAll("video[data-autoplay-when-visible]").forEach((v) => {
-          if (v.dataset.shouldPlay === "1") v.play().catch(() => {});
-        });
-      }
-    });
-    }; /* end bootCosmos */
-
-    /* Defer cosmos until the page is idle so first paint / scroll stay free */
-    const scheduleCosmos =
-      typeof requestIdleCallback === "function"
-        ? (fn) => requestIdleCallback(fn, { timeout: 4000 })
-        : (fn) => window.setTimeout(fn, 1600);
-    scheduleCosmos(bootCosmos);
-  }
-
-  /* Magnetic split letters on headings */
-  if (finePointer) {
-    document.querySelectorAll("[data-split]").forEach((el) => {
-      const walk = (node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-          const text = node.textContent;
-          if (!text || !text.trim()) return;
-          const frag = document.createDocumentFragment();
-          // Keep whole words together so letter-spans don't wrap mid-word
-          text.split(/(\s+)/).forEach((token) => {
-            if (!token) return;
-            if (/^\s+$/.test(token)) {
-              frag.appendChild(document.createTextNode(token));
-              return;
-            }
-            const word = document.createElement("span");
-            word.className = "split-word";
-            [...token].forEach((ch) => {
-              const span = document.createElement("span");
-              span.className = "split-char";
-              span.textContent = ch;
-              word.appendChild(span);
-            });
-            frag.appendChild(word);
-          });
-          node.parentNode.replaceChild(frag, node);
-          return;
-        }
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          [...node.childNodes].forEach(walk);
-        }
-      };
-      [...el.childNodes].forEach(walk);
-
-      const chars = [...el.querySelectorAll(".split-char")];
-      chars.forEach((ch, i) => {
-        ch.style.setProperty("--char-i", String(i));
-      });
-
-      if (el.classList.contains("hero-title")) {
-        requestAnimationFrame(() => el.classList.add("is-split-ready"));
-        chars.forEach((ch) => {
-          const release = (e) => {
-            if (e.animationName !== "charRise") return;
-            ch.removeEventListener("animationend", release);
-            ch.classList.add("is-risen");
-            ch.style.removeProperty("transform");
-            ch.style.removeProperty("translate");
-          };
-          ch.addEventListener("animationend", release);
-        });
-      }
-
-      let splitRaf = 0;
-      let pendingX = 0;
-      let pendingY = 0;
-      let splitActive = false;
-
-      function paintSplit() {
-        splitRaf = 0;
-        if (!splitActive) return;
-        const max = 110;
-        for (let i = 0; i < chars.length; i += 1) {
-          const ch = chars[i];
-          const rect = ch.getBoundingClientRect();
-          const dx = pendingX - (rect.left + rect.width / 2);
-          const dy = pendingY - (rect.top + rect.height / 2);
-          const dist = Math.hypot(dx, dy) || 1;
-          if (dist < max) {
-            const force = (1 - dist / max) * 12;
-            ch.style.transform = `translate3d(${((-dx / dist) * force).toFixed(1)}px, ${((-dy / dist) * force).toFixed(1)}px, 0)`;
-          } else if (ch.style.transform) {
-            ch.style.transform = "";
-          }
-          if (ch.style.textShadow) ch.style.textShadow = "";
-        }
-      }
-
-      el.addEventListener(
-        "pointermove",
-        (e) => {
-          splitActive = true;
-          pendingX = e.clientX;
-          pendingY = e.clientY;
-          if (!splitRaf) splitRaf = requestAnimationFrame(paintSplit);
-        },
-        { passive: true }
-      );
-      el.addEventListener("pointerleave", () => {
-        splitActive = false;
-        if (splitRaf) {
-          cancelAnimationFrame(splitRaf);
-          splitRaf = 0;
-        }
-        chars.forEach((ch) => {
-          ch.style.transform = "";
-          ch.style.textShadow = "";
-        });
-      });
-    });
-  } else {
-    document.querySelector(".hero-title")?.classList.add("is-split-ready");
-  }
-
-  /* Scroll-triggered motion for skill chips + data-animate — forever on enter/leave */
-  const motionExits = [
-    "slide-left",
-    "slide-right",
-    "zoom",
-    "fade-up",
-    "rise",
-    "fade-down",
-  ];
-  const motionEls = [
-    ...document.querySelectorAll("[data-animate]"),
-    ...document.querySelectorAll(".skill-panel"),
-  ];
-  if (motionEls.length && "IntersectionObserver" in window) {
-    const motionIo = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const el = entry.target;
-          if (entry.isIntersecting) {
-            el.classList.remove("is-exiting");
-            el.classList.add("is-inview");
-          } else if (el.classList.contains("is-inview")) {
-            el.classList.remove("is-inview");
-            el.classList.add("is-exiting");
-            window.setTimeout(() => el.classList.remove("is-exiting"), 520);
-          }
-        });
-      },
-      { threshold: 0.08, rootMargin: "0px 0px -6% 0px" }
-    );
-    motionEls.forEach((el, i) => {
-      el.style.setProperty("--stagger", String(i % 4));
-      if (el.hasAttribute("data-animate") && !el.hasAttribute("data-animate-out")) {
-        el.setAttribute("data-animate-out", motionExits[i % motionExits.length]);
-      }
-      motionIo.observe(el);
-    });
-  } else {
-    motionEls.forEach((el) => el.classList.add("is-inview"));
-  }
-
-  /* Scramble / decode section titles on hover */
-  const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789▓░▒#@$%";
-  document.querySelectorAll("[data-scramble]").forEach((el) => {
-    const original = el.textContent;
-    let timer = 0;
-    let running = false;
-
-    el.addEventListener("pointerenter", () => {
-      if (running) return;
-      running = true;
-      let frame = 0;
-      const total = 14;
-      cancelAnimationFrame(timer);
-      const step = () => {
-        frame += 1;
-        el.textContent = [...original]
-          .map((ch, i) => {
-            if (ch === " " || ch === "'" || ch === ",") return ch;
-            if (frame / total > i / original.length) return original[i];
-            return glyphs[(Math.random() * glyphs.length) | 0];
-          })
-          .join("");
-        if (frame < total) timer = requestAnimationFrame(step);
-        else {
-          el.textContent = original;
-          running = false;
-        }
-      };
-      timer = requestAnimationFrame(step);
-    });
-  });
-})();
-
-
-(() => {
-  const vid = document.querySelector(".back-vid");
-  const globeWrap = document.querySelector(".card-video-wrap[data-globe]");
-  const globe = globeWrap?.querySelector("video");
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
-  const conn = navigator.connection;
-  const lite =
-    reduce ||
-    document.documentElement.classList.contains("is-lite") ||
-    window.matchMedia("(max-width: 1100px), (update: slow)").matches ||
-    !finePointer ||
-    !!(conn && (conn.saveData || /2g|slow-2g/i.test(conn.effectiveType || ""))) ||
-    (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
-    (navigator.deviceMemory && navigator.deviceMemory < 4);
-  let scrollPaused = false;
-  let scrollTimer = 0;
-
-  function pauseDecorMedia() {
-    scrollPaused = true;
-    if (vid && !vid.paused) vid.pause();
-    if (globe && !globe.paused) globe.pause();
-  }
-
-  function resumeDecorMedia() {
-    scrollPaused = false;
-    if (vid?.dataset.shouldPlay === "1") vid.play().catch(() => {});
-    if (globe?.dataset.shouldPlay === "1") globe.play().catch(() => {});
-  }
-
-  window.addEventListener(
-    "scroll",
-    () => {
-      pauseDecorMedia();
-      window.clearTimeout(scrollTimer);
-      scrollTimer = window.setTimeout(resumeDecorMedia, 280);
-    },
-    { passive: true }
-  );
-
-  if (vid) {
-    vid.dataset.autoplayWhenVisible = "1";
-    vid.preload = "none";
-    vid.removeAttribute("autoplay");
-    const src = vid.getAttribute("src") || vid.dataset.src || "";
-    if (src) {
-      vid.dataset.src = src;
-      vid.removeAttribute("src");
-      try {
-        vid.load();
-      } catch (_) {
-        /* ignore */
-      }
-    }
-    if (lite) {
-      vid.pause();
-      vid.style.display = "none";
-      vid.dataset.shouldPlay = "0";
-    } else {
-      const armBg = () => {
-        if (!vid.dataset.src || vid.getAttribute("src")) return;
-        vid.src = vid.dataset.src;
-        if ("IntersectionObserver" in window) {
-          const io = new IntersectionObserver(
-            ([e]) => {
-              const on = !!e?.isIntersecting;
-              vid.dataset.shouldPlay = on ? "1" : "0";
-              if (on && !scrollPaused) vid.play().catch(() => {});
-              else vid.pause();
-            },
-            { threshold: 0.05, rootMargin: "0px" }
-          );
-          io.observe(vid);
-        }
-      };
-      const schedule =
-        typeof requestIdleCallback === "function"
-          ? (fn) => requestIdleCallback(fn, { timeout: 5000 })
-          : (fn) => window.setTimeout(fn, 2000);
-      schedule(armBg);
-    }
-  }
-
-  if (globe) {
-    globe.dataset.autoplayWhenVisible = "1";
-    globe.preload = "none";
-    globe.removeAttribute("autoplay");
-    const src = globe.getAttribute("src") || globe.dataset.src || "";
-    if (src) {
-      globe.dataset.src = src;
-      globe.removeAttribute("src");
-      try {
-        globe.load();
-      } catch (_) {
-        /* ignore */
-      }
-    }
-
-    /* Poster stays visible forever on lite — never leave a blank globe */
-    if (lite) {
-      globe.pause();
-      globe.dataset.shouldPlay = "0";
-      globe.removeAttribute("src");
-      globeWrap?.classList.remove("is-video-ready");
-      return;
-    }
-
-    const markReady = () => globeWrap?.classList.add("is-video-ready");
-    globe.addEventListener("loadeddata", markReady, { once: true });
-    globe.addEventListener("playing", markReady);
-
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver(
-        ([e]) => {
-          const on = !!e?.isIntersecting;
-          if (on && globe.dataset.src && !globe.getAttribute("src")) {
-            globe.src = globe.dataset.src;
-          }
-          globe.dataset.shouldPlay = on ? "1" : "0";
-          if (on && !scrollPaused) globe.play().catch(() => {});
-          else {
-            globe.pause();
-            if (!globe.getAttribute("src")) globeWrap?.classList.remove("is-video-ready");
-          }
-        },
-        { threshold: 0.15, rootMargin: "120px" }
-      );
-      io.observe(globeWrap || globe);
-    }
-  }
 })();
 
 (() => {
@@ -1698,10 +190,12 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   if (!track || !viewport || cards.length === 0) return;
 
   const AUTOPLAY_MS = 6500;
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
   let page = 0;
-  let perView = 3;
+  let perView = 1;
   let pageCount = 1;
   let autoTimer = 0;
   let pointerId = null;
@@ -1712,41 +206,9 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   let cardStep = 0;
 
   function readPerView() {
-    const raw = getComputedStyle(root).getPropertyValue("--projects-per-view").trim();
-    const n = Number.parseInt(raw, 10);
-    return Number.isFinite(n) && n > 0 ? n : 1;
-  }
-
-  function readCssLengthPx(value) {
-    const raw = String(value || "").trim();
-    if (!raw || raw === "0") return 0;
-    if (raw.endsWith("px")) {
-      const n = Number.parseFloat(raw);
-      return Number.isFinite(n) ? n : 0;
-    }
-    const probe = document.createElement("div");
-    probe.style.cssText =
-      "position:absolute;visibility:hidden;pointer-events:none;width:" + raw;
-    root.appendChild(probe);
-    const px = probe.getBoundingClientRect().width;
-    probe.remove();
-    return Number.isFinite(px) ? px : 0;
-  }
-
-  function syncSlideWidth() {
-    perView = readPerView();
-    const styles = getComputedStyle(track);
-    const gap = Number.parseFloat(styles.columnGap || styles.gap) || 0;
-    const peek = readCssLengthPx(
-      getComputedStyle(root).getPropertyValue("--projects-peek")
-    );
-    const viewW = viewport.clientWidth;
-    if (!(viewW > 0)) return;
-    const slideW = Math.max(
-      160,
-      (viewW - peek - Math.max(0, perView - 1) * gap) / perView
-    );
-    root.style.setProperty("--projects-slide-w", `${slideW.toFixed(2)}px`);
+    if (window.innerWidth >= 1024) return 2;
+    if (window.innerWidth >= 640) return 2;
+    return 1;
   }
 
   function measureCardStep() {
@@ -1758,9 +220,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   }
 
   function maxPixelOffset() {
-    const trackWidth = track.scrollWidth;
-    const viewWidth = viewport.clientWidth;
-    return Math.max(0, trackWidth - viewWidth);
+    return Math.max(0, track.scrollWidth - viewport.clientWidth);
   }
 
   function pageOffset(pageIndex) {
@@ -1784,8 +244,9 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
       dot.type = "button";
       dot.className = "projects-dot";
       dot.setAttribute("role", "tab");
-      dot.setAttribute("aria-label", `Projects ${start} to ${end}`);
+      dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
       dot.setAttribute("aria-selected", i === page ? "true" : "false");
+      dot.title = `Projects ${start} to ${end}`;
       dot.addEventListener("click", () => goTo(i, { user: true }));
       dotsWrap.appendChild(dot);
     }
@@ -1857,6 +318,20 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     goTo(page - 1, { user });
   }
 
+  function syncSlideWidth() {
+    perView = readPerView();
+    const styles = getComputedStyle(track);
+    const gap = Number.parseFloat(styles.columnGap || styles.gap) || 24;
+    const viewW = viewport.clientWidth;
+    if (!(viewW > 0)) return;
+    const slideW = Math.max(220, (viewW - Math.max(0, perView - 1) * gap) / perView);
+    cards.forEach((card) => {
+      card.style.flex = `0 0 ${slideW.toFixed(2)}px`;
+      card.style.maxWidth = `${slideW.toFixed(2)}px`;
+    });
+    track.style.gap = `${gap}px`;
+  }
+
   function layout() {
     syncSlideWidth();
     perView = readPerView();
@@ -1876,12 +351,6 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
       next(true);
-    } else if (e.key === "Home") {
-      e.preventDefault();
-      goTo(0, { user: true });
-    } else if (e.key === "End") {
-      e.preventDefault();
-      goTo(pageCount - 1, { user: true });
     }
   });
 
@@ -1889,8 +358,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     "click",
     (e) => {
       if (!suppressClick) return;
-      // Never block Open/Play (or other controls) — only swallow link opens after a real swipe.
-      if (e.target.closest(".project-btn, .projects-nav, .projects-dots button, button")) {
+      if (e.target.closest(".project-card__cta, .projects__nav-btn, button")) {
         suppressClick = false;
         return;
       }
@@ -1903,8 +371,11 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
 
   viewport.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
-    // Let project Open/Play links (and controls) work; drag only from the card surface.
-    if (e.target.closest(".project-btn, .projects-nav, .projects-dots button, button, input, textarea, select, label")) {
+    if (
+      e.target.closest(
+        ".project-card__cta, .projects__nav-btn, button, input, textarea, select, label"
+      )
+    ) {
       return;
     }
     dragging = true;
@@ -1951,9 +422,7 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
   viewport.addEventListener("pointerup", endDrag);
   viewport.addEventListener("pointercancel", endDrag);
 
-  root.addEventListener("pointerenter", () => {
-    stopAutoplay();
-  });
+  root.addEventListener("pointerenter", () => stopAutoplay());
   root.addEventListener("pointerleave", () => {
     if (!dragging) startAutoplay();
   });
@@ -1970,7 +439,6 @@ document.querySelectorAll(".project-vidbox img").forEach((img) => {
     window.addEventListener("resize", layout);
   }
 
-  // Wait a frame so fonts/layout settle before first measure
   requestAnimationFrame(() => {
     layout();
     if ("IntersectionObserver" in window) {
