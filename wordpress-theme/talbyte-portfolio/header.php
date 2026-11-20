@@ -19,7 +19,9 @@ $linkedin_url = talbyte_option( 'linkedin_url', $d['linkedin_url'] );
   <meta charset="<?php bloginfo( 'charset' ); ?>" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#000000" id="theme-color" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3ET%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="<?php echo esc_url( talbyte_asset( 'images/favicon-32.png' ) ); ?>?v=<?php echo esc_attr( TALBYTE_THEME_VERSION ); ?>" type="image/png" sizes="32x32" />
+  <link rel="icon" href="<?php echo esc_url( talbyte_asset( 'images/favicon.png' ) ); ?>?v=<?php echo esc_attr( TALBYTE_THEME_VERSION ); ?>" type="image/png" sizes="512x512" />
+  <link rel="apple-touch-icon" href="<?php echo esc_url( talbyte_asset( 'images/apple-touch-icon.png' ) ); ?>?v=<?php echo esc_attr( TALBYTE_THEME_VERSION ); ?>" sizes="180x180" />
   <script>
     try {
       var mq = window.matchMedia;
