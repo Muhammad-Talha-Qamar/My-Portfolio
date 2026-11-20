@@ -224,10 +224,12 @@
   const root = document.querySelector("[data-projects-carousel]");
   if (!root) return;
 
+  const section =
+    root.closest("#projects, .projects, .my-project, section") || document;
   const track = root.querySelector("[data-projects-track]");
   const viewport = root.querySelector("[data-projects-viewport]");
-  const prevBtn = root.querySelector("[data-projects-prev]");
-  const nextBtn = root.querySelector("[data-projects-next]");
+  const prevBtn = section.querySelector("[data-projects-prev]");
+  const nextBtn = section.querySelector("[data-projects-next]");
   const dotsWrap = root.querySelector("[data-projects-dots]");
   const progressBar = root.querySelector("[data-projects-progress]");
   const cards = [...(track?.querySelectorAll(":scope > .project-card") || [])];
