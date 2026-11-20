@@ -718,9 +718,8 @@ h3 {
 canvas[data-falling-leaves] {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 4 !important;
+  z-index: 6 !important;
   pointer-events: none !important;
-  contain: strict;
 }
 
 @media (prefers-reduced-motion: reduce) {

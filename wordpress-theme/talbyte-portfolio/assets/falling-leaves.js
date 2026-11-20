@@ -31,13 +31,13 @@
   ];
 
   const defaults = {
-    count: 32,
-    size: [16, 34],
-    speed: [0.55, 1.45],
-    wind: [-0.25, 0.85],
-    sway: [0.45, 1.5],
-    rotationSpeed: [-1.6, 1.6],
-    opacity: 0.92,
+    count: 28,
+    size: [26, 58],
+    speed: [0.45, 1.2],
+    wind: [-0.2, 0.7],
+    sway: [0.55, 1.65],
+    rotationSpeed: [-1.35, 1.35],
+    opacity: 0.96,
   };
 
   function lerpRange(range, t) {
@@ -85,54 +85,65 @@
     const ctx = canvas.getContext("2d");
     if (!ctx) return canvas;
 
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
     ctx.translate(SPRITE / 2, SPRITE / 2);
-    ctx.scale(SPRITE * 0.46, SPRITE * 0.46);
+    ctx.scale(SPRITE * 0.47, SPRITE * 0.47);
 
     // Soft ground shadow for depth
     ctx.save();
-    ctx.translate(0.06, 0.08);
+    ctx.translate(0.08, 0.1);
     traceMaple(ctx);
-    ctx.fillStyle = "rgba(0, 0, 0, 0.22)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.28)";
     ctx.fill();
     ctx.restore();
 
     traceMaple(ctx);
-    const body = ctx.createLinearGradient(-1, -1, 1, 1.1);
-    body.addColorStop(0, "#fff3e0");
-    body.addColorStop(0.22, color);
-    body.addColorStop(0.72, color);
-    body.addColorStop(1, "#3b1204");
+    const body = ctx.createLinearGradient(-1, -1.05, 0.9, 1.15);
+    body.addColorStop(0, "#ffe8cc");
+    body.addColorStop(0.18, color);
+    body.addColorStop(0.55, color);
+    body.addColorStop(0.82, "#7a1f08");
+    body.addColorStop(1, "#2a0c04");
     ctx.fillStyle = body;
     ctx.fill();
 
     ctx.globalCompositeOperation = "source-atop";
-    const gloss = ctx.createRadialGradient(-0.35, -0.45, 0.05, 0, 0, 1.2);
-    gloss.addColorStop(0, "rgba(255, 255, 255, 0.38)");
-    gloss.addColorStop(0.45, "rgba(255, 255, 255, 0.08)");
-    gloss.addColorStop(1, "rgba(0, 0, 0, 0.18)");
+    const gloss = ctx.createRadialGradient(-0.4, -0.5, 0.04, 0.05, 0.1, 1.25);
+    gloss.addColorStop(0, "rgba(255, 255, 255, 0.45)");
+    gloss.addColorStop(0.35, "rgba(255, 220, 180, 0.16)");
+    gloss.addColorStop(0.7, "rgba(255, 255, 255, 0.02)");
+    gloss.addColorStop(1, "rgba(0, 0, 0, 0.22)");
     ctx.fillStyle = gloss;
-    ctx.fillRect(-1.2, -1.2, 2.4, 2.4);
+    ctx.fillRect(-1.25, -1.25, 2.5, 2.5);
+
+    // Subtle mottling for realism
+    const mottle = ctx.createRadialGradient(0.35, 0.2, 0.05, 0.2, 0.15, 0.7);
+    mottle.addColorStop(0, "rgba(120, 30, 8, 0.18)");
+    mottle.addColorStop(1, "rgba(120, 30, 8, 0)");
+    ctx.fillStyle = mottle;
+    ctx.fillRect(-1.25, -1.25, 2.5, 2.5);
 
     ctx.globalCompositeOperation = "source-over";
-    ctx.strokeStyle = "rgba(60, 22, 0, 0.38)";
+    ctx.strokeStyle = "rgba(55, 18, 0, 0.42)";
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.save();
     traceMaple(ctx);
     ctx.clip();
-    ctx.lineWidth = 0.04;
+    ctx.lineWidth = 0.038;
     drawVeins(ctx);
     ctx.restore();
 
-    ctx.lineWidth = 0.055;
+    ctx.lineWidth = 0.05;
     ctx.beginPath();
     ctx.moveTo(0, 0.45);
     ctx.lineTo(0, 1);
     ctx.stroke();
 
-    // Crisp outer edge
-    ctx.lineWidth = 0.03;
-    ctx.strokeStyle = "rgba(255, 200, 140, 0.22)";
+    // Crisp outer rim
+    ctx.lineWidth = 0.028;
+    ctx.strokeStyle = "rgba(255, 210, 150, 0.28)";
     traceMaple(ctx);
     ctx.stroke();
 
@@ -206,9 +217,16 @@
         width: "100%",
         height: "100%",
         pointerEvents: "none",
-        zIndex: "4",
+        zIndex: "6",
       });
-      this.ctx = this.canvas.getContext("2d", { alpha: true });
+      this.ctx = this.canvas.getContext("2d", {
+        alpha: true,
+        desynchronized: true,
+      });
+      if (this.ctx) {
+        this.ctx.imageSmoothingEnabled = true;
+        this.ctx.imageSmoothingQuality = "high";
+      }
       document.body.appendChild(this.canvas);
 
       this.onResize = () => this.resize();
@@ -251,12 +269,16 @@
     }
 
     resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       this.width = window.innerWidth;
       this.height = window.innerHeight;
-      this.canvas.width = Math.round(this.width * dpr);
-      this.canvas.height = Math.round(this.height * dpr);
-      this.ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+      this.canvas.width = Math.max(1, Math.round(this.width * dpr));
+      this.canvas.height = Math.max(1, Math.round(this.height * dpr));
+      if (this.ctx) {
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.ctx.imageSmoothingEnabled = true;
+        this.ctx.imageSmoothingQuality = "high";
+      }
       this.syncCount(false);
     }
 
@@ -267,7 +289,7 @@
         0,
         Math.floor(
           lite || narrow
-            ? Math.min(this.options.count, 16)
+            ? Math.min(this.options.count, 14)
             : this.options.count
         )
       );
@@ -312,6 +334,8 @@
       const ctx = this.ctx;
       if (!ctx) return;
       ctx.clearRect(0, 0, this.width, this.height);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
       ctx.globalAlpha = this.options.opacity ?? defaults.opacity;
 
       const maxSize = maxRange(this.motion.size);
@@ -348,12 +372,12 @@
   function boot() {
     if (window.__talbyteLeaves) return;
     window.__talbyteLeaves = new FallingLeaves({
-      count: 34,
-      size: [15, 36],
-      speed: [0.5, 1.35],
-      wind: [-0.2, 0.75],
-      sway: [0.5, 1.55],
-      opacity: 0.94,
+      count: 26,
+      size: [28, 62],
+      speed: [0.42, 1.15],
+      wind: [-0.18, 0.68],
+      sway: [0.55, 1.7],
+      opacity: 0.97,
     });
   }
 
