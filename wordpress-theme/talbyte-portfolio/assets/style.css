@@ -2693,26 +2693,26 @@ canvas[data-falling-leaves] {
 /* —— Bidirectional scroll FX (entry + exit, both directions) —— */
 html.fx-active [data-fx] {
   --fx-delay: 0ms;
-  --fx-duration: 0.72s;
-  --fx-exit-duration: 0.95s;
-  --fx-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --fx-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --fx-duration: 0.58s;
+  --fx-exit-duration: 0.52s;
+  --fx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --fx-ease-out: cubic-bezier(0.33, 0, 0.2, 1);
   opacity: 0;
-  transform: translate3d(0, 42px, 0) scale(0.97);
-  filter: blur(10px);
+  transform: translate3d(0, 28px, 0) scale(0.985);
+  filter: blur(4px);
   transition:
     opacity var(--fx-duration) var(--fx-ease) var(--fx-delay),
     transform var(--fx-duration) var(--fx-ease) var(--fx-delay),
     filter var(--fx-duration) var(--fx-ease) var(--fx-delay),
     clip-path var(--fx-duration) var(--fx-ease) var(--fx-delay);
-  will-change: transform, opacity, filter;
   backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 html.fx-active [data-fx].fx-in {
   opacity: 1;
   transform: none;
-  filter: none;
+  filter: blur(0);
   clip-path: inset(0 0 0 0);
 }
 
@@ -2722,109 +2722,110 @@ html.fx-active [data-fx].fx-prep {
 
 html.fx-active [data-fx].fx-from-bottom {
   opacity: 0;
-  transform: translate3d(0, 56px, 0) scale(0.96);
-  filter: blur(12px);
+  transform: translate3d(0, 36px, 0) scale(0.98);
+  filter: blur(5px);
 }
 
 html.fx-active [data-fx].fx-from-top {
   opacity: 0;
-  transform: translate3d(0, -56px, 0) scale(0.96);
-  filter: blur(12px);
+  transform: translate3d(0, -36px, 0) scale(0.98);
+  filter: blur(5px);
 }
 
-/* Exits: longer, earlier, more theatrical — still on-screen when they start */
+/* Exits: short travel, soft fade, no heavy clip/blur thrash */
 html.fx-active [data-fx].fx-out {
   --fx-duration: var(--fx-exit-duration);
   transition-duration: var(--fx-exit-duration);
   transition-timing-function: var(--fx-ease-out);
   transition-delay: 0ms;
   pointer-events: none;
+  will-change: transform, opacity;
 }
 
 html.fx-active [data-fx].fx-out-up {
   opacity: 0;
-  transform: translate3d(0, -110px, 0) scale(0.84) rotate(-2.5deg);
-  filter: blur(18px);
-  clip-path: inset(0 8% 55% 8% round 12px);
+  transform: translate3d(0, -48px, 0) scale(0.94);
+  filter: blur(6px);
+  clip-path: inset(0 0 0 0);
 }
 
 html.fx-active [data-fx].fx-out-down {
   opacity: 0;
-  transform: translate3d(0, 110px, 0) scale(0.84) rotate(2.5deg);
-  filter: blur(18px);
-  clip-path: inset(55% 8% 0 8% round 12px);
+  transform: translate3d(0, 48px, 0) scale(0.94);
+  filter: blur(6px);
+  clip-path: inset(0 0 0 0);
 }
 
 /* Variant entry poses */
 html.fx-active [data-fx="rise"].fx-from-bottom,
 html.fx-active [data-fx="rise"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: translate3d(0, 64px, 0);
-  filter: blur(8px);
+  transform: translate3d(0, 40px, 0);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx="drop"].fx-from-top,
 html.fx-active [data-fx="drop"].fx-from-bottom {
-  transform: translate3d(0, -64px, 0);
-  filter: blur(8px);
+  transform: translate3d(0, -40px, 0);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx="drop"].fx-from-bottom {
-  transform: translate3d(0, -48px, 0) scale(1.04);
+  transform: translate3d(0, -32px, 0) scale(1.02);
 }
 
 html.fx-active [data-fx="slide-left"].fx-from-bottom,
 html.fx-active [data-fx="slide-left"].fx-from-top,
 html.fx-active [data-fx="slide-left"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: translate3d(72px, 18px, 0);
-  filter: blur(10px);
+  transform: translate3d(48px, 12px, 0);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx="slide-right"].fx-from-bottom,
 html.fx-active [data-fx="slide-right"].fx-from-top,
 html.fx-active [data-fx="slide-right"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: translate3d(-72px, 18px, 0);
-  filter: blur(10px);
+  transform: translate3d(-48px, 12px, 0);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx="zoom-blur"].fx-from-bottom,
 html.fx-active [data-fx="zoom-blur"].fx-from-top,
 html.fx-active [data-fx="zoom-blur"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: scale(0.82);
-  filter: blur(16px);
+  transform: scale(0.92);
+  filter: blur(8px);
 }
 
 html.fx-active [data-fx="flip-x"].fx-from-bottom,
 html.fx-active [data-fx="flip-x"].fx-from-top,
 html.fx-active [data-fx="flip-x"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: perspective(900px) rotateX(28deg) translate3d(0, 36px, 0);
-  filter: blur(6px);
+  transform: perspective(900px) rotateX(14deg) translate3d(0, 24px, 0);
+  filter: blur(3px);
   transform-origin: center top;
 }
 
 html.fx-active [data-fx="flip-y"].fx-from-bottom,
 html.fx-active [data-fx="flip-y"].fx-from-top,
 html.fx-active [data-fx="flip-y"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: perspective(900px) rotateY(-26deg) translate3d(0, 28px, 0) scale(0.96);
-  filter: blur(6px);
+  transform: perspective(900px) rotateY(-14deg) translate3d(0, 20px, 0) scale(0.98);
+  filter: blur(3px);
 }
 
 html.fx-active [data-fx="skew"].fx-from-bottom,
 html.fx-active [data-fx="skew"].fx-from-top,
 html.fx-active [data-fx="skew"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: translate3d(0, 48px, 0) skewY(4deg) scale(0.97);
-  filter: blur(10px);
+  transform: translate3d(0, 32px, 0) skewY(2deg) scale(0.985);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx="clip"] {
-  clip-path: inset(18% 12% 18% 12% round 8px);
+  clip-path: inset(8% 6% 8% 6% round 8px);
 }
 
 html.fx-active [data-fx="clip"].fx-from-bottom,
 html.fx-active [data-fx="clip"].fx-from-top,
 html.fx-active [data-fx="clip"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: translate3d(0, 36px, 0) scale(1.04);
-  filter: blur(8px);
-  clip-path: inset(42% 28% 42% 28% round 12px);
+  transform: translate3d(0, 28px, 0) scale(1.02);
+  filter: blur(4px);
+  clip-path: inset(24% 16% 24% 16% round 10px);
 }
 
 html.fx-active [data-fx="clip"].fx-in {
@@ -2834,150 +2835,148 @@ html.fx-active [data-fx="clip"].fx-in {
 html.fx-active [data-fx="spin"].fx-from-bottom,
 html.fx-active [data-fx="spin"].fx-from-top,
 html.fx-active [data-fx="spin"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: translate3d(0, 40px, 0) rotate(-8deg) scale(0.92);
-  filter: blur(12px);
+  transform: translate3d(0, 28px, 0) rotate(-4deg) scale(0.96);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx="stretch"].fx-from-bottom,
 html.fx-active [data-fx="stretch"].fx-from-top,
 html.fx-active [data-fx="stretch"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: translate3d(0, 28px, 0) scaleX(1.12) scaleY(0.88);
-  filter: blur(8px);
+  transform: translate3d(0, 20px, 0) scaleX(1.06) scaleY(0.94);
+  filter: blur(3px);
 }
 
 html.fx-active [data-fx="drift"].fx-from-bottom {
-  transform: translate3d(-40px, 52px, 0) rotate(-2deg);
-  filter: blur(12px);
+  transform: translate3d(-28px, 36px, 0) rotate(-1.5deg);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx="drift"].fx-from-top {
-  transform: translate3d(40px, -52px, 0) rotate(2deg);
-  filter: blur(12px);
+  transform: translate3d(28px, -36px, 0) rotate(1.5deg);
+  filter: blur(4px);
 }
 
-/* Exit variants — keyed by data-fx-out so leave ≠ enter */
+/* Exit variants — soft, directional, GPU-friendly */
 html.fx-active [data-fx-out="rise"].fx-out-up {
-  transform: translate3d(0, -130px, 0) scale(0.88);
-  filter: blur(20px);
+  transform: translate3d(0, -56px, 0) scale(0.96);
+  filter: blur(6px);
 }
 
 html.fx-active [data-fx-out="rise"].fx-out-down {
-  transform: translate3d(0, 130px, 0) scale(0.88);
-  filter: blur(20px);
+  transform: translate3d(0, 56px, 0) scale(0.96);
+  filter: blur(6px);
 }
 
 html.fx-active [data-fx-out="drop"].fx-out-up {
-  transform: translate3d(0, -48px, 0) scale(1.12);
-  filter: blur(24px);
+  transform: translate3d(0, -28px, 0) scale(1.04);
+  filter: blur(6px);
 }
 
 html.fx-active [data-fx-out="drop"].fx-out-down {
-  transform: translate3d(0, 140px, 0) scale(0.8);
-  filter: blur(22px);
+  transform: translate3d(0, 56px, 0) scale(0.94);
+  filter: blur(6px);
 }
 
 html.fx-active [data-fx-out="slide-left"].fx-out-up,
 html.fx-active [data-fx-out="slide-left"].fx-out-down {
-  transform: translate3d(-140px, -24px, 0) scale(0.9) rotate(-3deg);
-  filter: blur(18px);
+  transform: translate3d(-64px, -12px, 0) scale(0.96);
+  filter: blur(5px);
 }
 
 html.fx-active [data-fx-out="slide-right"].fx-out-up,
 html.fx-active [data-fx-out="slide-right"].fx-out-down {
-  transform: translate3d(140px, -24px, 0) scale(0.9) rotate(3deg);
-  filter: blur(18px);
+  transform: translate3d(64px, -12px, 0) scale(0.96);
+  filter: blur(5px);
 }
 
 html.fx-active [data-fx-out="zoom-blur"].fx-out-up,
 html.fx-active [data-fx-out="zoom-blur"].fx-out-down {
-  transform: scale(1.28);
-  filter: blur(28px);
+  transform: scale(1.08);
+  filter: blur(8px);
   opacity: 0;
-  clip-path: inset(20% 20% 20% 20% round 20px);
 }
 
 html.fx-active [data-fx-out="flip-x"].fx-out-up {
-  transform: perspective(1000px) rotateX(-48deg) translate3d(0, -40px, 0) scale(0.9);
+  transform: perspective(1000px) rotateX(-18deg) translate3d(0, -24px, 0) scale(0.96);
   transform-origin: center bottom;
-  filter: blur(14px);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx-out="flip-x"].fx-out-down {
-  transform: perspective(1000px) rotateX(48deg) translate3d(0, 40px, 0) scale(0.9);
+  transform: perspective(1000px) rotateX(18deg) translate3d(0, 24px, 0) scale(0.96);
   transform-origin: center top;
-  filter: blur(14px);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx-out="flip-y"].fx-out-up,
 html.fx-active [data-fx-out="flip-y"].fx-out-down {
-  transform: perspective(1000px) rotateY(52deg) scale(0.86);
-  filter: blur(16px);
+  transform: perspective(1000px) rotateY(22deg) scale(0.95);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx-out="skew"].fx-out-up {
-  transform: translate3d(28px, -100px, 0) skewY(-8deg) scale(0.9);
-  filter: blur(18px);
+  transform: translate3d(16px, -48px, 0) skewY(-3deg) scale(0.96);
+  filter: blur(5px);
 }
 
 html.fx-active [data-fx-out="skew"].fx-out-down {
-  transform: translate3d(-28px, 100px, 0) skewY(8deg) scale(0.9);
-  filter: blur(18px);
+  transform: translate3d(-16px, 48px, 0) skewY(3deg) scale(0.96);
+  filter: blur(5px);
 }
 
 html.fx-active [data-fx-out="clip"].fx-out-up,
 html.fx-active [data-fx-out="clip"].fx-out-down {
-  clip-path: inset(46% 40% 46% 40% round 24px);
-  transform: scale(0.86);
-  filter: blur(20px);
+  clip-path: inset(12% 10% 12% 10% round 12px);
+  transform: scale(0.96);
+  filter: blur(5px);
 }
 
 html.fx-active [data-fx-out="spin"].fx-out-up {
-  transform: translate3d(36px, -100px, 0) rotate(14deg) scale(0.82);
-  filter: blur(18px);
+  transform: translate3d(18px, -48px, 0) rotate(6deg) scale(0.95);
+  filter: blur(5px);
 }
 
 html.fx-active [data-fx-out="spin"].fx-out-down {
-  transform: translate3d(-36px, 100px, 0) rotate(-14deg) scale(0.82);
-  filter: blur(18px);
+  transform: translate3d(-18px, 48px, 0) rotate(-6deg) scale(0.95);
+  filter: blur(5px);
 }
 
 html.fx-active [data-fx-out="stretch"].fx-out-up,
 html.fx-active [data-fx-out="stretch"].fx-out-down {
-  transform: scaleX(0.62) scaleY(1.28);
-  filter: blur(16px);
-  clip-path: inset(10% 18% 10% 18%);
+  transform: scaleX(0.88) scaleY(1.06);
+  filter: blur(4px);
 }
 
 html.fx-active [data-fx-out="drift"].fx-out-up {
-  transform: translate3d(80px, -120px, 0) rotate(5deg) scale(0.88);
-  filter: blur(20px);
+  transform: translate3d(40px, -52px, 0) rotate(2deg) scale(0.96);
+  filter: blur(5px);
 }
 
 html.fx-active [data-fx-out="drift"].fx-out-down {
-  transform: translate3d(-80px, 120px, 0) rotate(-5deg) scale(0.88);
-  filter: blur(20px);
+  transform: translate3d(-40px, 52px, 0) rotate(-2deg) scale(0.96);
+  filter: blur(5px);
 }
 
 /* Soften FX on denser pill grids so they stay readable */
 html.fx-active .skills__pill[data-fx] {
-  --fx-duration: 0.55s;
+  --fx-duration: 0.45s;
   filter: none;
 }
 
 html.fx-active .skills__pill[data-fx].fx-from-bottom,
 html.fx-active .skills__pill[data-fx].fx-from-top,
 html.fx-active .skills__pill[data-fx]:not(.fx-in):not(.fx-out):not(.fx-prep) {
-  transform: translate3d(0, 18px, 0) scale(0.92);
+  transform: translate3d(0, 14px, 0) scale(0.96);
   filter: none;
 }
 
 html.fx-active .skills__pill[data-fx].fx-out-up {
-  transform: translate3d(0, -22px, 0) scale(0.9);
+  transform: translate3d(0, -16px, 0) scale(0.96);
   filter: none;
 }
 
 html.fx-active .skills__pill[data-fx].fx-out-down {
-  transform: translate3d(0, 22px, 0) scale(0.9);
+  transform: translate3d(0, 16px, 0) scale(0.96);
   filter: none;
 }
 

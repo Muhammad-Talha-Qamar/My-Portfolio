@@ -67,6 +67,13 @@
     ".footer",
   ];
 
+  /* Keep enter/exit from fighting each other mid-transition */
+  const ENTER_LOCK_MS = 520;
+  const EXIT_LOCK_MS = 640;
+  const ENTER_RATIO = 0.2;
+  const EXIT_RATIO = 0.05;
+  const ENTER_VIEWPORT = 0.28;
+
   function forceVisible(scope) {
     (scope || document).querySelectorAll("[data-fx]").forEach((el) => {
       el.classList.add("fx-in");
@@ -161,20 +168,19 @@
   let ticking = false;
 
   /**
-   * Stage band: middle of the viewport where content should be "alive".
-   * Leaving this band triggers EXIT while the element is still partly on-screen,
-   * so the exit motion is actually visible (unlike waiting for full leave).
+   * Wide stage + hysteresis: enter needs more overlap than exit,
+   * so boundary scrolling cannot flicker classes every frame.
    */
   function measure(el) {
     const vh = window.innerHeight || 1;
     const rect = el.getBoundingClientRect();
-    const stageTop = vh * 0.14;
-    const stageBottom = vh * 0.76;
+    const stageTop = vh * 0.1;
+    const stageBottom = vh * 0.88;
+    const stageHeight = Math.max(stageBottom - stageTop, 1);
 
     const overlapTop = Math.max(rect.top, stageTop);
     const overlapBottom = Math.min(rect.bottom, stageBottom);
     const overlap = Math.max(0, overlapBottom - overlapTop);
-    const stageHeight = stageBottom - stageTop;
     const visibleInStage = overlap / Math.min(Math.max(rect.height, 1), stageHeight);
 
     const viewportOverlapTop = Math.max(rect.top, 0);
@@ -182,18 +188,30 @@
     const viewportVisible = Math.max(0, viewportOverlapBottom - viewportOverlapTop);
     const viewportRatio = viewportVisible / Math.min(Math.max(rect.height, 1), vh);
 
-    /* Early exit for tall blocks once their head has scrolled away */
-    const headGoneUp = scrollDir === "down" && rect.top < vh * 0.06 && rect.bottom < vh * 0.58;
-    const headGoneDown = scrollDir === "up" && rect.bottom > vh * 0.94 && rect.top > vh * 0.42;
+    const mostlyAbove = rect.bottom < vh * 0.12;
+    const mostlyBelow = rect.top > vh * 0.88;
+    const offStage = mostlyAbove || mostlyBelow || visibleInStage < EXIT_RATIO;
 
-    const inStage = visibleInStage > 0.12 && !headGoneUp && !headGoneDown;
-    const stronglyIn = visibleInStage > 0.22 || (viewportRatio > 0.35 && rect.top < stageBottom && rect.bottom > stageTop);
+    const shouldEnter =
+      !offStage && (visibleInStage >= ENTER_RATIO || (viewportRatio >= ENTER_VIEWPORT && rect.top < stageBottom && rect.bottom > stageTop));
 
-    return { rect, vh, inStage, stronglyIn, viewportRatio, headGoneUp, headGoneDown };
+    return { rect, vh, visibleInStage, viewportRatio, offStage, shouldEnter };
+  }
+
+  function clearFxClasses(el) {
+    el.classList.remove(
+      "fx-in",
+      "fx-out",
+      "fx-out-up",
+      "fx-out-down",
+      "fx-prep",
+      "fx-from-top",
+      "fx-from-bottom"
+    );
   }
 
   function prepEnter(el, from) {
-    el.classList.remove("fx-in", "fx-out", "fx-out-up", "fx-out-down");
+    clearFxClasses(el);
     el.classList.add("fx-prep", from === "top" ? "fx-from-top" : "fx-from-bottom");
     void el.offsetWidth;
   }
@@ -206,7 +224,6 @@
   }
 
   function playExit(el, outDir) {
-    /* Keep current painted pose, then swap to exit so the transition is visible */
     el.classList.remove("fx-prep", "fx-from-top", "fx-from-bottom");
     if (!el.classList.contains("fx-in") && !el.classList.contains("fx-out")) {
       el.classList.add("fx-in");
@@ -217,14 +234,17 @@
   }
 
   const state = new Map();
+  const now = () => performance.now();
 
   function syncElement(el) {
-    const prev = state.get(el) || { visible: false };
+    const prev = state.get(el) || { visible: false, lockUntil: 0 };
+    if (now() < (prev.lockUntil || 0)) return;
+
     const m = measure(el);
 
     if (!prev.visible) {
-      if (m.stronglyIn || m.inStage) {
-        state.set(el, { visible: true });
+      if (m.shouldEnter) {
+        state.set(el, { visible: true, lockUntil: now() + ENTER_LOCK_MS });
         const from = m.rect.top > m.vh * 0.45 ? "bottom" : scrollDir === "up" ? "top" : "bottom";
         prepEnter(el, from);
         playEnter(el);
@@ -232,11 +252,12 @@
       return;
     }
 
-    /* Was visible — exit early when it leaves the stage band */
-    if (!m.inStage) {
-      state.set(el, { visible: false });
+    if (m.offStage) {
+      state.set(el, { visible: false, lockUntil: now() + EXIT_LOCK_MS });
       const outDir =
-        m.headGoneUp || m.rect.top < m.vh * 0.35 || scrollDir === "down" ? "up" : "down";
+        m.rect.bottom < m.vh * 0.45 || (scrollDir === "down" && m.rect.top < m.vh * 0.4)
+          ? "up"
+          : "down";
       playExit(el, outDir);
     }
   }
@@ -274,11 +295,11 @@
   /* Arm: mark above-the-fold as in, then enable CSS hiding for the rest */
   targets.forEach((el) => {
     const m = measure(el);
-    if (m.stronglyIn || m.inStage || (m.rect.top < m.vh * 0.92 && m.rect.bottom > 40)) {
-      state.set(el, { visible: true });
+    if (m.shouldEnter || (m.rect.top < m.vh * 0.92 && m.rect.bottom > 40 && !m.offStage)) {
+      state.set(el, { visible: true, lockUntil: 0 });
       el.classList.add("fx-in");
     } else {
-      state.set(el, { visible: false });
+      state.set(el, { visible: false, lockUntil: 0 });
     }
   });
   root.classList.add("fx-active");

@@ -1,9 +1,9 @@
 {
-  "builtAt": "2026-11-20T18:05:23.813Z",
+  "builtAt": "2026-11-20T18:11:54.578Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 71483,
-    "after": 56626
+    "before": 71283,
+    "after": 56453
   },
   "js": {
     "main": {
@@ -18,8 +18,8 @@
     },
     "scrollFx": {
       "file": "dist/scroll-fx.min.js",
-      "before": 8765,
-      "after": 4870
+      "before": 8976,
+      "after": 5037
     },
     "intro": {
       "file": "dist/intro-loader.min.js",
