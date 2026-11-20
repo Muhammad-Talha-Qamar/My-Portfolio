@@ -238,93 +238,141 @@
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  let page = 0;
-  let perView = 1;
-  let pageCount = 1;
+  let active = 0;
   let autoTimer = 0;
   let pointerId = null;
   let pointerStartX = 0;
   let pointerDelta = 0;
   let dragging = false;
   let suppressClick = false;
-  let cardStep = 0;
 
-  function readPerView() {
-    if (window.innerWidth >= 1024) return 2;
-    if (window.innerWidth >= 640) return 2;
-    return 1;
-  }
+  root.classList.add("is-coverflow");
 
-  function measureCardStep() {
-    const card = cards[0];
-    if (!card) return 0;
-    const styles = getComputedStyle(track);
-    const gap = Number.parseFloat(styles.columnGap || styles.gap) || 0;
-    return card.getBoundingClientRect().width + gap;
-  }
-
-  function maxPixelOffset() {
-    return Math.max(0, track.scrollWidth - viewport.clientWidth);
-  }
-
-  function pageOffset(pageIndex) {
-    const start = pageIndex * perView;
-    const maxStart = Math.max(0, cards.length - perView);
-    return Math.min(start, maxStart);
-  }
-
-  function pixelOffsetForPage(pageIndex) {
-    const raw = pageOffset(pageIndex) * (cardStep || measureCardStep());
-    return Math.min(raw, maxPixelOffset());
+  function wrapOffset(i) {
+    const n = cards.length;
+    let o = i - active;
+    if (o > n / 2) o -= n;
+    if (o < -n / 2) o += n;
+    return o;
   }
 
   function renderDots() {
     if (!dotsWrap) return;
     dotsWrap.innerHTML = "";
-    for (let i = 0; i < pageCount; i += 1) {
-      const start = pageOffset(i) + 1;
-      const end = Math.min(pageOffset(i) + perView, cards.length);
+    cards.forEach((card, i) => {
+      const title =
+        card.querySelector(".project-card__title, .project-title")?.textContent?.trim() ||
+        `Project ${i + 1}`;
       const dot = document.createElement("button");
       dot.type = "button";
       dot.className = "projects-dot";
       dot.setAttribute("role", "tab");
-      dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
-      dot.setAttribute("aria-selected", i === page ? "true" : "false");
-      dot.title = `Projects ${start} to ${end}`;
+      dot.setAttribute("aria-label", `Go to ${title}`);
+      dot.setAttribute("aria-selected", i === active ? "true" : "false");
       dot.addEventListener("click", () => goTo(i, { user: true }));
       dotsWrap.appendChild(dot);
-    }
+    });
   }
 
-  function markActiveCards() {
-    const start = pageOffset(page);
+  function applyCoverflow({ dragging: isDrag = false } = {}) {
+    const viewW = viewport.clientWidth || 1;
+    const sideX = Math.min(210, viewW * 0.34);
+    const dragShift = isDrag ? pointerDelta * 0.55 : 0;
+
     cards.forEach((card, i) => {
-      const active = i >= start && i < start + perView;
-      card.classList.toggle("is-active", active);
-      card.setAttribute("aria-hidden", active ? "false" : "true");
+      const o = wrapOffset(i);
+      const abs = Math.abs(o);
+      let x = o * sideX + dragShift;
+      let y = 0;
+      let scale = 0.72;
+      let rot = o < 0 ? 28 : o > 0 ? -28 : 0;
+      let z = -140;
+      let opacity = 0;
+      let blur = 0;
+      let zIndex = 1;
+
+      if (abs === 0) {
+        scale = 1.1;
+        rot = isDrag ? (pointerDelta / viewW) * -18 : 0;
+        z = 120;
+        y = -6;
+        opacity = 1;
+        zIndex = 5;
+      } else if (abs === 1) {
+        scale = 0.76;
+        rot = o < 0 ? 34 : -34;
+        y = 28;
+        if (isDrag) {
+          // Pull nearest side card toward center while dragging
+          const pull = Math.max(-1, Math.min(1, -pointerDelta / (viewW * 0.45)));
+          if ((o < 0 && pull > 0) || (o > 0 && pull < 0)) {
+            const t = Math.abs(pull);
+            scale = 0.76 + (1.1 - 0.76) * t * 0.7;
+            z = -160 + 280 * t;
+            y = 28 - 34 * t;
+            opacity = 0.5 + 0.45 * t;
+          } else {
+            opacity = 0.5;
+          }
+        } else {
+          opacity = 0.5;
+        }
+        zIndex = 3;
+        blur = 0.4;
+      } else if (abs === 2) {
+        x = o * sideX * 1.15 + dragShift * 0.35;
+        scale = 0.62;
+        rot = o < 0 ? 42 : -42;
+        z = -240;
+        y = 42;
+        opacity = 0.18;
+        zIndex = 2;
+        blur = 1.1;
+      } else {
+        x = o * sideX * 1.25;
+        scale = 0.55;
+        rot = o < 0 ? 48 : -48;
+        z = -300;
+        y = 50;
+        opacity = 0;
+        zIndex = 1;
+      }
+
+      card.classList.toggle("is-center", abs === 0);
+      card.classList.toggle("is-side", abs === 1);
+      card.classList.toggle("is-far", abs > 1);
+      card.setAttribute("aria-hidden", abs === 0 ? "false" : "true");
+      card.tabIndex = abs === 0 ? 0 : -1;
+      card.style.zIndex = String(zIndex);
+      card.style.opacity = String(opacity);
+      card.style.filter = blur ? `blur(${blur}px)` : "none";
+      card.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px), ${z}px) rotateY(${rot.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
+      card.style.pointerEvents = abs <= 1 ? "auto" : "none";
+    });
+
+    dotsWrap?.querySelectorAll(".projects-dot").forEach((dot, i) => {
+      dot.setAttribute("aria-selected", i === active ? "true" : "false");
     });
   }
 
   function syncUi({ animate = true } = {}) {
-    cardStep = measureCardStep();
-    const offset = -pixelOffsetForPage(page);
-    if (!animate) track.style.transition = "none";
-    track.style.transform = `translate3d(${offset}px, 0, 0)`;
+    if (!animate) {
+      track.classList.add("is-instant");
+      cards.forEach((c) => c.classList.add("is-instant"));
+    }
+    applyCoverflow();
     if (!animate) {
       void track.offsetWidth;
-      track.style.transition = "";
+      track.classList.remove("is-instant");
+      cards.forEach((c) => c.classList.remove("is-instant"));
     }
-    dotsWrap?.querySelectorAll(".projects-dot").forEach((dot, i) => {
-      dot.setAttribute("aria-selected", i === page ? "true" : "false");
-    });
-    markActiveCards();
   }
 
   function restartProgress() {
     if (!progressBar) return;
     progressBar.style.animation = "none";
     void progressBar.offsetWidth;
-    if (prefersReducedMotion || pageCount <= 1) {
+    if (prefersReducedMotion || cards.length <= 1) {
       progressBar.style.width = "0%";
       return;
     }
@@ -338,49 +386,32 @@
   }
 
   function startAutoplay() {
-    if (prefersReducedMotion || pageCount <= 1) return;
+    if (prefersReducedMotion || cards.length <= 1) return;
     stopAutoplay();
     root.classList.remove("is-paused");
     restartProgress();
     autoTimer = window.setInterval(() => {
-      goTo(page + 1);
+      goTo(active + 1);
     }, AUTOPLAY_MS);
   }
 
-  function goTo(nextPage, { user = false } = {}) {
-    page = ((nextPage % pageCount) + pageCount) % pageCount;
+  function goTo(nextIndex, { user = false } = {}) {
+    const n = cards.length;
+    active = ((nextIndex % n) + n) % n;
     syncUi();
     if (user) startAutoplay();
     else restartProgress();
   }
 
   function next(user = true) {
-    goTo(page + 1, { user });
+    goTo(active + 1, { user });
   }
 
   function prev(user = true) {
-    goTo(page - 1, { user });
-  }
-
-  function syncSlideWidth() {
-    perView = readPerView();
-    const styles = getComputedStyle(track);
-    const gap = Number.parseFloat(styles.columnGap || styles.gap) || 24;
-    const viewW = viewport.clientWidth;
-    if (!(viewW > 0)) return;
-    const slideW = Math.max(220, (viewW - Math.max(0, perView - 1) * gap) / perView);
-    cards.forEach((card) => {
-      card.style.flex = `0 0 ${slideW.toFixed(2)}px`;
-      card.style.maxWidth = `${slideW.toFixed(2)}px`;
-    });
-    track.style.gap = `${gap}px`;
+    goTo(active - 1, { user });
   }
 
   function layout() {
-    syncSlideWidth();
-    perView = readPerView();
-    pageCount = Math.max(1, Math.ceil(cards.length / perView));
-    page = Math.min(page, pageCount - 1);
     renderDots();
     syncUi({ animate: false });
   }
@@ -396,6 +427,24 @@
       e.preventDefault();
       next(true);
     }
+  });
+
+  // Click a side card to bring it center
+  cards.forEach((card, i) => {
+    card.addEventListener("click", (e) => {
+      if (suppressClick) return;
+      if (e.target.closest(".project-card__cta, .project-btn, a.project-card__media, a.project-vidbox")) {
+        if (wrapOffset(i) !== 0) {
+          e.preventDefault();
+          goTo(i, { user: true });
+        }
+        return;
+      }
+      if (wrapOffset(i) !== 0) {
+        e.preventDefault();
+        goTo(i, { user: true });
+      }
+    });
   });
 
   viewport.addEventListener(
@@ -417,7 +466,7 @@
     if (e.pointerType === "mouse" && e.button !== 0) return;
     if (
       e.target.closest(
-        ".project-card__cta, .projects__nav-btn, button, input, textarea, select, label"
+        ".project-card__cta, .project-btn, .projects__nav-btn, button, input, textarea, select, label"
       )
     ) {
       return;
@@ -429,8 +478,8 @@
     pointerDelta = 0;
     root.classList.add("is-dragging");
     stopAutoplay();
-    cardStep = measureCardStep();
-    track.style.transition = "none";
+    track.classList.add("is-instant");
+    cards.forEach((c) => c.classList.add("is-instant"));
     viewport.setPointerCapture?.(e.pointerId);
   });
 
@@ -438,16 +487,16 @@
     if (!dragging || e.pointerId !== pointerId) return;
     pointerDelta = e.clientX - pointerStartX;
     if (Math.abs(pointerDelta) > 8) suppressClick = true;
-    const base = -pixelOffsetForPage(page);
-    track.style.transform = `translate3d(${base + pointerDelta}px, 0, 0)`;
+    applyCoverflow({ dragging: true });
   });
 
   function endDrag(e) {
     if (!dragging || (e && pointerId != null && e.pointerId !== pointerId)) return;
     dragging = false;
     root.classList.remove("is-dragging");
-    track.style.transition = "";
-    const threshold = Math.max(36, Math.min(120, viewport.clientWidth * 0.12));
+    track.classList.remove("is-instant");
+    cards.forEach((c) => c.classList.remove("is-instant"));
+    const threshold = Math.max(40, Math.min(120, viewport.clientWidth * 0.12));
     if (pointerDelta > threshold) prev(true);
     else if (pointerDelta < -threshold) next(true);
     else {
@@ -483,41 +532,18 @@
     window.addEventListener("resize", layout);
   }
 
-  let cardsOpened = false;
-
-  function openCards() {
-    if (cardsOpened) return;
-    cardsOpened = true;
-    if (prefersReducedMotion) {
-      root.classList.remove("is-cards-closed", "is-cards-opening");
-      root.classList.add("is-cards-open");
-      return;
-    }
-    root.classList.remove("is-cards-closed");
-    root.classList.add("is-cards-opening");
-    window.setTimeout(() => {
-      root.classList.remove("is-cards-opening");
-      root.classList.add("is-cards-open");
-    }, 1200);
-  }
-
-  root.classList.add("is-cards-closed");
-
   requestAnimationFrame(() => {
     layout();
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
         ([entry]) => {
-          if (entry?.isIntersecting) {
-            openCards();
-            startAutoplay();
-          } else stopAutoplay();
+          if (entry?.isIntersecting) startAutoplay();
+          else stopAutoplay();
         },
         { threshold: 0.22 }
       );
       io.observe(root);
     } else {
-      openCards();
       startAutoplay();
     }
   });
