@@ -271,17 +271,6 @@ function talbyte_defaults() {
 function talbyte_default_projects() {
 	return array(
 		array(
-			'title'       => 'DUAL COP',
-			'highlight'   => '',
-			'tag'         => 'Web Game',
-			'description' => 'Getaway driving game with nitro, heat meters, and split-screen play — built as a full browser experience.',
-			'url'         => 'https://dual-cop.talbyte.com/',
-			'thumb'       => 'images/thumbs/dual-cop.jpg',
-			'alt'         => 'Dual Cop Game homepage',
-			'tech'        => 'HTML,CSS,JavaScript',
-			'cta'         => 'LIVE DEMO',
-		),
-		array(
 			'title'       => 'SMIT PORTAL',
 			'highlight'   => '',
 			'tag'         => 'Education',
@@ -378,6 +367,17 @@ function talbyte_default_projects() {
 			'thumb'       => 'images/thumbs/lifepilot.jpg',
 			'alt'         => 'LifePilot homepage',
 			'tech'        => 'TypeScript,HTML,CSS',
+			'cta'         => 'LIVE DEMO',
+		),
+		array(
+			'title'       => 'DUAL COP',
+			'highlight'   => '',
+			'tag'         => 'Web Game',
+			'description' => 'Getaway driving game with nitro, heat meters, and split-screen play — built as a full browser experience.',
+			'url'         => 'https://dual-cop.talbyte.com/',
+			'thumb'       => 'images/thumbs/dual-cop.jpg',
+			'alt'         => 'Dual Cop Game homepage',
+			'tech'        => 'HTML,CSS,JavaScript',
 			'cta'         => 'LIVE DEMO',
 		),
 	);

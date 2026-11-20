@@ -115,6 +115,110 @@ function talbyte_seed_content() {
 }
 
 /**
+ * One-time: move Dual Cop to the end of the projects carousel order.
+ */
+add_action( 'init', 'talbyte_reorder_projects_v1', 19 );
+
+/**
+ * Sync portfolio_project menu_order to the current default project list.
+ */
+function talbyte_reorder_projects_v1() {
+	if ( get_option( 'talbyte_projects_order_v1' ) ) {
+		return;
+	}
+
+	$defaults = talbyte_default_projects();
+	$order    = 0;
+	$matched  = array();
+
+	foreach ( $defaults as $project ) {
+		$title = isset( $project['title'] ) ? $project['title'] : '';
+		if ( $title === '' ) {
+			continue;
+		}
+
+		$posts = get_posts(
+			array(
+				'post_type'              => 'portfolio_project',
+				'post_status'            => 'any',
+				'title'                  => $title,
+				'posts_per_page'         => 1,
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			)
+		);
+
+		// Fallback for older WP / title query quirks.
+		if ( empty( $posts ) ) {
+			$all = get_posts(
+				array(
+					'post_type'              => 'portfolio_project',
+					'post_status'            => 'any',
+					'posts_per_page'         => -1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+				)
+			);
+			foreach ( $all as $pid ) {
+				if ( strcasecmp( get_the_title( $pid ), $title ) === 0 ) {
+					$posts = array( $pid );
+					break;
+				}
+			}
+		}
+
+		if ( empty( $posts ) ) {
+			continue;
+		}
+
+		$post_id = (int) $posts[0];
+		wp_update_post(
+			array(
+				'ID'         => $post_id,
+				'menu_order' => $order,
+			)
+		);
+		$matched[ $post_id ] = true;
+		$order++;
+	}
+
+	// Any leftover custom projects keep going after the defaults.
+	$leftovers = get_posts(
+		array(
+			'post_type'              => 'portfolio_project',
+			'post_status'            => 'any',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'orderby'                => array(
+				'menu_order' => 'ASC',
+				'date'       => 'ASC',
+			),
+		)
+	);
+
+	foreach ( $leftovers as $pid ) {
+		if ( isset( $matched[ (int) $pid ] ) ) {
+			continue;
+		}
+		wp_update_post(
+			array(
+				'ID'         => (int) $pid,
+				'menu_order' => $order++,
+			)
+		);
+	}
+
+	update_option( 'talbyte_projects_order_v1', 1 );
+}
+
+/**
  * One-time refresh of copy for the ashithmk-inspired redesign.
  */
 add_action( 'init', 'talbyte_upgrade_design_v2', 20 );
