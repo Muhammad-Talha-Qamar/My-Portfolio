@@ -50,7 +50,6 @@
     ".hero__stats-strip",
     ".hero__cta-row",
     ".hero__left-rail",
-    /* static / legacy portfolio markup */
     ".hero-info-title",
     ".hero-title",
     ".hero-info > p",
@@ -71,7 +70,14 @@
   function forceVisible(scope) {
     (scope || document).querySelectorAll("[data-fx]").forEach((el) => {
       el.classList.add("fx-in");
-      el.classList.remove("fx-out", "fx-out-up", "fx-out-down", "fx-prep", "fx-from-top", "fx-from-bottom");
+      el.classList.remove(
+        "fx-out",
+        "fx-out-up",
+        "fx-out-down",
+        "fx-prep",
+        "fx-from-top",
+        "fx-from-bottom"
+      );
     });
   }
 
@@ -80,7 +86,7 @@
       el.setAttribute("data-fx", VARIANTS[index % VARIANTS.length]);
     }
     if (!el.hasAttribute("data-fx-out")) {
-      el.setAttribute("data-fx-out", VARIANTS[(index + 5) % VARIANTS.length]);
+      el.setAttribute("data-fx-out", VARIANTS[(index + 7) % VARIANTS.length]);
     }
   }
 
@@ -96,7 +102,6 @@
     }
 
     document.querySelectorAll("[data-fx], [data-aos]").forEach(add);
-
     AUTO_SELECTORS.forEach((selector) => {
       document.querySelectorAll(selector).forEach(add);
     });
@@ -116,8 +121,7 @@
         "zoom-out": "zoom-blur",
         flip: "flip-y",
       };
-      const aos = el.getAttribute("data-aos");
-      el.setAttribute("data-fx", map[aos] || "rise");
+      el.setAttribute("data-fx", map[el.getAttribute("data-aos")] || "rise");
     }
     const delay = el.getAttribute("data-aos-delay");
     if (delay && !el.style.getPropertyValue("--fx-delay")) {
@@ -133,26 +137,6 @@
     forceVisible(document);
     return;
   }
-
-  let scrollY = window.scrollY || 0;
-  let scrollDir = "down";
-  let scrollRaf = 0;
-
-  window.addEventListener(
-    "scroll",
-    () => {
-      if (scrollRaf) return;
-      scrollRaf = requestAnimationFrame(() => {
-        scrollRaf = 0;
-        const y = window.scrollY || 0;
-        if (Math.abs(y - scrollY) > 2) {
-          scrollDir = y > scrollY ? "down" : "up";
-          scrollY = y;
-        }
-      });
-    },
-    { passive: true }
-  );
 
   const targets = collectTargets();
   targets.forEach((el, i) => {
@@ -172,6 +156,42 @@
     }
   });
 
+  let scrollY = window.scrollY || 0;
+  let scrollDir = "down";
+  let ticking = false;
+
+  /**
+   * Stage band: middle of the viewport where content should be "alive".
+   * Leaving this band triggers EXIT while the element is still partly on-screen,
+   * so the exit motion is actually visible (unlike waiting for full leave).
+   */
+  function measure(el) {
+    const vh = window.innerHeight || 1;
+    const rect = el.getBoundingClientRect();
+    const stageTop = vh * 0.14;
+    const stageBottom = vh * 0.76;
+
+    const overlapTop = Math.max(rect.top, stageTop);
+    const overlapBottom = Math.min(rect.bottom, stageBottom);
+    const overlap = Math.max(0, overlapBottom - overlapTop);
+    const stageHeight = stageBottom - stageTop;
+    const visibleInStage = overlap / Math.min(Math.max(rect.height, 1), stageHeight);
+
+    const viewportOverlapTop = Math.max(rect.top, 0);
+    const viewportOverlapBottom = Math.min(rect.bottom, vh);
+    const viewportVisible = Math.max(0, viewportOverlapBottom - viewportOverlapTop);
+    const viewportRatio = viewportVisible / Math.min(Math.max(rect.height, 1), vh);
+
+    /* Early exit for tall blocks once their head has scrolled away */
+    const headGoneUp = scrollDir === "down" && rect.top < vh * 0.06 && rect.bottom < vh * 0.58;
+    const headGoneDown = scrollDir === "up" && rect.bottom > vh * 0.94 && rect.top > vh * 0.42;
+
+    const inStage = visibleInStage > 0.12 && !headGoneUp && !headGoneDown;
+    const stronglyIn = visibleInStage > 0.22 || (viewportRatio > 0.35 && rect.top < stageBottom && rect.bottom > stageTop);
+
+    return { rect, vh, inStage, stronglyIn, viewportRatio, headGoneUp, headGoneDown };
+  }
+
   function prepEnter(el, from) {
     el.classList.remove("fx-in", "fx-out", "fx-out-up", "fx-out-down");
     el.classList.add("fx-prep", from === "top" ? "fx-from-top" : "fx-from-bottom");
@@ -186,56 +206,75 @@
   }
 
   function playExit(el, outDir) {
-    el.classList.remove("fx-in", "fx-prep", "fx-from-top", "fx-from-bottom");
+    /* Keep current painted pose, then swap to exit so the transition is visible */
+    el.classList.remove("fx-prep", "fx-from-top", "fx-from-bottom");
+    if (!el.classList.contains("fx-in") && !el.classList.contains("fx-out")) {
+      el.classList.add("fx-in");
+      void el.offsetWidth;
+    }
+    el.classList.remove("fx-in");
     el.classList.add("fx-out", outDir === "up" ? "fx-out-up" : "fx-out-down");
   }
 
-  const state = new WeakMap();
+  const state = new Map();
 
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const el = entry.target;
-        const prev = state.get(el) || { visible: false };
+  function syncElement(el) {
+    const prev = state.get(el) || { visible: false };
+    const m = measure(el);
 
-        if (entry.isIntersecting) {
-          if (prev.visible) return;
-          state.set(el, { visible: true });
+    if (!prev.visible) {
+      if (m.stronglyIn || m.inStage) {
+        state.set(el, { visible: true });
+        const from = m.rect.top > m.vh * 0.45 ? "bottom" : scrollDir === "up" ? "top" : "bottom";
+        prepEnter(el, from);
+        playEnter(el);
+      }
+      return;
+    }
 
-          const from =
-            entry.boundingClientRect.top > (entry.rootBounds?.height || window.innerHeight) * 0.45
-              ? "bottom"
-              : scrollDir === "down"
-                ? "bottom"
-                : "top";
+    /* Was visible — exit early when it leaves the stage band */
+    if (!m.inStage) {
+      state.set(el, { visible: false });
+      const outDir =
+        m.headGoneUp || m.rect.top < m.vh * 0.35 || scrollDir === "down" ? "up" : "down";
+      playExit(el, outDir);
+    }
+  }
 
-          prepEnter(el, from);
-          playEnter(el);
-          return;
-        }
+  function syncAll() {
+    targets.forEach(syncElement);
+  }
 
-        if (!prev.visible && !el.classList.contains("fx-in")) {
-          state.set(el, { visible: false });
-          return;
-        }
-
-        state.set(el, { visible: false });
-        const outDir = scrollDir === "down" ? "up" : "down";
-        playExit(el, outDir);
+  window.addEventListener(
+    "scroll",
+    () => {
+      const y = window.scrollY || 0;
+      if (Math.abs(y - scrollY) > 1) {
+        scrollDir = y > scrollY ? "down" : "up";
+        scrollY = y;
+      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        syncAll();
       });
     },
-    {
-      root: null,
-      rootMargin: "0px 0px -8% 0px",
-      threshold: [0, 0.12, 0.24],
-    }
+    { passive: true }
   );
 
-  /* Mark in-view first, then arm CSS so above-the-fold never flashes hidden */
+  window.addEventListener(
+    "resize",
+    () => {
+      requestAnimationFrame(syncAll);
+    },
+    { passive: true }
+  );
+
+  /* Arm: mark above-the-fold as in, then enable CSS hiding for the rest */
   targets.forEach((el) => {
-    const rect = el.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight * 0.92 && rect.bottom > 40;
-    if (inView) {
+    const m = measure(el);
+    if (m.stronglyIn || m.inStage || (m.rect.top < m.vh * 0.92 && m.rect.bottom > 40)) {
       state.set(el, { visible: true });
       el.classList.add("fx-in");
     } else {
@@ -243,18 +282,9 @@
     }
   });
   root.classList.add("fx-active");
-  targets.forEach((el) => io.observe(el));
 
-  /* After intro loader finishes, re-check above-the-fold elements */
   const introDone = () => {
-    targets.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0 && !el.classList.contains("fx-in")) {
-        state.set(el, { visible: true });
-        prepEnter(el, "bottom");
-        playEnter(el);
-      }
-    });
+    syncAll();
   };
 
   if (root.dataset.intro === "done") {
