@@ -1749,10 +1749,115 @@ canvas[data-falling-leaves] {
   position: relative;
 }
 
+.projects-lottie {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-card);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(243, 107, 33, 0.12), transparent 55%),
+    rgba(5, 5, 5, 0.92);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease), visibility 0.4s;
+}
+
+.projects-carousel.is-lottie-pending,
+.projects-carousel.is-lottie-playing {
+  min-height: min(70vw, 460px);
+}
+
+.projects-carousel.is-lottie-pending .projects-lottie,
+.projects-carousel.is-lottie-playing .projects-lottie {
+  opacity: 1;
+  visibility: visible;
+}
+
+.projects-carousel.is-lottie-done .projects-lottie {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.projects-lottie__frame,
+.projects-lottie__player {
+  display: block;
+  width: min(100%, 360px);
+  height: min(52vw, 320px);
+  margin-inline: auto;
+}
+
+.projects-lottie__caption {
+  margin: 0;
+  color: var(--muted);
+  font: 700 0.68rem/1 var(--font-mono);
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.projects-carousel.is-lottie-pending .projects-viewport,
+.projects-carousel.is-lottie-playing .projects-viewport {
+  opacity: 0;
+  transform: translateY(18px) scale(0.985);
+  pointer-events: none;
+}
+
+.projects-carousel.is-lottie-done .projects-viewport {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+}
+
+.projects-carousel.is-lottie-done .project-card {
+  animation: project-card-open 0.7s var(--ease) both;
+}
+
+.projects-carousel.is-lottie-done .project-card:nth-child(1) { animation-delay: 0.04s; }
+.projects-carousel.is-lottie-done .project-card:nth-child(2) { animation-delay: 0.12s; }
+.projects-carousel.is-lottie-done .project-card:nth-child(3) { animation-delay: 0.2s; }
+.projects-carousel.is-lottie-done .project-card:nth-child(4) { animation-delay: 0.28s; }
+
+@keyframes project-card-open {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.9) rotateY(10deg);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projects-lottie {
+    display: none !important;
+  }
+
+  .projects-carousel.is-lottie-pending .projects-viewport,
+  .projects-carousel.is-lottie-playing .projects-viewport,
+  .projects-carousel.is-lottie-done .projects-viewport {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .projects-carousel.is-lottie-done .project-card {
+    animation: none;
+  }
+}
+
 .projects-viewport {
   overflow: hidden;
   outline: 0;
   touch-action: pan-y;
+  min-height: 420px;
 }
 
 .projects-track,
@@ -1761,6 +1866,8 @@ canvas[data-falling-leaves] {
   align-items: stretch;
   transition: transform 0.7s var(--ease);
   will-change: transform;
+  transform-style: preserve-3d;
+  perspective: 1200px;
 }
 
 .project-card__media {

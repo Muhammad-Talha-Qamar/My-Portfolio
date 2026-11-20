@@ -87,6 +87,10 @@ $total = count( $projects );
       </div>
 
       <div class="projects-carousel" data-projects-carousel>
+        <div class="projects-lottie" data-projects-lottie aria-hidden="true">
+          <div class="projects-lottie__frame" data-projects-lottie-mount></div>
+          <p class="projects-lottie__caption">Opening the build log…</p>
+        </div>
         <div class="projects-viewport" data-projects-viewport tabindex="0" aria-roledescription="carousel" aria-label="Featured projects">
           <div class="projects-track" data-projects-track>
             <?php foreach ( $projects as $i => $project ) :

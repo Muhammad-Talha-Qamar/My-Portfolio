@@ -1,9 +1,9 @@
 {
-  "builtAt": "2026-11-20T12:47:35.663Z",
+  "builtAt": "2026-11-20T13:06:33.975Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 59920,
-    "after": 46825
+    "before": 62590,
+    "after": 49094
   },
   "js": {
     "main": {
@@ -30,6 +30,11 @@
       "file": "dist/interactive-grid.min.js",
       "before": 5971,
       "after": 3074
+    },
+    "projectsLottie": {
+      "file": "dist/projects-lottie.min.js",
+      "before": 2874,
+      "after": 1847
     }
   },
   "webp": [

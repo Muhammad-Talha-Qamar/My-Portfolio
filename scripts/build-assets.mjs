@@ -90,6 +90,10 @@ const grid = await minifyJs(
   path.join(themeAssets, 'interactive-grid.js'),
   path.join(dist, 'interactive-grid.min.js')
 );
+const projectsLottie = await minifyJs(
+  path.join(themeAssets, 'projects-lottie.js'),
+  path.join(dist, 'projects-lottie.min.js')
+);
 
 const images = [];
 for (const img of ['images/main.jpg']) {
@@ -127,6 +131,7 @@ const manifest = {
     intro: { file: 'dist/intro-loader.min.js', ...intro },
     leaves: { file: 'dist/falling-leaves.min.js', ...leaves },
     grid: { file: 'dist/interactive-grid.min.js', ...grid },
+    projectsLottie: { file: 'dist/projects-lottie.min.js', ...projectsLottie },
   },
   webp: images,
 };
@@ -139,6 +144,7 @@ console.log(`  AOS  ${kb(aos.before)} → ${kb(aos.after)}`);
 console.log(`  INTRO ${kb(intro.before)} → ${kb(intro.after)}`);
 console.log(`  LEAVES ${kb(leaves.before)} → ${kb(leaves.after)}`);
 console.log(`  GRID ${kb(grid.before)} → ${kb(grid.after)}`);
+console.log(`  LOTTIE ${kb(projectsLottie.before)} → ${kb(projectsLottie.after)}`);
 for (const img of images) {
   console.log(`  WEBP ${img.srcRel} ${kb(img.before)} → ${img.destRel} ${kb(img.after)}`);
 }
