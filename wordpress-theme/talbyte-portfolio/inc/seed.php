@@ -117,13 +117,13 @@ function talbyte_seed_content() {
 /**
  * One-time: move Dual Cop to the end of the projects carousel order.
  */
-add_action( 'init', 'talbyte_reorder_projects_v1', 19 );
+add_action( 'init', 'talbyte_reorder_projects_v2', 19 );
 
 /**
  * Sync portfolio_project menu_order to the current default project list.
  */
-function talbyte_reorder_projects_v1() {
-	if ( get_option( 'talbyte_projects_order_v1' ) ) {
+function talbyte_reorder_projects_v2() {
+	if ( get_option( 'talbyte_projects_order_v2' ) ) {
 		return;
 	}
 
@@ -215,7 +215,7 @@ function talbyte_reorder_projects_v1() {
 		);
 	}
 
-	update_option( 'talbyte_projects_order_v1', 1 );
+	update_option( 'talbyte_projects_order_v2', 1 );
 }
 
 /**
