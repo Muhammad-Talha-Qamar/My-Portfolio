@@ -34,15 +34,17 @@ if ( ! $bg_video ) {
       var forceLoader = params.has("loader") || params.has("replay");
       var seenIntro = !forceLoader && sessionStorage.getItem("talbyte_loader_seen") === "1";
       var reduceMotion = mq("(prefers-reduced-motion: reduce)").matches;
+      var saveData = !!(navigator.connection && (navigator.connection.saveData || /2g|slow-2g/i.test(navigator.connection.effectiveType || "")));
       var lite =
         reduceMotion ||
         mq("(max-width: 1100px), (update: slow)").matches ||
         !mq("(pointer: fine)").matches ||
-        !!(navigator.connection && (navigator.connection.saveData || /2g|slow-2g/i.test(navigator.connection.effectiveType || ""))) ||
+        saveData ||
         (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
         (navigator.deviceMemory && navigator.deviceMemory < 4);
       if (lite) document.documentElement.classList.add("is-lite");
-      if (seenIntro || (lite && !forceLoader)) {
+      // Skip intro only when already seen, reduced-motion, or save-data — still show on phones.
+      if (seenIntro || ((reduceMotion || saveData) && !forceLoader)) {
         document.documentElement.dataset.intro = "done";
       } else {
         document.documentElement.dataset.intro = "pending";
