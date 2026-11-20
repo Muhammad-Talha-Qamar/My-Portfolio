@@ -54,7 +54,7 @@ if ( ! is_array( $stats ) || empty( $stats ) ) {
 
       <div class="skills-video-box hero__photo-wrapper">
         <div class="hero__photo-card">
-          <img class="hero__photo-img" src="<?php echo esc_url( $photo ); ?>" alt="<?php echo esc_attr( $display ); ?>" width="720" height="960" decoding="async" fetchpriority="high" />
+          <img class="hero__photo-img" src="<?php echo esc_url( $photo ); ?>" alt="<?php echo esc_attr( $display ); ?>" width="1024" height="1024" decoding="async" fetchpriority="high" />
         </div>
       </div>
 

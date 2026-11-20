@@ -432,8 +432,9 @@ h3 {
   display: grid;
   min-height: 100svh;
   align-items: center;
-  gap: 3rem;
-  padding-top: 8rem;
+  gap: 2.5rem;
+  padding-top: 7rem;
+  overflow: visible;
 }
 
 .hero-info {
@@ -601,22 +602,36 @@ h3 {
   color: #fff;
 }
 
-.hero__photo-card,
-.skills-video-box {
+.hero__photo-wrapper,
+.skills-video-box.hero__photo-wrapper {
   position: relative;
-  width: min(78vw, 480px);
+  width: 100%;
+  min-width: 0;
+  max-width: min(100%, 460px);
   justify-self: center;
-  transform: rotate(3deg);
+  transform: rotate(-2.5deg);
 }
 
-.hero__photo-card::before,
-.skills-video-box::before {
+.hero__photo-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0b0b0b;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+
+.hero__photo-wrapper::before,
+.skills-video-box.hero__photo-wrapper::before {
   position: absolute;
-  inset: -12px;
-  z-index: -1;
-  border: 1px solid rgba(243, 107, 33, 0.7);
+  inset: -10px -12px 10px 12px;
+  z-index: 1;
+  border: 1px solid rgba(243, 107, 33, 0.45);
+  background: rgba(25, 25, 25, 0.75);
   content: "";
-  transform: rotate(-6deg);
+  transform: rotate(4deg);
+  pointer-events: none;
 }
 
 .hero__photo-card::after,
@@ -626,18 +641,22 @@ h3 {
   z-index: 2;
   pointer-events: none;
   content: "";
-  opacity: 0.19;
+  opacity: 0.16;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
 }
 
 .hero__photo-card img,
+.hero__photo-img,
 .hero-photo-frame,
 .hero-photo {
+  display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  height: auto;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
-  filter: saturate(0.75) contrast(1.08);
+  object-position: center center;
+  filter: saturate(0.85) contrast(1.08) brightness(0.96);
 }
 
 .hero-photo-frame {
@@ -1994,8 +2013,9 @@ h3 {
   }
 
   #home.hero {
-    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-    gap: 4rem;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: center;
   }
 
   .about__facts {
@@ -2044,9 +2064,11 @@ h3 {
     right: clamp(2rem, 5vw, 5rem);
   }
 
-  .hero__photo-card,
-  .skills-video-box {
-    width: min(34vw, 500px);
+  .hero__photo-wrapper,
+  .skills-video-box.hero__photo-wrapper {
+    width: 100%;
+    max-width: min(100%, 440px);
+    justify-self: end;
   }
 
   .info-cards {
@@ -2081,9 +2103,11 @@ h3 {
     order: 1;
   }
 
-  .skills-video-box,
-  .hero__photo-card {
+  .hero__photo-wrapper,
+  .skills-video-box.hero__photo-wrapper {
     order: 0;
+    max-width: min(78vw, 320px);
+    transform: rotate(-2deg);
   }
 
   .hero__name,
