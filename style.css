@@ -2694,7 +2694,7 @@ canvas[data-falling-leaves] {
 html.fx-active [data-fx] {
   --fx-delay: 0ms;
   --fx-duration: 0.58s;
-  --fx-exit-duration: 0.52s;
+  --fx-exit-duration: 0.62s;
   --fx-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --fx-ease-out: cubic-bezier(0.33, 0, 0.2, 1);
   opacity: 0;

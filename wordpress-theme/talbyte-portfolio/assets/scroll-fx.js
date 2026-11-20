@@ -68,11 +68,12 @@
   ];
 
   /* Keep enter/exit from fighting each other mid-transition */
-  const ENTER_LOCK_MS = 520;
-  const EXIT_LOCK_MS = 640;
-  const ENTER_RATIO = 0.2;
-  const EXIT_RATIO = 0.05;
-  const ENTER_VIEWPORT = 0.28;
+  const ENTER_LOCK_MS = 420;
+  const EXIT_LOCK_MS = 480;
+  /* Alive stage = middle two quarters (25%–75%). Exit once content enters top/bottom quarter. */
+  const ENTER_RATIO = 0.18;
+  const EXIT_RATIO = 0.08;
+  const ENTER_VIEWPORT = 0.22;
 
   function forceVisible(scope) {
     (scope || document).querySelectorAll("[data-fx]").forEach((el) => {
@@ -166,16 +167,21 @@
   let scrollY = window.scrollY || 0;
   let scrollDir = "down";
   let ticking = false;
+  let userScrolled = false;
 
   /**
-   * Wide stage + hysteresis: enter needs more overlap than exit,
-   * so boundary scrolling cannot flicker classes every frame.
+   * Viewport quarters (top → bottom):
+   *   Q1 0–25%  → exit zone (scroll down)
+   *   Q2–Q3 25–75% → alive stage
+   *   Q4 75–100% → exit zone (scroll up)
+   * Exits start as soon as content enters the edge quarter, so the motion
+   * plays across that whole band instead of vanishing at the screen edge.
    */
   function measure(el) {
     const vh = window.innerHeight || 1;
     const rect = el.getBoundingClientRect();
-    const stageTop = vh * 0.1;
-    const stageBottom = vh * 0.88;
+    const stageTop = vh * 0.25;
+    const stageBottom = vh * 0.75;
     const stageHeight = Math.max(stageBottom - stageTop, 1);
 
     const overlapTop = Math.max(rect.top, stageTop);
@@ -188,14 +194,29 @@
     const viewportVisible = Math.max(0, viewportOverlapBottom - viewportOverlapTop);
     const viewportRatio = viewportVisible / Math.min(Math.max(rect.height, 1), vh);
 
-    const mostlyAbove = rect.bottom < vh * 0.12;
-    const mostlyBelow = rect.top > vh * 0.88;
-    const offStage = mostlyAbove || mostlyBelow || visibleInStage < EXIT_RATIO;
+    /*
+     * Early exit: element's leading edge is inside the edge quarter.
+     * Cap with bottom/top so tall blocks don't exit on first paint,
+     * but still start while a full quarter of screen remains.
+     */
+    const inTopQuarter = rect.top < stageTop && rect.bottom < vh * 0.68;
+    const inBottomQuarter = rect.bottom > stageBottom && rect.top > vh * 0.32;
+    const fullyPastTop = rect.bottom <= stageTop * 0.5;
+    const fullyPastBottom = rect.top >= stageBottom + (vh - stageBottom) * 0.5;
+
+    const earlyExit =
+      userScrolled &&
+      ((scrollDir === "down" && inTopQuarter) || (scrollDir === "up" && inBottomQuarter));
+
+    const shouldExit =
+      fullyPastTop || fullyPastBottom || visibleInStage < EXIT_RATIO || earlyExit;
 
     const shouldEnter =
-      !offStage && (visibleInStage >= ENTER_RATIO || (viewportRatio >= ENTER_VIEWPORT && rect.top < stageBottom && rect.bottom > stageTop));
+      !shouldExit &&
+      (visibleInStage >= ENTER_RATIO ||
+        (viewportRatio >= ENTER_VIEWPORT && rect.top < stageBottom && rect.bottom > stageTop));
 
-    return { rect, vh, visibleInStage, viewportRatio, offStage, shouldEnter };
+    return { rect, vh, visibleInStage, viewportRatio, shouldExit, shouldEnter, inTopQuarter, inBottomQuarter };
   }
 
   function clearFxClasses(el) {
@@ -252,12 +273,10 @@
       return;
     }
 
-    if (m.offStage) {
+    if (m.shouldExit) {
       state.set(el, { visible: false, lockUntil: now() + EXIT_LOCK_MS });
       const outDir =
-        m.rect.bottom < m.vh * 0.45 || (scrollDir === "down" && m.rect.top < m.vh * 0.4)
-          ? "up"
-          : "down";
+        m.inTopQuarter || m.rect.bottom < m.vh * 0.5 || scrollDir === "down" ? "up" : "down";
       playExit(el, outDir);
     }
   }
@@ -273,6 +292,7 @@
       if (Math.abs(y - scrollY) > 1) {
         scrollDir = y > scrollY ? "down" : "up";
         scrollY = y;
+        userScrolled = true;
       }
       if (ticking) return;
       ticking = true;
@@ -295,7 +315,7 @@
   /* Arm: mark above-the-fold as in, then enable CSS hiding for the rest */
   targets.forEach((el) => {
     const m = measure(el);
-    if (m.shouldEnter || (m.rect.top < m.vh * 0.92 && m.rect.bottom > 40 && !m.offStage)) {
+    if (m.shouldEnter || (m.rect.top < m.vh * 0.92 && m.rect.bottom > 40 && !m.shouldExit)) {
       state.set(el, { visible: true, lockUntil: 0 });
       el.classList.add("fx-in");
     } else {
