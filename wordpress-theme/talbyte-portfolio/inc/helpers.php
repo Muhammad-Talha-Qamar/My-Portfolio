@@ -140,6 +140,7 @@ function talbyte_defaults() {
 		'logo_fallback'   => 'images/main.jpg',
 		'bg_video'        => 'videos/galaxy.mp4',
 
+		'intro_text'      => 'TALHA Q.',
 		'hero_badge'      => 'Front-end Developer Portfolio',
 		'hero_title'      => 'Providing the best Project Experience',
 		'hero_highlight'  => 'the best,Experience',

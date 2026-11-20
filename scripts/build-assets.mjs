@@ -78,6 +78,10 @@ const aos = await minifyJs(
   path.join(themeAssets, 'aos-init.js'),
   path.join(dist, 'aos-init.min.js')
 );
+const intro = await minifyJs(
+  path.join(themeAssets, 'intro-loader.js'),
+  path.join(dist, 'intro-loader.min.js')
+);
 
 const images = [];
 for (const img of [
@@ -117,6 +121,7 @@ const manifest = {
   js: {
     main: { file: 'dist/main.min.js', ...main },
     aosInit: { file: 'dist/aos-init.min.js', ...aos },
+    intro: { file: 'dist/intro-loader.min.js', ...intro },
   },
   webp: images,
 };
@@ -126,6 +131,7 @@ console.log('Build complete → assets/dist/');
 console.log(`  CSS  ${kb(css.before)} → ${kb(css.after)}`);
 console.log(`  JS   ${kb(main.before)} → ${kb(main.after)}`);
 console.log(`  AOS  ${kb(aos.before)} → ${kb(aos.after)}`);
+console.log(`  INTRO ${kb(intro.before)} → ${kb(intro.after)}`);
 for (const img of images) {
   console.log(`  WEBP ${img.srcRel} ${kb(img.before)} → ${img.destRel} ${kb(img.after)}`);
 }

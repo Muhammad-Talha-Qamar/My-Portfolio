@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '1.1.6' );
+define( 'TALBYTE_THEME_VERSION', '1.1.7' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -60,18 +60,35 @@ function talbyte_enqueue_assets() {
 	$css      = talbyte_asset_file( 'style.css', 'dist/style.min.css' );
 	$js_main  = talbyte_asset_file( 'main.js', 'dist/main.min.js' );
 	$js_aos   = talbyte_asset_file( 'aos-init.js', 'dist/aos-init.min.js' );
+	$js_intro = talbyte_asset_file( 'intro-loader.js', 'dist/intro-loader.min.js' );
 
 	// jsDelivr is usually faster/cached than unpkg for first paint.
+	wp_enqueue_style(
+		'talbyte-anton',
+		'https://fonts.googleapis.com/css2?family=Anton&display=swap',
+		array(),
+		null
+	);
 	wp_enqueue_style( 'boxicons', 'https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css', array(), '2.1.4' );
 	wp_enqueue_style( 'aos', 'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css', array(), '2.3.4' );
-	wp_enqueue_style( 'talbyte-portfolio', $uri . '/' . $css, array( 'boxicons', 'aos' ), $ver );
+	wp_enqueue_style( 'talbyte-portfolio', $uri . '/' . $css, array( 'boxicons', 'aos', 'talbyte-anton' ), $ver );
 
+	wp_enqueue_script( 'talbyte-intro', $uri . '/' . $js_intro, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'aos', 'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js', array(), '2.3.4', array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-aos-init', $uri . '/' . $js_aos, array( 'aos' ), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 
 	$d     = talbyte_defaults();
 	$email = talbyte_option( 'email', $d['email'] );
+	$intro = talbyte_option( 'intro_text', $d['intro_text'] );
+
+	wp_localize_script(
+		'talbyte-intro',
+		'talbyteIntro',
+		array(
+			'text' => (string) $intro,
+		)
+	);
 
 	wp_localize_script(
 		'talbyte-main',
@@ -96,6 +113,8 @@ function talbyte_resource_hints() {
 	$hero = talbyte_image_url( talbyte_option( 'hero_photo', null ), talbyte_defaults()['hero_photo'] );
 	echo '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />' . "\n";
 	echo '<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />' . "\n";
+	echo '<link rel="preconnect" href="https://fonts.googleapis.com" />' . "\n";
+	echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />' . "\n";
 	echo '<link rel="preload" href="' . esc_url( $href ) . '" as="style" />' . "\n";
 	if ( $hero ) {
 		$type = str_ends_with( strtolower( wp_parse_url( $hero, PHP_URL_PATH ) ?: '' ), '.webp' ) ? 'image/webp' : 'image/jpeg';
