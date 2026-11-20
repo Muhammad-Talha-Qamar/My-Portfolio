@@ -290,6 +290,50 @@ function talbyte_upgrade_design_v2() {
 }
 
 /**
+ * One-time copy update: Frontend Developer → Full Stack Developer.
+ */
+add_action( 'init', 'talbyte_upgrade_fullstack_copy', 21 );
+
+/**
+ * Refresh role/subtitle/about/services strings in ACF options.
+ */
+function talbyte_upgrade_fullstack_copy() {
+	if ( get_option( 'talbyte_fullstack_copy_v1' ) ) {
+		return;
+	}
+
+	$d = talbyte_defaults();
+	$keys = array(
+		'seo_description',
+		'hero_subtitle',
+		'hero_bio',
+		'about_para_1',
+		'about_para_1_hl',
+	);
+
+	foreach ( $keys as $key ) {
+		if ( ! isset( $d[ $key ] ) ) {
+			continue;
+		}
+		if ( function_exists( 'update_field' ) ) {
+			update_field( $key, $d[ $key ], 'option' );
+		} else {
+			update_option( 'options_' . $key, $d[ $key ] );
+		}
+	}
+
+	if ( function_exists( 'update_field' ) ) {
+		update_field( 'about_facts', $d['about_facts'], 'option' );
+		update_field( 'services', $d['services'], 'option' );
+	} else {
+		update_option( 'options_about_facts', $d['about_facts'] );
+		update_option( 'options_services', $d['services'] );
+	}
+
+	update_option( 'talbyte_fullstack_copy_v1', 1 );
+}
+
+/**
  * Admin notice pointing to Portfolio Settings.
  */
 add_action( 'admin_notices', 'talbyte_admin_edit_guide' );

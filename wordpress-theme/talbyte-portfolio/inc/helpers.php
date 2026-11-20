@@ -161,7 +161,7 @@ function talbyte_highlight_html( $text, $highlight = '' ) {
 function talbyte_defaults() {
 	return array(
 		'seo_title'       => 'Muhammad Talha Qamar — Developer',
-		'seo_description' => 'Muhammad Talha Qamar — frontend developer building polished websites, product landings, clones, and interactive web apps.',
+		'seo_description' => 'Muhammad Talha Qamar — Full Stack Developer building polished websites, product landings, clones, and interactive web apps.',
 		'brand_first'     => 'TALHA',
 		'brand_last'      => 'Q.',
 		'display_name'    => 'Muhammad Talha Qamar',
@@ -177,8 +177,8 @@ function talbyte_defaults() {
 		'hero_role'       => 'DEVELOPER',
 		'hero_name_line1' => 'TALHA',
 		'hero_name_line2' => 'Q.',
-		'hero_subtitle'   => 'FRONTEND DEVELOPER',
-		'hero_bio'        => "I'm Muhammad Talha Qamar — a frontend developer passionate about building modern, interactive, and responsive websites with HTML, CSS, and JavaScript.",
+		'hero_subtitle'   => 'FULL STACK DEVELOPER',
+		'hero_bio'        => "I'm Muhammad Talha Qamar — a Full Stack Developer passionate about building modern, interactive, and responsive websites with HTML, CSS, and JavaScript.",
 		'hero_cta_label'  => 'EXPLORE MY WORK',
 		'hero_cta_href'   => '#projects',
 		'hero_talk_label' => "LET'S TALK",
@@ -194,12 +194,12 @@ function talbyte_defaults() {
 		'about_tag'       => 'ABOUT',
 		'about_headline'  => 'I turn ideas into',
 		'about_slot_words'=> 'products,websites,interfaces,experiences,games',
-		'about_para_1'    => "Hi, I'm Muhammad Talha Qamar, a frontend developer shipping polished web products. I turn ideas into working websites and interactive apps using HTML, CSS, JavaScript, and TypeScript.",
-		'about_para_1_hl' => 'frontend developer,websites and interactive apps,HTML, CSS, JavaScript, and TypeScript',
+		'about_para_1'    => "Hi, I'm Muhammad Talha Qamar, a Full Stack Developer shipping polished web products. I turn ideas into working websites and interactive apps using HTML, CSS, JavaScript, and TypeScript.",
+		'about_para_1_hl' => 'Full Stack Developer,websites and interactive apps,HTML, CSS, JavaScript, and TypeScript',
 		'about_para_2'    => 'From EV product landings and brand clones to recipe sites, ordering flows, and a split-screen driving game, I focus on clean layouts, fast performance, and interfaces that feel simple to use. Have a project in mind? Let’s talk and build it.',
 		'about_para_2_hl' => 'clean layouts,fast performance,talk and build it',
 		'about_facts'     => array(
-			array( 'label' => 'Role', 'value' => 'Developer' ),
+			array( 'label' => 'Role', 'value' => 'Full Stack Developer' ),
 			array( 'label' => 'Focus', 'value' => 'Web & Interfaces' ),
 			array( 'label' => 'Main stack', 'value' => 'HTML · CSS · JS · WP' ),
 			array( 'label' => 'Profiles', 'value' => 'GitHub · LinkedIn' ),
@@ -233,7 +233,7 @@ function talbyte_defaults() {
 		'services'        => array(
 			array(
 				'num'   => '01',
-				'title' => 'FRONTEND DEVELOPMENT',
+				'title' => 'FULL STACK DEVELOPMENT',
 				'note'  => 'Modern, responsive and scalable web apps.',
 			),
 			array(
