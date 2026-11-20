@@ -30,7 +30,7 @@ $stat_count       = count( $stats );
     <section class="hero" id="home" aria-label="Hero section" style="--parallax-hero-photo: 0px; --parallax-hero-backlayer: 0px; --parallax-hero-text: 0px;">
       <div class="hero__top-bar">
         <div class="hero__top-left">
-          <div class="hero__role-badge"><span><?php echo esc_html( $role ); ?></span></div>
+          <div class="hero__role-badge" data-fx="slide-right" data-fx-out="slide-left"><span><?php echo esc_html( $role ); ?></span></div>
           <span class="hero__role-bar" aria-hidden="true"></span>
         </div>
       </div>
@@ -59,11 +59,11 @@ $stat_count       = count( $stats );
             </div>
           </div>
 
-          <div class="hero__word-ashith-wrap">
+          <div class="hero__word-ashith-wrap" data-fx="clip" data-fx-out="zoom-blur">
             <h1 class="hero__word-ashith"><?php echo esc_html( $line1 ); ?></h1>
           </div>
 
-          <div class="hero__word-mk-wrap">
+          <div class="hero__word-mk-wrap" data-fx="rise" data-fx-out="drift" data-fx-delay="80">
             <span class="hero__word-mk"><?php echo esc_html( $line2 ); ?><?php if ( $line2_has_period ) : ?><span class="hero__period">.</span><?php endif; ?></span>
             <div class="hero__role-tag">
               <span class="hero__role-tag-line" aria-hidden="true"></span>
@@ -72,7 +72,7 @@ $stat_count       = count( $stats );
           </div>
 
           <div class="hero__info-col">
-            <div class="hero__stats-strip" aria-label="Key statistics" role="list">
+            <div class="hero__stats-strip" data-fx="flip-y" data-fx-out="stretch" data-fx-delay="120" aria-label="Key statistics" role="list">
               <?php foreach ( $stats as $i => $stat ) : ?>
               <div class="hero__stat-item" role="listitem">
                 <span class="hero__stat-num<?php echo ( isset( $stat['num'] ) && $stat['num'] === '∞' ) ? ' hero__stat-num--inf' : ''; ?>"><?php echo esc_html( isset( $stat['num'] ) ? $stat['num'] : '' ); ?></span>
@@ -84,7 +84,7 @@ $stat_count       = count( $stats );
               <?php endforeach; ?>
             </div>
 
-            <div class="hero__cta-row">
+            <div class="hero__cta-row" data-fx="slide-left" data-fx-out="slide-right" data-fx-delay="160">
               <a class="hero__btn-work" href="<?php echo esc_url( $cta_href ); ?>">
                 <span><?php echo esc_html( $cta_label ); ?></span>
                 <span class="hero__btn-arrow" aria-hidden="true">→</span>

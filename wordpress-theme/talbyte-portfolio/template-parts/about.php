@@ -28,11 +28,11 @@ if ( ! is_array( $facts ) || empty( $facts ) ) {
       <div class="about__container">
         <div class="about__grid">
           <div class="about__col about__col-left">
-            <div class="about__tag">
+            <div class="about__tag" data-fx="slide-right" data-fx-out="slide-left">
               <span class="about__tag-label"><?php echo esc_html( $tag ); ?></span>
               <span class="about__tag-slash" aria-hidden="true">/</span>
             </div>
-            <h2 class="about__headline">
+            <h2 class="about__headline" data-fx="clip" data-fx-out="zoom-blur" data-fx-delay="60">
               <?php echo esc_html( $headline ); ?>
               <span class="about__line about__line--slot">
                 <span class="about__slot" data-about-slot data-words="<?php echo esc_attr( implode( ',', $slot_words ) ); ?>"><?php echo esc_html( $slot_words[0] ); ?></span>.
@@ -42,13 +42,13 @@ if ( ! is_array( $facts ) || empty( $facts ) ) {
 
           <div class="about__col about__col-right">
             <div class="about__story">
-              <p class="about__para"><?php echo talbyte_highlight_html( $para_1, $para_1_hl ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
-              <p class="about__para"><?php echo talbyte_highlight_html( $para_2, $para_2_hl ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+              <p class="about__para" data-fx="rise" data-fx-out="drift" data-fx-delay="80"><?php echo talbyte_highlight_html( $para_1, $para_1_hl ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+              <p class="about__para" data-fx="rise" data-fx-out="drift" data-fx-delay="140"><?php echo talbyte_highlight_html( $para_2, $para_2_hl ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
             </div>
 
             <div class="about__facts">
-              <?php foreach ( $facts as $fact ) : ?>
-              <div class="about__fact-item">
+              <?php foreach ( $facts as $i => $fact ) : ?>
+              <div class="about__fact-item" data-fx="flip-y" data-fx-out="stretch" data-fx-delay="<?php echo esc_attr( (string) ( 100 + ( $i * 70 ) ) ); ?>">
                 <small><?php echo esc_html( isset( $fact['label'] ) ? $fact['label'] : '' ); ?></small>
                 <strong><?php echo esc_html( isset( $fact['value'] ) ? $fact['value'] : '' ); ?></strong>
               </div>

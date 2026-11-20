@@ -78,6 +78,10 @@ const aos = await minifyJs(
   path.join(themeAssets, 'aos-init.js'),
   path.join(dist, 'aos-init.min.js')
 );
+const scrollFx = await minifyJs(
+  path.join(themeAssets, 'scroll-fx.js'),
+  path.join(dist, 'scroll-fx.min.js')
+);
 const intro = await minifyJs(
   path.join(themeAssets, 'intro-loader.js'),
   path.join(dist, 'intro-loader.min.js')
@@ -124,6 +128,7 @@ const manifest = {
   js: {
     main: { file: 'dist/main.min.js', ...main },
     aosInit: { file: 'dist/aos-init.min.js', ...aos },
+    scrollFx: { file: 'dist/scroll-fx.min.js', ...scrollFx },
     intro: { file: 'dist/intro-loader.min.js', ...intro },
     leaves: { file: 'dist/falling-leaves.min.js', ...leaves },
     grid: { file: 'dist/interactive-grid.min.js', ...grid },
@@ -136,6 +141,7 @@ console.log('Build complete → assets/dist/');
 console.log(`  CSS  ${kb(css.before)} → ${kb(css.after)}`);
 console.log(`  JS   ${kb(main.before)} → ${kb(main.after)}`);
 console.log(`  AOS  ${kb(aos.before)} → ${kb(aos.after)}`);
+console.log(`  FX   ${kb(scrollFx.before)} → ${kb(scrollFx.after)}`);
 console.log(`  INTRO ${kb(intro.before)} → ${kb(intro.after)}`);
 console.log(`  LEAVES ${kb(leaves.before)} → ${kb(leaves.after)}`);
 console.log(`  GRID ${kb(grid.before)} → ${kb(grid.after)}`);

@@ -23,9 +23,9 @@ $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
       <div class="contact__grid">
         <div class="contact__left">
           <div class="contact__head">
-            <span class="contact__section-num">05</span>
-            <h2 class="contact__title"><?php echo esc_html( $title ); ?></h2>
-            <p class="contact__desc"><?php echo esc_html( $lead ); ?></p>
+            <span class="contact__section-num" data-fx="drop" data-fx-out="rise">05</span>
+            <h2 class="contact__title" data-fx="clip" data-fx-out="zoom-blur" data-fx-delay="50"><?php echo esc_html( $title ); ?></h2>
+            <p class="contact__desc" data-fx="rise" data-fx-out="drift" data-fx-delay="110"><?php echo esc_html( $lead ); ?></p>
           </div>
 
           <div class="contact__icons-dock contact__icons-dock--desktop">
@@ -44,7 +44,7 @@ $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
         </div>
 
         <div class="contact__right">
-          <div class="contact__card-header">
+          <div class="contact__card-header" data-fx="slide-left" data-fx-out="slide-right">
             <span class="contact__card-num">01</span>
             <div class="contact__card-title-group">
               <span class="contact__card-icon" aria-hidden="true"><?php echo talbyte_icon( 'mail-send' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
@@ -53,7 +53,7 @@ $submit         = talbyte_option( 'form_submit', $d['form_submit'] );
             <span class="contact__card-accent-bar" aria-hidden="true"></span>
           </div>
 
-          <form class="contact__form" id="contact-form" novalidate>
+          <form class="contact__form" id="contact-form" data-fx="flip-y" data-fx-out="skew" data-fx-delay="90" novalidate>
             <div class="contact__input-group">
               <label class="visually-hidden" for="name"><?php echo esc_html( $name_label ); ?></label>
               <input class="contact__input" id="name" name="name" placeholder="<?php echo esc_attr( $name_label ); ?>" type="text" autocomplete="name" required />

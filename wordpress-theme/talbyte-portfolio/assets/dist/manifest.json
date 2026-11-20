@@ -1,9 +1,9 @@
 {
-  "builtAt": "2026-11-20T15:52:44.476Z",
+  "builtAt": "2026-11-20T16:53:34.493Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 62084,
-    "after": 48598
+    "before": 70290,
+    "after": 55708
   },
   "js": {
     "main": {
@@ -15,6 +15,11 @@
       "file": "dist/aos-init.min.js",
       "before": 3456,
       "after": 2202
+    },
+    "scrollFx": {
+      "file": "dist/scroll-fx.min.js",
+      "before": 7507,
+      "after": 4507
     },
     "intro": {
       "file": "dist/intro-loader.min.js",

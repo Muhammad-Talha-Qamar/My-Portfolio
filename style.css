@@ -2690,6 +2690,290 @@ canvas[data-falling-leaves] {
   transition-timing-function: var(--ease) !important;
 }
 
+/* —— Bidirectional scroll FX (entry + exit, both directions) —— */
+html.fx-active [data-fx] {
+  --fx-delay: 0ms;
+  --fx-duration: 0.78s;
+  --fx-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --fx-ease-out: cubic-bezier(0.55, 0.05, 0.65, 0.95);
+  opacity: 0;
+  transform: translate3d(0, 42px, 0) scale(0.97);
+  filter: blur(10px);
+  transition:
+    opacity var(--fx-duration) var(--fx-ease) var(--fx-delay),
+    transform var(--fx-duration) var(--fx-ease) var(--fx-delay),
+    filter var(--fx-duration) var(--fx-ease) var(--fx-delay),
+    clip-path var(--fx-duration) var(--fx-ease) var(--fx-delay);
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+}
+
+html.fx-active [data-fx].fx-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  clip-path: none;
+}
+
+html.fx-active [data-fx].fx-prep {
+  transition: none !important;
+}
+
+html.fx-active [data-fx].fx-from-bottom {
+  opacity: 0;
+  transform: translate3d(0, 56px, 0) scale(0.96);
+  filter: blur(12px);
+}
+
+html.fx-active [data-fx].fx-from-top {
+  opacity: 0;
+  transform: translate3d(0, -56px, 0) scale(0.96);
+  filter: blur(12px);
+}
+
+html.fx-active [data-fx].fx-out {
+  transition-timing-function: var(--fx-ease-out);
+  transition-delay: 0ms;
+  pointer-events: none;
+}
+
+html.fx-active [data-fx].fx-out-up {
+  opacity: 0;
+  transform: translate3d(0, -64px, 0) scale(0.9) rotate(-1.4deg);
+  filter: blur(14px);
+}
+
+html.fx-active [data-fx].fx-out-down {
+  opacity: 0;
+  transform: translate3d(0, 64px, 0) scale(0.9) rotate(1.4deg);
+  filter: blur(14px);
+}
+
+/* Variant entry poses */
+html.fx-active [data-fx="rise"].fx-from-bottom,
+html.fx-active [data-fx="rise"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: translate3d(0, 64px, 0);
+  filter: blur(8px);
+}
+
+html.fx-active [data-fx="drop"].fx-from-top,
+html.fx-active [data-fx="drop"].fx-from-bottom {
+  transform: translate3d(0, -64px, 0);
+  filter: blur(8px);
+}
+
+html.fx-active [data-fx="drop"].fx-from-bottom {
+  transform: translate3d(0, -48px, 0) scale(1.04);
+}
+
+html.fx-active [data-fx="slide-left"].fx-from-bottom,
+html.fx-active [data-fx="slide-left"].fx-from-top,
+html.fx-active [data-fx="slide-left"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: translate3d(72px, 18px, 0);
+  filter: blur(10px);
+}
+
+html.fx-active [data-fx="slide-right"].fx-from-bottom,
+html.fx-active [data-fx="slide-right"].fx-from-top,
+html.fx-active [data-fx="slide-right"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: translate3d(-72px, 18px, 0);
+  filter: blur(10px);
+}
+
+html.fx-active [data-fx="zoom-blur"].fx-from-bottom,
+html.fx-active [data-fx="zoom-blur"].fx-from-top,
+html.fx-active [data-fx="zoom-blur"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: scale(0.82);
+  filter: blur(16px);
+}
+
+html.fx-active [data-fx="flip-x"].fx-from-bottom,
+html.fx-active [data-fx="flip-x"].fx-from-top,
+html.fx-active [data-fx="flip-x"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: perspective(900px) rotateX(28deg) translate3d(0, 36px, 0);
+  filter: blur(6px);
+  transform-origin: center top;
+}
+
+html.fx-active [data-fx="flip-y"].fx-from-bottom,
+html.fx-active [data-fx="flip-y"].fx-from-top,
+html.fx-active [data-fx="flip-y"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: perspective(900px) rotateY(-26deg) translate3d(0, 28px, 0) scale(0.96);
+  filter: blur(6px);
+}
+
+html.fx-active [data-fx="skew"].fx-from-bottom,
+html.fx-active [data-fx="skew"].fx-from-top,
+html.fx-active [data-fx="skew"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: translate3d(0, 48px, 0) skewY(4deg) scale(0.97);
+  filter: blur(10px);
+}
+
+html.fx-active [data-fx="clip"] {
+  clip-path: inset(18% 12% 18% 12% round 8px);
+}
+
+html.fx-active [data-fx="clip"].fx-from-bottom,
+html.fx-active [data-fx="clip"].fx-from-top,
+html.fx-active [data-fx="clip"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: translate3d(0, 36px, 0) scale(1.04);
+  filter: blur(8px);
+  clip-path: inset(42% 28% 42% 28% round 12px);
+}
+
+html.fx-active [data-fx="clip"].fx-in {
+  clip-path: inset(0 0 0 0);
+}
+
+html.fx-active [data-fx="spin"].fx-from-bottom,
+html.fx-active [data-fx="spin"].fx-from-top,
+html.fx-active [data-fx="spin"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: translate3d(0, 40px, 0) rotate(-8deg) scale(0.92);
+  filter: blur(12px);
+}
+
+html.fx-active [data-fx="stretch"].fx-from-bottom,
+html.fx-active [data-fx="stretch"].fx-from-top,
+html.fx-active [data-fx="stretch"]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: translate3d(0, 28px, 0) scaleX(1.12) scaleY(0.88);
+  filter: blur(8px);
+}
+
+html.fx-active [data-fx="drift"].fx-from-bottom {
+  transform: translate3d(-40px, 52px, 0) rotate(-2deg);
+  filter: blur(12px);
+}
+
+html.fx-active [data-fx="drift"].fx-from-top {
+  transform: translate3d(40px, -52px, 0) rotate(2deg);
+  filter: blur(12px);
+}
+
+/* Variant-aware exits */
+html.fx-active [data-fx="rise"].fx-out-up {
+  transform: translate3d(0, -72px, 0) scale(0.94);
+}
+
+html.fx-active [data-fx="rise"].fx-out-down {
+  transform: translate3d(0, 72px, 0) scale(0.94);
+}
+
+html.fx-active [data-fx="drop"].fx-out-up {
+  transform: translate3d(0, -40px, 0) scale(1.06);
+  filter: blur(18px);
+}
+
+html.fx-active [data-fx="drop"].fx-out-down {
+  transform: translate3d(0, 80px, 0) scale(0.88);
+}
+
+html.fx-active [data-fx="slide-left"].fx-out-up,
+html.fx-active [data-fx="slide-left"].fx-out-down {
+  transform: translate3d(-90px, 0, 0) scale(0.94);
+}
+
+html.fx-active [data-fx="slide-right"].fx-out-up,
+html.fx-active [data-fx="slide-right"].fx-out-down {
+  transform: translate3d(90px, 0, 0) scale(0.94);
+}
+
+html.fx-active [data-fx="zoom-blur"].fx-out-up,
+html.fx-active [data-fx="zoom-blur"].fx-out-down {
+  transform: scale(1.18);
+  filter: blur(22px);
+  opacity: 0;
+}
+
+html.fx-active [data-fx="flip-x"].fx-out-up {
+  transform: perspective(900px) rotateX(-32deg) translate3d(0, -28px, 0);
+  transform-origin: center bottom;
+}
+
+html.fx-active [data-fx="flip-x"].fx-out-down {
+  transform: perspective(900px) rotateX(32deg) translate3d(0, 28px, 0);
+  transform-origin: center top;
+}
+
+html.fx-active [data-fx="flip-y"].fx-out-up,
+html.fx-active [data-fx="flip-y"].fx-out-down {
+  transform: perspective(900px) rotateY(38deg) scale(0.9);
+}
+
+html.fx-active [data-fx="skew"].fx-out-up {
+  transform: translate3d(12px, -60px, 0) skewY(-5deg);
+}
+
+html.fx-active [data-fx="skew"].fx-out-down {
+  transform: translate3d(-12px, 60px, 0) skewY(5deg);
+}
+
+html.fx-active [data-fx="clip"].fx-out-up,
+html.fx-active [data-fx="clip"].fx-out-down {
+  clip-path: inset(48% 36% 48% 36% round 16px);
+  transform: scale(0.92);
+  filter: blur(14px);
+}
+
+html.fx-active [data-fx="spin"].fx-out-up {
+  transform: translate3d(18px, -56px, 0) rotate(10deg) scale(0.88);
+}
+
+html.fx-active [data-fx="spin"].fx-out-down {
+  transform: translate3d(-18px, 56px, 0) rotate(-10deg) scale(0.88);
+}
+
+html.fx-active [data-fx="stretch"].fx-out-up,
+html.fx-active [data-fx="stretch"].fx-out-down {
+  transform: scaleX(0.78) scaleY(1.16);
+  filter: blur(12px);
+}
+
+html.fx-active [data-fx="drift"].fx-out-up {
+  transform: translate3d(48px, -70px, 0) rotate(3deg);
+}
+
+html.fx-active [data-fx="drift"].fx-out-down {
+  transform: translate3d(-48px, 70px, 0) rotate(-3deg);
+}
+
+/* Soften FX on denser pill grids so they stay readable */
+html.fx-active .skills__pill[data-fx] {
+  --fx-duration: 0.55s;
+  filter: none;
+}
+
+html.fx-active .skills__pill[data-fx].fx-from-bottom,
+html.fx-active .skills__pill[data-fx].fx-from-top,
+html.fx-active .skills__pill[data-fx]:not(.fx-in):not(.fx-out):not(.fx-prep) {
+  transform: translate3d(0, 18px, 0) scale(0.92);
+  filter: none;
+}
+
+html.fx-active .skills__pill[data-fx].fx-out-up {
+  transform: translate3d(0, -22px, 0) scale(0.9);
+  filter: none;
+}
+
+html.fx-active .skills__pill[data-fx].fx-out-down {
+  transform: translate3d(0, 22px, 0) scale(0.9);
+  filter: none;
+}
+
+html.is-lite [data-fx],
+html.is-lite [data-fx].fx-prep,
+html.is-lite [data-fx].fx-from-top,
+html.is-lite [data-fx].fx-from-bottom,
+html.is-lite [data-fx].fx-out,
+html.is-lite [data-fx].fx-out-up,
+html.is-lite [data-fx].fx-out-down {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  clip-path: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+
 /* Section breakpoints (hero/nav handled above) */
 @media (min-width: 640px) {
   .site-section,

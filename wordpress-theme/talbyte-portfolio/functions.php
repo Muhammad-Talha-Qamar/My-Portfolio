@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '2.3.9' );
+define( 'TALBYTE_THEME_VERSION', '2.4.0' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -62,6 +62,7 @@ function talbyte_enqueue_assets() {
 	$js_intro = talbyte_asset_file( 'intro-loader.js', 'dist/intro-loader.min.js' );
 	$js_leaves = talbyte_asset_file( 'falling-leaves.js', 'dist/falling-leaves.min.js' );
 	$js_grid   = talbyte_asset_file( 'interactive-grid.js', 'dist/interactive-grid.min.js' );
+	$js_fx     = talbyte_asset_file( 'scroll-fx.js', 'dist/scroll-fx.min.js' );
 
 	// Bust browser/CDN CSS cache whenever the built file changes.
 	$css_path = get_template_directory() . '/assets/' . $css;
@@ -80,6 +81,9 @@ function talbyte_enqueue_assets() {
 	wp_enqueue_script( 'talbyte-grid', $uri . '/' . $js_grid, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-leaves', $uri . '/' . $js_leaves, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	$fx_path = get_template_directory() . '/assets/' . $js_fx;
+	$fx_ver  = file_exists( $fx_path ) ? (string) filemtime( $fx_path ) : $ver;
+	wp_enqueue_script( 'talbyte-scroll-fx', $uri . '/' . $js_fx, array(), $fx_ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 
 	$d     = talbyte_defaults();
 	$email = talbyte_option( 'email', $d['email'] );

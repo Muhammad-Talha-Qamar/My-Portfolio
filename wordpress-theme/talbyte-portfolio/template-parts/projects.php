@@ -74,11 +74,11 @@ $total = count( $projects );
     <section class="projects site-section" id="projects" aria-label="Projects build log">
       <div class="projects__header">
         <div class="projects__header-left">
-          <span class="projects__meta-label">BUILD LOG</span>
-          <h2 class="projects__title"><?php echo esc_html( $title ); ?></h2>
-          <p class="projects__subtitle"><?php echo talbyte_title_html( $lead, $lead_hl, 'hl' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+          <span class="projects__meta-label" data-fx="slide-right" data-fx-out="slide-left">BUILD LOG</span>
+          <h2 class="projects__title" data-fx="clip" data-fx-out="zoom-blur" data-fx-delay="50"><?php echo esc_html( $title ); ?></h2>
+          <p class="projects__subtitle" data-fx="rise" data-fx-out="drift" data-fx-delay="110"><?php echo talbyte_title_html( $lead, $lead_hl, 'hl' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
         </div>
-        <div class="projects__controls">
+        <div class="projects__controls" data-fx="slide-left" data-fx-out="slide-right" data-fx-delay="80">
           <div class="projects__nav-btns">
             <button type="button" class="projects__nav-btn" data-projects-prev aria-label="Previous projects slide">←</button>
             <button type="button" class="projects__nav-btn" data-projects-next aria-label="Next projects slide">→</button>
@@ -86,7 +86,7 @@ $total = count( $projects );
         </div>
       </div>
 
-      <div class="projects-carousel" data-projects-carousel>
+      <div class="projects-carousel" data-projects-carousel data-fx="rise" data-fx-out="zoom-blur" data-fx-delay="40">
         <div class="projects-viewport" data-projects-viewport tabindex="0" aria-roledescription="carousel" aria-label="Featured projects">
           <div class="projects-track" data-projects-track>
             <?php foreach ( $projects as $i => $project ) :

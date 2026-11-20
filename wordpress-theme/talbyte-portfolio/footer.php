@@ -16,9 +16,9 @@ $linkedin_url = talbyte_option( 'linkedin_url', $d['linkedin_url'] );
 ?>
     <footer class="footer site-section">
       <div class="footer__grid">
-        <h2 class="footer__brand"><?php echo esc_html( $brand_first . ' ' . $brand_last ); ?></h2>
-        <p class="footer__copy">© <span id="year"><?php echo esc_html( gmdate( 'Y' ) ); ?></span> <?php echo esc_html( $display ); ?>. All rights reserved.</p>
-        <div class="footer__socials">
+        <h2 class="footer__brand" data-fx="rise" data-fx-out="drop"><?php echo esc_html( $brand_first . ' ' . $brand_last ); ?></h2>
+        <p class="footer__copy" data-fx="slide-right" data-fx-out="slide-left" data-fx-delay="60">© <span id="year"><?php echo esc_html( gmdate( 'Y' ) ); ?></span> <?php echo esc_html( $display ); ?>. All rights reserved.</p>
+        <div class="footer__socials" data-fx="zoom-blur" data-fx-out="spin" data-fx-delay="100">
           <a href="<?php echo esc_url( $github_url ); ?>" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
             <?php echo talbyte_icon( 'github' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
           </a>
