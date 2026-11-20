@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '2.3.0' );
+define( 'TALBYTE_THEME_VERSION', '2.3.1' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -63,6 +63,10 @@ function talbyte_enqueue_assets() {
 	$js_leaves = talbyte_asset_file( 'falling-leaves.js', 'dist/falling-leaves.min.js' );
 	$js_grid   = talbyte_asset_file( 'interactive-grid.js', 'dist/interactive-grid.min.js' );
 
+	// Bust browser/CDN CSS cache whenever the built file changes.
+	$css_path = get_template_directory() . '/assets/' . $css;
+	$css_ver  = file_exists( $css_path ) ? (string) filemtime( $css_path ) : $ver;
+
 	// Subset to weights actually used by the theme CSS (no italic / unused 500s).
 	wp_enqueue_style(
 		'talbyte-fonts',
@@ -70,7 +74,7 @@ function talbyte_enqueue_assets() {
 		array(),
 		null
 	);
-	wp_enqueue_style( 'talbyte-portfolio', $uri . '/' . $css, array( 'talbyte-fonts' ), $ver );
+	wp_enqueue_style( 'talbyte-portfolio', $uri . '/' . $css, array( 'talbyte-fonts' ), $css_ver );
 
 	wp_enqueue_script( 'talbyte-intro', $uri . '/' . $js_intro, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-grid', $uri . '/' . $js_grid, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
@@ -107,8 +111,10 @@ add_action( 'wp_head', 'talbyte_resource_hints', 1 );
  * Print preconnect / preload hints.
  */
 function talbyte_resource_hints() {
-	$css  = talbyte_asset_file( 'style.css', 'dist/style.min.css' );
-	$href = get_template_directory_uri() . '/assets/' . $css . '?ver=' . rawurlencode( TALBYTE_THEME_VERSION );
+	$css      = talbyte_asset_file( 'style.css', 'dist/style.min.css' );
+	$css_path = get_template_directory() . '/assets/' . $css;
+	$css_ver  = file_exists( $css_path ) ? (string) filemtime( $css_path ) : TALBYTE_THEME_VERSION;
+	$href     = get_template_directory_uri() . '/assets/' . $css . '?ver=' . rawurlencode( $css_ver );
 	$hero = talbyte_image_url( talbyte_option( 'hero_photo', null ), talbyte_defaults()['hero_photo'] );
 	echo '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />' . "\n";
 	echo '<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />' . "\n";
