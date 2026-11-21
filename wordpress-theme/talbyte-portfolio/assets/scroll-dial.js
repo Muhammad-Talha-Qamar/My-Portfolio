@@ -12,10 +12,14 @@
     document.querySelector(".footer__brand")?.textContent?.trim() ||
     "TALHA Q.";
   const brand = brandRaw.replace(/[<>&"]/g, "").trim() || "TALHA Q.";
-  const logoSrc =
-    document.querySelector(".navbar__logo img")?.getAttribute("src") ||
-    document.querySelector(".hero__photo-img")?.getAttribute("src") ||
+  const dialScriptSrc =
+    document.querySelector('script[src*="scroll-dial"]')?.src ||
+    document.querySelector('script[src*="talbyte-portfolio/assets/"]')?.src ||
     "";
+  const themeAssetBase = dialScriptSrc
+    ? dialScriptSrc.replace(/\/(?:dist\/)?[^/?#]+\.js(?:\?[^#]*)?(?:#.*)?$/, "/images/")
+    : document.querySelector(".navbar__logo img")?.src?.replace(/\/images\/[^/?#]+.*$/, "/images/") || "";
+  const markSrc = themeAssetBase ? `${themeAssetBase}tq-mark.png` : "";
   const rimLabel = `• ${brand} `.repeat(6).trim();
 
   const wrap = document.createElement("aside");
@@ -50,20 +54,28 @@
 
   const core = document.createElement("div");
   core.className = "scroll-dial__core";
-  if (logoSrc) {
+  if (markSrc) {
     const img = document.createElement("img");
     img.className = "scroll-dial__photo";
-    img.src = logoSrc;
+    img.src = markSrc;
     img.alt = "";
     img.width = 56;
     img.height = 56;
     img.decoding = "async";
+    img.onerror = () => {
+      img.remove();
+      const fallback = document.createElement("span");
+      fallback.className = "scroll-dial__fallback";
+      fallback.setAttribute("aria-hidden", "true");
+      fallback.textContent = "TQ";
+      core.prepend(fallback);
+    };
     core.appendChild(img);
   } else {
     const fallback = document.createElement("span");
     fallback.className = "scroll-dial__fallback";
     fallback.setAttribute("aria-hidden", "true");
-    fallback.textContent = brand.slice(0, 1);
+    fallback.textContent = "TQ";
     core.appendChild(fallback);
   }
   const indexEl = document.createElement("span");

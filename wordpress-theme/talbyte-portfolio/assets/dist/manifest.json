@@ -1,9 +1,9 @@
 {
-  "builtAt": "2026-11-21T03:53:21.793Z",
+  "builtAt": "2026-11-21T03:57:36.336Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 75382,
-    "after": 59529
+    "before": 75347,
+    "after": 59495
   },
   "js": {
     "main": {
@@ -38,8 +38,8 @@
     },
     "dial": {
       "file": "dist/scroll-dial.min.js",
-      "before": 6258,
-      "after": 4292
+      "before": 6836,
+      "after": 4694
     }
   },
   "webp": [
