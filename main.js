@@ -251,8 +251,13 @@
   let suppressClick = false;
   let stepping = false;
   let skipClickUntil = 0;
+  let carouselInView = false;
+  let wheelAcc = 0;
+  let wheelLockUntil = 0;
 
   const STEP_MS = prefersReducedMotion ? 0 : 420;
+  const WHEEL_THRESHOLD = 48;
+  const WHEEL_LOCK_MS = 520;
 
   root.classList.add("is-coverflow");
 
@@ -496,6 +501,58 @@
   prevBtn?.addEventListener("click", () => prev(true));
   nextBtn?.addEventListener("click", () => next(true));
 
+  function isTypingTarget(el) {
+    return !!el?.closest?.(
+      'input, textarea, select, [contenteditable="true"], [contenteditable=""]'
+    );
+  }
+
+  /* Keyboard arrows while the projects carousel is on screen */
+  document.addEventListener("keydown", (e) => {
+    if (!carouselInView || stepping || cards.length <= 1) return;
+    if (isTypingTarget(e.target)) return;
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      prev(true);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      next(true);
+    }
+  });
+
+  /*
+   * MacBook trackpad: two-finger swipe left/right arrives as wheel deltaX.
+   * Shift+vertical wheel is treated as horizontal for desktop mice.
+   */
+  root.addEventListener(
+    "wheel",
+    (e) => {
+      if (!carouselInView || stepping || cards.length <= 1) return;
+
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
+      const horizontal = absX > absY && absX > 1.5;
+      const shiftVertical = e.shiftKey && absY > 1.5;
+      if (!horizontal && !shiftVertical) return;
+
+      e.preventDefault();
+      if (performance.now() < wheelLockUntil) return;
+
+      wheelAcc += horizontal ? e.deltaX : e.deltaY;
+
+      if (wheelAcc > WHEEL_THRESHOLD) {
+        wheelAcc = 0;
+        wheelLockUntil = performance.now() + WHEEL_LOCK_MS;
+        next(true);
+      } else if (wheelAcc < -WHEEL_THRESHOLD) {
+        wheelAcc = 0;
+        wheelLockUntil = performance.now() + WHEEL_LOCK_MS;
+        prev(true);
+      }
+    },
+    { passive: false }
+  );
+
   viewport.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -682,13 +739,18 @@
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
         ([entry]) => {
-          if (entry?.isIntersecting) startAutoplay();
-          else stopAutoplay();
+          carouselInView = !!entry?.isIntersecting;
+          if (carouselInView) startAutoplay();
+          else {
+            stopAutoplay();
+            wheelAcc = 0;
+          }
         },
         { threshold: 0.22 }
       );
       io.observe(root);
     } else {
+      carouselInView = true;
       startAutoplay();
     }
   });
