@@ -1,15 +1,15 @@
 {
-  "builtAt": "2026-11-21T06:47:56.490Z",
+  "builtAt": "2026-11-21T06:41:16.293Z",
   "css": {
     "file": "dist/style.min.css",
-    "before": 79235,
-    "after": 62536
+    "before": 75347,
+    "after": 59495
   },
   "js": {
     "main": {
       "file": "dist/main.min.js",
-      "before": 23944,
-      "after": 12694
+      "before": 22774,
+      "after": 11805
     },
     "aosInit": {
       "file": "dist/aos-init.min.js",
@@ -18,8 +18,8 @@
     },
     "scrollFx": {
       "file": "dist/scroll-fx.min.js",
-      "before": 11232,
-      "after": 5774
+      "before": 9971,
+      "after": 5177
     },
     "intro": {
       "file": "dist/intro-loader.min.js",
@@ -38,13 +38,8 @@
     },
     "dial": {
       "file": "dist/scroll-dial.min.js",
-      "before": 8005,
-      "after": 5441
-    },
-    "slideDeck": {
-      "file": "dist/slide-deck.min.js",
-      "before": 17232,
-      "after": 9328
+      "before": 6836,
+      "after": 4694
     }
   },
   "webp": [

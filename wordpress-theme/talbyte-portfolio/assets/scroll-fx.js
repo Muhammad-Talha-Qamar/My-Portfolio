@@ -172,7 +172,6 @@
   let scrollDir = "down";
   let ticking = false;
   let userScrolled = false;
-  const slideMode = () => root.classList.contains("slide-deck-mode");
 
   /**
    * Viewport quarters, then top quarter halved:
@@ -264,21 +263,6 @@
     const prev = state.get(el) || { visible: false, lockUntil: 0 };
     if (now() < (prev.lockUntil || 0)) return;
 
-    if (slideMode()) {
-      const slide = el.closest(".slide-section");
-      if (
-        slide &&
-        !slide.classList.contains("is-active") &&
-        !slide.classList.contains("is-entering")
-      ) {
-        if (prev.visible) {
-          state.set(el, { visible: false, lockUntil: now() + EXIT_LOCK_MS });
-          playExit(el, scrollDir === "down" ? "up" : "down");
-        }
-        return;
-      }
-    }
-
     const m = measure(el);
 
     if (!prev.visible) {
@@ -303,46 +287,24 @@
     targets.forEach(syncElement);
   }
 
-  function scheduleSync(dir) {
-    if (dir === "up" || dir === "down") scrollDir = dir;
-    userScrolled = true;
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      ticking = false;
-      syncAll();
-    });
-  }
-
   window.addEventListener(
     "scroll",
     () => {
-      if (slideMode()) return;
       const y = window.scrollY || 0;
       if (Math.abs(y - scrollY) > 1) {
         scrollDir = y > scrollY ? "down" : "up";
         scrollY = y;
         userScrolled = true;
       }
-      scheduleSync();
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        syncAll();
+      });
     },
     { passive: true }
   );
-
-  window.addEventListener(
-    "talbyte:slidescroll",
-    () => {
-      scheduleSync();
-    },
-    { passive: true }
-  );
-
-  window.addEventListener("talbyte:slidechange", (event) => {
-    const dir = event?.detail?.direction;
-    scheduleSync(dir === -1 ? "up" : "down");
-    /* Re-arm elements inside the newly active slide */
-    window.setTimeout(() => syncAll(), 40);
-  });
 
   window.addEventListener(
     "resize",
@@ -351,28 +313,6 @@
     },
     { passive: true }
   );
-
-  /* Internal slide scrollers drive fx when deck mode is on */
-  const boundScrollers = new WeakSet();
-  function bindSlideScrollers() {
-    document.querySelectorAll("[data-slide-scroll]").forEach((scroller) => {
-      if (boundScrollers.has(scroller)) return;
-      boundScrollers.add(scroller);
-      scroller.addEventListener(
-        "scroll",
-        () => {
-          const y = scroller.scrollTop || 0;
-          if (Math.abs(y - scrollY) > 1) {
-            scrollDir = y > scrollY ? "down" : "up";
-            scrollY = y;
-          }
-          scheduleSync();
-        },
-        { passive: true }
-      );
-    });
-  }
-  bindSlideScrollers();
 
   /* Arm: mark above-the-fold as in, then enable CSS hiding for the rest */
   targets.forEach((el) => {

@@ -39,34 +39,10 @@
     if (window.innerWidth > 768) setNavOpen(false);
   });
 
-  function syncNavbarScrolled(y) {
-    navbar?.classList.toggle("navbar--scrolled", (y ?? window.scrollY) > 24);
-  }
-
   window.addEventListener(
     "scroll",
     () => {
-      if (document.documentElement.classList.contains("slide-deck-mode")) return;
-      syncNavbarScrolled(window.scrollY);
-    },
-    { passive: true }
-  );
-
-  window.addEventListener("talbyte:slidechange", (e) => {
-    const idx = e?.detail?.activeIndex ?? 0;
-    syncNavbarScrolled(idx > 0 ? 48 : 0);
-    const id = e?.detail?.id;
-    if (id) {
-      links.forEach((link) => {
-        link.classList.toggle("is-active", link.getAttribute("href") === `#${id}`);
-      });
-    }
-  });
-
-  window.addEventListener(
-    "talbyte:slidescroll",
-    (e) => {
-      syncNavbarScrolled(e?.detail?.scrollTop ?? 0);
+      navbar?.classList.toggle("navbar--scrolled", window.scrollY > 24);
     },
     { passive: true }
   );
@@ -79,41 +55,27 @@
     !window.matchMedia("(prefers-reduced-motion: reduce)").matches
   ) {
     let heroRaf = 0;
-    const updateHeroParallax = (y) => {
+    const updateHeroParallax = () => {
       heroRaf = 0;
-      const scrollY = typeof y === "number" ? y : window.scrollY;
-      if (scrollY < window.innerHeight * 1.6) {
-        hero.style.setProperty("--parallax-hero-photo", `${(scrollY * 0.14).toFixed(1)}px`);
-        hero.style.setProperty("--parallax-hero-backlayer", `${(scrollY * 0.06).toFixed(1)}px`);
-        hero.style.setProperty("--parallax-hero-text", `${(scrollY * 0.04).toFixed(1)}px`);
+      const y = window.scrollY;
+      if (y < window.innerHeight * 1.6) {
+        hero.style.setProperty("--parallax-hero-photo", `${(y * 0.14).toFixed(1)}px`);
+        hero.style.setProperty("--parallax-hero-backlayer", `${(y * 0.06).toFixed(1)}px`);
+        hero.style.setProperty("--parallax-hero-text", `${(y * 0.04).toFixed(1)}px`);
       }
     };
     window.addEventListener(
       "scroll",
       () => {
-        if (document.documentElement.classList.contains("slide-deck-mode")) return;
         if (heroRaf) return;
-        heroRaf = requestAnimationFrame(() => updateHeroParallax());
-      },
-      { passive: true }
-    );
-    window.addEventListener(
-      "talbyte:slidescroll",
-      (e) => {
-        if (e?.detail?.activeIndex !== 0) return;
-        if (heroRaf) return;
-        heroRaf = requestAnimationFrame(() => updateHeroParallax(e.detail.scrollTop || 0));
+        heroRaf = requestAnimationFrame(updateHeroParallax);
       },
       { passive: true }
     );
   }
 
   const sections = [...document.querySelectorAll("section[id]")];
-  if (
-    sections.length &&
-    "IntersectionObserver" in window &&
-    !document.documentElement.classList.contains("slide-deck-mode")
-  ) {
+  if (sections.length && "IntersectionObserver" in window) {
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
