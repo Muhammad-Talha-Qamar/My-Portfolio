@@ -170,7 +170,7 @@ function talbyte_defaults() {
 		'github_label'    => 'Muhammad-Talha-Qamar',
 		'linkedin_url'    => 'https://www.linkedin.com/in/m-talha-qamar-96765b435/',
 		'linkedin_label'  => 'Talha Qamar',
-		'logo_fallback'   => 'images/main.jpg',
+		'logo_fallback'   => 'images/tq-mark.png',
 		'bg_video'        => '',
 
 		'intro_text'      => 'TALHA Q.',
