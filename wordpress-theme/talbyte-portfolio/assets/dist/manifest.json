@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-20T18:21:03.145Z",
+  "builtAt": "2026-11-21T03:20:17.712Z",
   "css": {
     "file": "dist/style.min.css",
     "before": 71283,
@@ -18,8 +18,8 @@
     },
     "scrollFx": {
       "file": "dist/scroll-fx.min.js",
-      "before": 9741,
-      "after": 5178
+      "before": 9971,
+      "after": 5177
     },
     "intro": {
       "file": "dist/intro-loader.min.js",
