@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-11-21T03:57:36.336Z",
+  "builtAt": "2026-11-21T06:41:16.293Z",
   "css": {
     "file": "dist/style.min.css",
     "before": 75347,
@@ -76,8 +76,8 @@
     {
       "srcRel": "images/thumbs/lifepilot.jpg",
       "destRel": "images/thumbs/lifepilot.webp",
-      "before": 29854,
-      "after": 4368
+      "before": 75597,
+      "after": 15154
     },
     {
       "srcRel": "images/thumbs/mirage-works.jpg",
