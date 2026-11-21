@@ -1830,6 +1830,13 @@ canvas[data-falling-leaves] {
   box-shadow: none;
 }
 
+.projects-carousel.is-coverflow .project-card.is-promoting {
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.5),
+    0 0 22px rgba(243, 107, 33, 0.16);
+  border-color: rgba(243, 107, 33, 0.28);
+}
+
 @media (max-width: 639px) {
   .projects-carousel.is-coverflow .project-card {
     width: min(340px, 84%);

@@ -242,11 +242,16 @@
 
   let active = 0;
   let autoTimer = 0;
+  let stepTimer = 0;
+  let promoteIndex = -1;
   let pointerId = null;
   let pointerStartX = 0;
   let pointerDelta = 0;
   let dragging = false;
   let suppressClick = false;
+  let stepping = false;
+
+  const STEP_MS = prefersReducedMotion ? 0 : 420;
 
   root.classList.add("is-coverflow");
 
@@ -256,6 +261,13 @@
     if (o > n / 2) o -= n;
     if (o < -n / 2) o += n;
     return o;
+  }
+
+  function shortestDelta(from, to) {
+    const n = cards.length;
+    let d = ((to - from) % n + n) % n;
+    if (d > n / 2) d -= n;
+    return d;
   }
 
   function renderDots() {
@@ -271,7 +283,7 @@
       dot.setAttribute("role", "tab");
       dot.setAttribute("aria-label", `Go to ${title}`);
       dot.setAttribute("aria-selected", i === active ? "true" : "false");
-      dot.addEventListener("click", () => goTo(i, { user: true }));
+      dot.addEventListener("click", () => selectCard(i));
       dotsWrap.appendChild(dot);
     });
   }
@@ -340,16 +352,26 @@
         zIndex = 1;
       }
 
+      const promoting = i === promoteIndex && abs > 0;
+      if (promoting) {
+        zIndex = 8;
+        opacity = Math.max(opacity, 0.92);
+        blur = Math.min(blur, 0.2);
+      }
+
       card.classList.toggle("is-center", abs === 0);
       card.classList.toggle("is-side", abs === 1);
       card.classList.toggle("is-far", abs > 1);
+      card.classList.toggle("is-promoting", promoting);
       card.setAttribute("aria-hidden", abs === 0 ? "false" : "true");
       card.tabIndex = abs === 0 ? 0 : -1;
       card.style.zIndex = String(zIndex);
       card.style.opacity = String(opacity);
       card.style.filter = blur ? `blur(${blur}px)` : "none";
       card.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px), ${z}px) rotateY(${rot.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
-      card.style.pointerEvents = abs <= 1 ? "auto" : "none";
+      /* Far cards stay clickable so the back stack can be brought forward */
+      card.style.pointerEvents = abs <= 2 ? "auto" : "none";
+      card.style.cursor = abs === 0 ? "default" : abs <= 2 ? "pointer" : "default";
     });
 
     dotsWrap?.querySelectorAll(".projects-dot").forEach((dot, i) => {
@@ -397,19 +419,64 @@
     }, AUTOPLAY_MS);
   }
 
-  function goTo(nextIndex, { user = false } = {}) {
+  function goTo(nextIndex, { user = false, keepStepping = false } = {}) {
     const n = cards.length;
     active = ((nextIndex % n) + n) % n;
+    if (!keepStepping) {
+      promoteIndex = -1;
+      stepping = false;
+      window.clearTimeout(stepTimer);
+    }
     syncUi();
+    if (keepStepping) return;
     if (user) startAutoplay();
     else restartProgress();
   }
 
+  /**
+   * Bring any visible card to center by stepping through coverflow slots,
+   * so a back card slides across the side card into the front.
+   */
+  function selectCard(targetIndex) {
+    const n = cards.length;
+    const target = ((targetIndex % n) + n) % n;
+    if (target === active || stepping) return;
+
+    window.clearTimeout(stepTimer);
+    stopAutoplay();
+    stepping = true;
+    promoteIndex = target;
+
+    const stepOnce = () => {
+      const delta = shortestDelta(active, target);
+      if (delta === 0) {
+        promoteIndex = -1;
+        stepping = false;
+        syncUi();
+        startAutoplay();
+        return;
+      }
+      goTo(active + (delta > 0 ? 1 : -1), { keepStepping: true });
+      if (shortestDelta(active, target) === 0) {
+        promoteIndex = -1;
+        stepping = false;
+        syncUi();
+        startAutoplay();
+        return;
+      }
+      stepTimer = window.setTimeout(stepOnce, STEP_MS);
+    };
+
+    stepOnce();
+  }
+
   function next(user = true) {
+    if (stepping) return;
     goTo(active + 1, { user });
   }
 
   function prev(user = true) {
+    if (stepping) return;
     goTo(active - 1, { user });
   }
 
@@ -431,21 +498,13 @@
     }
   });
 
-  // Click a side card to bring it center
+  // Click any visible card (side or back) to slide it to center
   cards.forEach((card, i) => {
     card.addEventListener("click", (e) => {
-      if (suppressClick) return;
-      if (e.target.closest(".project-card__cta, .project-btn, a.project-card__media, a.project-vidbox")) {
-        if (wrapOffset(i) !== 0) {
-          e.preventDefault();
-          goTo(i, { user: true });
-        }
-        return;
-      }
-      if (wrapOffset(i) !== 0) {
-        e.preventDefault();
-        goTo(i, { user: true });
-      }
+      if (suppressClick || stepping) return;
+      if (wrapOffset(i) === 0) return;
+      e.preventDefault();
+      selectCard(i);
     });
   });
 
