@@ -250,6 +250,7 @@
   let dragging = false;
   let suppressClick = false;
   let stepping = false;
+  let skipClickUntil = 0;
 
   const STEP_MS = prefersReducedMotion ? 0 : 420;
 
@@ -505,27 +506,86 @@
     }
   });
 
-  // Click any visible card (side or back) to slide it to center
-  cards.forEach((card, i) => {
-    card.addEventListener("click", (e) => {
-      if (suppressClick || stepping) return;
-      if (wrapOffset(i) === 0) return;
-      e.preventDefault();
-      selectCard(i);
-    });
-  });
+  function indexWithOffset(offset) {
+    return cards.findIndex((_, i) => wrapOffset(i) === offset);
+  }
+
+  /**
+   * 3D coverflow hit-testing is unreliable (transformed AABBs fall outside the
+   * clipped viewport). Map the click's X position inside the viewport to the
+   * visible side / back card instead.
+   */
+  function cardIndexFromPoint(clientX, clientY) {
+    const viewRect = viewport.getBoundingClientRect();
+    if (
+      clientX < viewRect.left ||
+      clientX > viewRect.right ||
+      clientY < viewRect.top ||
+      clientY > viewRect.bottom
+    ) {
+      return -1;
+    }
+
+    const rel = (clientX - viewRect.left) / Math.max(viewRect.width, 1);
+
+    /* Left stack */
+    if (rel < 0.34) {
+      const far = indexWithOffset(-2);
+      const side = indexWithOffset(-1);
+      if (rel < 0.16 && far >= 0) return far;
+      return side;
+    }
+
+    /* Right stack */
+    if (rel > 0.66) {
+      const far = indexWithOffset(2);
+      const side = indexWithOffset(1);
+      if (rel > 0.84 && far >= 0) return far;
+      return side;
+    }
+
+    /* Center band — ignore so VIEW CTA keeps working */
+    return -1;
+  }
+
+  function activateCardAtPoint(clientX, clientY, event) {
+    if (suppressClick || stepping) return false;
+    if (performance.now() < skipClickUntil) return false;
+    if (event?.target?.closest?.(".project-card__cta, .projects__nav-btn, .projects-dot, button")) {
+      return false;
+    }
+    const idx = cardIndexFromPoint(clientX, clientY);
+    if (idx < 0) return false;
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
+    skipClickUntil = performance.now() + 450;
+    selectCard(idx);
+    return true;
+  }
 
   viewport.addEventListener(
     "click",
     (e) => {
-      if (!suppressClick) return;
-      if (e.target.closest(".project-card__cta, .projects__nav-btn, button")) {
+      if (performance.now() < skipClickUntil) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      if (e.target.closest(".project-card__cta") && e.target.closest(".project-card.is-center")) {
         suppressClick = false;
         return;
       }
-      e.preventDefault();
-      e.stopPropagation();
-      suppressClick = false;
+      if (e.target.closest(".projects__nav-btn, .projects-dot, button")) {
+        suppressClick = false;
+        return;
+      }
+      if (suppressClick) {
+        e.preventDefault();
+        e.stopPropagation();
+        suppressClick = false;
+        return;
+      }
+      activateCardAtPoint(e.clientX, e.clientY, e);
     },
     true
   );
@@ -539,38 +599,55 @@
     ) {
       return;
     }
-    dragging = true;
+    dragging = false;
     suppressClick = false;
     pointerId = e.pointerId;
     pointerStartX = e.clientX;
     pointerDelta = 0;
-    root.classList.add("is-dragging");
     stopAutoplay();
-    track.classList.add("is-instant");
-    cards.forEach((c) => c.classList.add("is-instant"));
-    viewport.setPointerCapture?.(e.pointerId);
   });
 
   viewport.addEventListener("pointermove", (e) => {
-    if (!dragging || e.pointerId !== pointerId) return;
+    if (pointerId == null || e.pointerId !== pointerId) return;
     pointerDelta = e.clientX - pointerStartX;
-    if (Math.abs(pointerDelta) > 8) suppressClick = true;
+    if (!dragging && Math.abs(pointerDelta) > 8) {
+      dragging = true;
+      suppressClick = true;
+      root.classList.add("is-dragging");
+      track.classList.add("is-instant");
+      cards.forEach((c) => c.classList.add("is-instant"));
+      viewport.setPointerCapture?.(e.pointerId);
+    }
+    if (!dragging) return;
     applyCoverflow({ dragging: true });
   });
 
   function endDrag(e) {
-    if (!dragging || (e && pointerId != null && e.pointerId !== pointerId)) return;
+    if (pointerId == null || (e && e.pointerId != null && e.pointerId !== pointerId)) return;
+    const wasDragging = dragging;
+    const dx = pointerDelta;
+    const x = e?.clientX ?? pointerStartX + dx;
+    const y = e?.clientY ?? viewport.getBoundingClientRect().top + viewport.clientHeight / 2;
+
     dragging = false;
     root.classList.remove("is-dragging");
     track.classList.remove("is-instant");
     cards.forEach((c) => c.classList.remove("is-instant"));
+
     const threshold = Math.max(40, Math.min(120, viewport.clientWidth * 0.12));
-    if (pointerDelta > threshold) prev(true);
-    else if (pointerDelta < -threshold) next(true);
-    else {
+    if (wasDragging && dx > threshold) prev(true);
+    else if (wasDragging && dx < -threshold) next(true);
+    else if (!wasDragging && !suppressClick) {
+      /* Click without drag — promote the card under the pointer */
+      if (!activateCardAtPoint(x, y, e)) {
+        syncUi();
+        startAutoplay();
+      }
+    } else {
       syncUi();
       startAutoplay();
     }
+
     pointerId = null;
     pointerDelta = 0;
     try {
