@@ -30,10 +30,10 @@
   dial.className = "scroll-dial";
   dial.tabIndex = 0;
   dial.setAttribute("role", "button");
-  dial.title = "Click to advance • Drag up/down to scrub scroll";
+  dial.title = "Click to advance • Drag up/down to scrub sections";
   dial.setAttribute(
     "aria-label",
-    "Scroll dial. Click to go to next section. Drag to scrub the page."
+    "Scroll dial. Click to go to next section. Drag to scrub sections."
   );
 
   const ring = document.createElement("div");
@@ -96,9 +96,11 @@
   let active = 0;
   let dragging = false;
   let dragStartY = 0;
-  let dragStartScroll = 0;
+  let dragStartIndex = 0;
   let moved = false;
   let raf = 0;
+
+  const deck = () => window.talbyteSlideDeck;
 
   function maxScroll() {
     return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
@@ -117,12 +119,21 @@
     return String(n).padStart(2, "0");
   }
 
-  function syncFromScroll() {
+  function syncFromDeckOrScroll() {
+    const api = deck();
+    if (api && typeof api.activeIndex === "number") {
+      active = api.activeIndex;
+      const progress = api.length > 1 ? active / (api.length - 1) : 0;
+      ring.style.transform = `rotate(${(progress * 360).toFixed(2)}deg)`;
+      indexEl.textContent = pad(active + 1);
+      dial.dataset.section = api.getSlideIds?.()?.[active] || sections[active]?.id || "";
+      wrap.classList.toggle("is-near-end", progress > 0.92);
+      return;
+    }
+
     const max = maxScroll();
     const progress = max > 0 ? window.scrollY / max : 0;
-    const rot = progress * 360;
-    ring.style.transform = `rotate(${rot.toFixed(2)}deg)`;
-
+    ring.style.transform = `rotate(${(progress * 360).toFixed(2)}deg)`;
     active = sectionIndexFromScroll();
     indexEl.textContent = pad(active + 1);
     dial.dataset.section = sections[active]?.id || "";
@@ -133,13 +144,21 @@
     if (raf) return;
     raf = requestAnimationFrame(() => {
       raf = 0;
-      syncFromScroll();
+      syncFromDeckOrScroll();
     });
   }
 
   function goToIndex(i, { smooth = true } = {}) {
     const n = sections.length;
     const next = ((i % n) + n) % n;
+    const api = deck();
+    if (api?.goTo) {
+      api.goTo(next);
+      active = next;
+      indexEl.textContent = pad(active + 1);
+      scheduleSync();
+      return;
+    }
     const target = sections[next];
     if (!target) return;
     active = next;
@@ -179,7 +198,7 @@
     dragging = true;
     moved = false;
     dragStartY = e.clientY;
-    dragStartScroll = window.scrollY;
+    dragStartIndex = active;
     dial.classList.add("is-dragging");
     dial.setPointerCapture?.(e.pointerId);
     e.preventDefault();
@@ -189,9 +208,20 @@
     if (!dragging) return;
     const dy = e.clientY - dragStartY;
     if (Math.abs(dy) > 4) moved = true;
+
+    const api = deck();
+    if (api?.goTo) {
+      const steps = Math.round(dy / 56);
+      const next = Math.max(0, Math.min(sections.length - 1, dragStartIndex + steps));
+      if (next !== active) goToIndex(next, { smooth: false });
+      scheduleSync();
+      return;
+    }
+
     const scrub = dy * 2.4;
-    const nextY = Math.max(0, Math.min(maxScroll(), dragStartScroll + scrub));
-    window.scrollTo({ top: nextY, behavior: "auto" });
+    const startScroll = sections[dragStartIndex]?.offsetTop ?? window.scrollY;
+    const scrubY = Math.max(0, Math.min(maxScroll(), startScroll + scrub));
+    window.scrollTo({ top: scrubY, behavior: "auto" });
     scheduleSync();
   });
 
@@ -211,9 +241,11 @@
 
   window.addEventListener("scroll", scheduleSync, { passive: true });
   window.addEventListener("resize", scheduleSync, { passive: true });
+  window.addEventListener("talbyte:slidechange", scheduleSync);
+  window.addEventListener("talbyte:slidescroll", scheduleSync);
 
   requestAnimationFrame(() => {
-    syncFromScroll();
+    syncFromDeckOrScroll();
     wrap.classList.add("scroll-dial-wrapper--ready");
   });
 })();

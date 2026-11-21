@@ -98,6 +98,10 @@ const dial = await minifyJs(
   path.join(themeAssets, 'scroll-dial.js'),
   path.join(dist, 'scroll-dial.min.js')
 );
+const slideDeck = await minifyJs(
+  path.join(themeAssets, 'slide-deck.js'),
+  path.join(dist, 'slide-deck.min.js')
+);
 
 const images = [];
 for (const img of ['images/main.jpg']) {
@@ -137,6 +141,7 @@ const manifest = {
     leaves: { file: 'dist/falling-leaves.min.js', ...leaves },
     grid: { file: 'dist/interactive-grid.min.js', ...grid },
     dial: { file: 'dist/scroll-dial.min.js', ...dial },
+    slideDeck: { file: 'dist/slide-deck.min.js', ...slideDeck },
   },
   webp: images,
 };
@@ -151,6 +156,7 @@ console.log(`  INTRO ${kb(intro.before)} → ${kb(intro.after)}`);
 console.log(`  LEAVES ${kb(leaves.before)} → ${kb(leaves.after)}`);
 console.log(`  GRID ${kb(grid.before)} → ${kb(grid.after)}`);
 console.log(`  DIAL ${kb(dial.before)} → ${kb(dial.after)}`);
+console.log(`  DECK ${kb(slideDeck.before)} → ${kb(slideDeck.after)}`);
 for (const img of images) {
   console.log(`  WEBP ${img.srcRel} ${kb(img.before)} → ${img.destRel} ${kb(img.after)}`);
 }

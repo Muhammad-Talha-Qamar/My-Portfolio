@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '2.4.4' );
+define( 'TALBYTE_THEME_VERSION', '2.5.0' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -62,6 +62,7 @@ function talbyte_enqueue_assets() {
 	$js_intro = talbyte_asset_file( 'intro-loader.js', 'dist/intro-loader.min.js' );
 	$js_leaves = talbyte_asset_file( 'falling-leaves.js', 'dist/falling-leaves.min.js' );
 	$js_grid   = talbyte_asset_file( 'interactive-grid.js', 'dist/interactive-grid.min.js' );
+	$js_deck   = talbyte_asset_file( 'slide-deck.js', 'dist/slide-deck.min.js' );
 	$js_fx     = talbyte_asset_file( 'scroll-fx.js', 'dist/scroll-fx.min.js' );
 	$js_dial   = talbyte_asset_file( 'scroll-dial.js', 'dist/scroll-dial.min.js' );
 
@@ -85,10 +86,11 @@ function talbyte_enqueue_assets() {
 
 	wp_enqueue_script( 'talbyte-intro', $uri . '/' . $js_intro, array(), $js_ver( $js_intro ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-grid', $uri . '/' . $js_grid, array(), $js_ver( $js_grid ), array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array(), $js_ver( $js_main ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-slide-deck', $uri . '/' . $js_deck, array(), $js_ver( $js_deck ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array( 'talbyte-slide-deck' ), $js_ver( $js_main ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-leaves', $uri . '/' . $js_leaves, array(), $js_ver( $js_leaves ), array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_enqueue_script( 'talbyte-scroll-fx', $uri . '/' . $js_fx, array(), $js_ver( $js_fx ), array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_enqueue_script( 'talbyte-scroll-dial', $uri . '/' . $js_dial, array(), $js_ver( $js_dial ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-scroll-fx', $uri . '/' . $js_fx, array( 'talbyte-slide-deck' ), $js_ver( $js_fx ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-scroll-dial', $uri . '/' . $js_dial, array( 'talbyte-slide-deck' ), $js_ver( $js_dial ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 
 	$d     = talbyte_defaults();
 	$email = talbyte_option( 'email', $d['email'] );
