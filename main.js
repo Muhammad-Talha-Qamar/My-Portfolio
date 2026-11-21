@@ -339,9 +339,9 @@
         rot = o < 0 ? 42 : -42;
         z = -240;
         y = 42;
-        opacity = 0.18;
+        opacity = 0.34;
         zIndex = 2;
-        blur = 1.1;
+        blur = 0.8;
       } else {
         x = o * sideX * 1.25;
         scale = 0.55;
@@ -370,8 +370,15 @@
       card.style.filter = blur ? `blur(${blur}px)` : "none";
       card.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px), ${z}px) rotateY(${rot.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
       /* Far cards stay clickable so the back stack can be brought forward */
-      card.style.pointerEvents = abs <= 2 ? "auto" : "none";
+      /*
+       * Center card AABB covers the side/back cards — let clicks pass through
+       * the shell so visible side/far cards can be selected. Links stay clickable.
+       */
+      card.style.pointerEvents = abs === 0 ? "none" : abs <= 2 ? "auto" : "none";
       card.style.cursor = abs === 0 ? "default" : abs <= 2 ? "pointer" : "default";
+      card.querySelectorAll("a, button").forEach((el) => {
+        el.style.pointerEvents = "auto";
+      });
     });
 
     dotsWrap?.querySelectorAll(".projects-dot").forEach((dot, i) => {

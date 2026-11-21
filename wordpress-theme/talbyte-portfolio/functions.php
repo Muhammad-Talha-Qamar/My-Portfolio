@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TALBYTE_THEME_VERSION', '2.4.3' );
+define( 'TALBYTE_THEME_VERSION', '2.4.4' );
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/cpt-project.php';
@@ -77,13 +77,16 @@ function talbyte_enqueue_assets() {
 	);
 	wp_enqueue_style( 'talbyte-portfolio', $uri . '/' . $css, array( 'talbyte-fonts' ), $css_ver );
 
-	wp_enqueue_script( 'talbyte-intro', $uri . '/' . $js_intro, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_enqueue_script( 'talbyte-grid', $uri . '/' . $js_grid, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
-	wp_enqueue_script( 'talbyte-leaves', $uri . '/' . $js_leaves, array(), $ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
-	$fx_path = get_template_directory() . '/assets/' . $js_fx;
-	$fx_ver  = file_exists( $fx_path ) ? (string) filemtime( $fx_path ) : $ver;
-	wp_enqueue_script( 'talbyte-scroll-fx', $uri . '/' . $js_fx, array(), $fx_ver, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	$js_ver = static function ( $relative ) use ( $ver ) {
+		$path = get_template_directory() . '/assets/' . ltrim( $relative, '/' );
+		return file_exists( $path ) ? (string) filemtime( $path ) : $ver;
+	};
+
+	wp_enqueue_script( 'talbyte-intro', $uri . '/' . $js_intro, array(), $js_ver( $js_intro ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-grid', $uri . '/' . $js_grid, array(), $js_ver( $js_grid ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array(), $js_ver( $js_main ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-leaves', $uri . '/' . $js_leaves, array(), $js_ver( $js_leaves ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-scroll-fx', $uri . '/' . $js_fx, array(), $js_ver( $js_fx ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 
 	$d     = talbyte_defaults();
 	$email = talbyte_option( 'email', $d['email'] );
