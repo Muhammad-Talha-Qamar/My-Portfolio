@@ -63,6 +63,7 @@ function talbyte_enqueue_assets() {
 	$js_leaves = talbyte_asset_file( 'falling-leaves.js', 'dist/falling-leaves.min.js' );
 	$js_grid   = talbyte_asset_file( 'interactive-grid.js', 'dist/interactive-grid.min.js' );
 	$js_fx     = talbyte_asset_file( 'scroll-fx.js', 'dist/scroll-fx.min.js' );
+	$js_dial   = talbyte_asset_file( 'scroll-dial.js', 'dist/scroll-dial.min.js' );
 
 	// Bust browser/CDN CSS cache whenever the built file changes.
 	$css_path = get_template_directory() . '/assets/' . $css;
@@ -87,6 +88,7 @@ function talbyte_enqueue_assets() {
 	wp_enqueue_script( 'talbyte-main', $uri . '/' . $js_main, array(), $js_ver( $js_main ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-leaves', $uri . '/' . $js_leaves, array(), $js_ver( $js_leaves ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 	wp_enqueue_script( 'talbyte-scroll-fx', $uri . '/' . $js_fx, array(), $js_ver( $js_fx ), array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_script( 'talbyte-scroll-dial', $uri . '/' . $js_dial, array(), $js_ver( $js_dial ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 
 	$d     = talbyte_defaults();
 	$email = talbyte_option( 'email', $d['email'] );
